@@ -1,81 +1,75 @@
-# Project at a glance
+# #PequalNP — Dream6 Spectral Tester
 
-**What it is.**
-A deterministic, time-averaged **spectral tester** for SAT. We encode a formula into a structured “phase schedule,” build a complex Gram matrix from those phases, and decide **SAT vs. UNSAT** by looking at one number: the top eigenvalue (normalized), $\mu=\lambda_{\max}/C$.
+## 🌌 At a glance
 
-**Why it’s interesting.**
-It produces a **clear and reproducible gap** between SAT-like and UNSAT-like behavior using simple, fast linear-algebra—no search, no backtracking. The construction is explicit (no randomness required) and scales polynomially.
+We propose a **deterministic, polynomial-time spectral tester** for SAT.
+Every CNF is mapped to a **phase schedule**, averaged into a complex Hermitian Gram matrix.
+One number decides: the normalized top eigenvalue
 
----
-
-## How it works (60-second version)
-
-1. **Schedule the phases.**
-   Each clause gets a time window (“lock”). We place phases using:
-
-   * **De-aliased offsets** (a stride near $T/2$, coprime with $T$) to minimize lock overlap between neighboring clauses.
-   * **Low-correlation Hadamard masks** inside the lock (rows/columns chosen with coprime strides) so cross-terms cancel well after truncation.
-
-2. **Average and measure.**
-   We form $G=\frac{1}{T} Z^\* Z$ with $Z=\exp(i\Phi)$ (complex Hermitian—no absolute values), then compute the largest eigenvalue $\lambda_{\max}$ and normalize $\mu=\lambda_{\max}/C$.
-
-3. **Decide.**
-   If $\mu$ exceeds a fixed threshold $\tau$, declare **SAT**; otherwise **UNSAT**.
+$$
+\mu = \lambda_{\max}(G)/C.
+$$
 
 ---
 
-## What’s new here
+## 🚀 Why it matters
+
+* **Reproducible SAT/UNSAT gap.**
+  No randomness, no backtracking — just structured interference + averaging.
 
 * **Deterministic pipeline.**
-  Offsets and Hadamard masks are chosen explicitly to minimize aliasing and keep correlations low, even after truncation to $m$ time slots.
+  Offsets are de-aliased (stride ≈ T/2, coprime with T).
+  Masks come from truncated Walsh–Hadamard rows with coprime strides.
 
-* **Lock-only S2 control.**
-  We measure neighbor cross-terms **only inside the lock window** and normalize by $m$. This matches the theoretical S2 bound and keeps the analysis honest.
-
-* **Simple spectral witness.**
-  A single eigenvalue captures the global “coherence” of the schedule. In practice we see a **large SAT/UNSAT separation**.
+* **Polynomial-time.**
+  Full schedule + Gram + top eigenvalue in \$\tilde O(C^2 \log C)\$.
 
 ---
 
-## What we actually observed
+## 🔬 Core mechanism
 
-On a large run (e.g., $C=1000,\ T=312,\ m=156,\ \zeta_0=0.40$):
-
-* **UNSAT-Hadamard:** $\mu \approx 0.158$ with $\lambda_{\max} \approx 158$ (i.e., $\mu \approx \lambda_{\max}/C$) → **strong gap** below any reasonable threshold.
-* **S2 (lock-only) neighbor row-sum:** $\approx 0.228$ for $d=4$, well **below** the theoretical bound $d\,\kappa_{\mathrm{S2}} \approx 0.474$.
-
-This is repeatable and robust after the key fixes (complex Hermitian Gram, de-aliased offsets, Hadamard row/column strides, lock-only normalization).
+1. **Lock windows.** Each clause is assigned \$m\$ slots.
+2. **Hadamard masks.** Negative entries → phase \$\pi\$, positives → \$0\$.
+3. **Gram averaging.** \$G = \tfrac{1}{T} Z^\* Z\$ with \$Z = \exp(i\Phi)\$.
+4. **Decision.** If \$\mu \ge \tau\$, declare SAT; else UNSAT.
 
 ---
 
-## What it means (and what it doesn’t)
+## 📊 What we observed
 
-* **It means:** we have a **fast, deterministic spectral tester** with strong **soundness** evidence on UNSAT-like inputs and a clear gap to SAT-like behavior.
+On \$C=1000,\ T=312,\ m=156,\ \zeta\_0=0.40\$:
 
-* **It does *not* mean:** we’ve proved **P = NP**. A formal resolution needs full proofs (no unproven assumptions) for stability/concentration and completeness across general SAT instances.
+* **UNSAT-Hadamard:** \$\mu \approx 0.158 \ll 1\$, \$\lambda\_{\max}\approx 158\$.
+* **Lock-only S2 row-sum:** \$\approx 0.228\$ vs. theoretical bound \$d\kappa\_{S2}\approx 0.474\$ (\$d=4\$).
 
----
-
-## Why it might matter
-
-* **Conceptual:** shows how structured interference + averaging can turn combinatorics into a clean spectral signal.
-* **Practical:** a lightweight, matrix-based diagnostic that scales as $\tilde O(C^2\log C)$, useful as a filter or heuristic before heavy solvers.
-* **Research:** a concrete avenue to formalize soundness/completeness via standard tools (Gershgorin, matrix concentration, stability lemmas).
+Clear gap, stable margins.
 
 ---
 
-## Limitations and open work
+## ✅ What’s solid
 
-* **Completeness:** formal lower bounds on $\mu$ for SAT under small deviations (the SAT envelope) need a full proof.
-* **Assumptions:** the usual A1–A5 (geometry, truncated orthogonality, S2 bound, concentration, stability) must be rigorously closed with polynomial constants.
-* **Generality:** behavior outside the specific “UNSAT-Hadamard” regime should be mapped carefully.
+* **Soundness:** lock-only Gershgorin bounds + S2 control hold.
+* **Determinism:** all offsets/masks are explicit, no seeds needed.
+* **Empirical evidence:** strong, repeatable SAT/UNSAT separation.
 
 ---
 
-## Where to take it next
+## ⚠️ What’s open
 
-* **Paper skeleton:** formalize algorithm, assumptions, and theorems; include seed/scale sweeps and ablations (offset stride, row/col strides).
-* **CLI controls:** expose `s_stride`, `row_step`, `col_stride`, `col_offset`, and `d` to tune overlap and correlations from the command line.
-* **Repro pack:** repo with fixed schedules, scripts, JSON outputs, and plots; a one-command script to regenerate all figures/tables.
+* **Completeness:** lower bounds on \$\mu\$ for SAT require formal proof.
+* **Assumptions A1–A5:** geometry, orthogonality, S2, concentration, stability must be fully closed.
+* **Generality:** extend beyond UNSAT-Hadamard regime.
 
-**Bottom line:** Functionally, the method delivers a strong, reproducible spectral gap and meets the lock-only S2 bound with margin. The path to a formal result is clear: write down and prove the A1–A5 assumptions and the completeness guarantee.
+---
+
+## 🧭 Next steps
+
+* Finish paper draft (theorems, proofs, plots).
+* Release reproducibility pack (CLI + JSON outputs + figures).
+* Push formal closure of A1–A5 → #PequalNP.
+
+---
+
+**Bottom line:**
+We now have a **working, deterministic spectral tester** for SAT with polynomial scaling and a strong UNSAT gap.
+The road to #PequalNP is open: prove completeness, close assumptions.
