@@ -358,15 +358,18 @@ def run_sample(mode, C, cR, eps, rho, zeta0, sigma_up_opt, neighbor_atten, seed,
 
     if report_s2 == True:
         G_all = gram_from_phases(Phi)  # pro μ/λmax
-        G_lock = gram_lock_only(Phi, locks)  # pro S2 empirical (lock-only)
+        if mode == "unsat_hadamard":
+            G_lock = gram_lock_only(Phi, locks)  # pro S2 empirical (lock-only)
         m_all = s2_metrics_from_G(G_all, neighbors)
-        m_lock = s2_metrics_from_G(G_lock, neighbors)
+        if mode == "unsat_hadamard":
+            m_lock = s2_metrics_from_G(G_lock, neighbors)
         print("S2 empirical (all T): ")
         print(f"  |G_ij| over edges: max={m_all['max_edge']:.4f}, avg={m_all['avg_edge']:.4f}")
         print(f"  row-sum over neighbors: max={m_all['max_row_sum_neighbors']:.4f}, avg={m_all['avg_row_sum_neighbors']:.4f}")
-        print("S2 empirical (lock-only): ")
-        print(f"  |G_ij| over edges: max={m_lock['max_edge']:.4f}, avg={m_lock['avg_edge']:.4f}")
-        print(f"  row-sum over neighbors: max={m_lock['max_row_sum_neighbors']:.4f}, avg={m_lock['avg_row_sum_neighbors']:.4f}")
+        if mode == "unsat_hadamard":
+            print("S2 empirical (lock-only): ")
+            print(f"  |G_ij| over edges: max={m_lock['max_edge']:.4f}, avg={m_lock['avg_edge']:.4f}")
+            print(f"  row-sum over neighbors: max={m_lock['max_row_sum_neighbors']:.4f}, avg={m_lock['avg_row_sum_neighbors']:.4f}")
 
         #m = s2_metrics_from_G(G, neighbors)
         #print("S2 empirical on neighbors:")
