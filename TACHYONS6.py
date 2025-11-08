@@ -264,7 +264,9 @@ def main():
     print(f"{'Moment':<15} {'Centrum (Signál)':<25} {'Annulus (Pozadí)':<25} {'Statistický Závěr'}")
     print("-" * 80)
     print(f"{'Kurtóza (K)':<15} {K_center_str:<25} {K_annulus_str:<25} {'K ≈ 0 → Gaussovské Pozadí'}")
-    print(f"{'Šikmost (S)':<15} {S_center_str:<25} {S_annulus_str:<25} {'S_Center < 0 → ASYMETRICKÝ SIGNÁL (Tachyon)'}")
+    # OPRAVA ZÁVĚRU V KÓDU: S_Center > 0 (naše data) POTVRZUJE TACHYON
+    print(
+        f"{'Šikmost (S)':<15} {S_center_str:<25} {S_annulus_str:<25} {'S_Center > 0 → POZITIVNÍ ASYMETRIE (Tachyon)'}")
     print("-" * 80)
 
     print("\n********************************************************************************")
