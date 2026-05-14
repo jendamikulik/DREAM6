@@ -1,0 +1,329 @@
+PS D:\HIT\PythonProject>
+PS D:\HIT\PythonProject>
+PS D:\HIT\PythonProject>
+PS D:\HIT\PythonProject> python .\DREAM6_operator_v8_14_REPAIR_KERNEL_kissat_FINISHER_BEFORE_KISSAT.py --cnf-path .\exam_flat_0.04_2018_3.cnf --mode sat --edge-mode logic --shared-carrier --shared-misphase --noise-sigma 0 --seed 0 --model-out exam_flat_0.04_2018_3.model --polish 8_000_000 --kissat --kissat-bin "C:\msys\home\Jencek\kissat\build\kissat.exe" --kissat-repair-radius 22 --kissat-max-free-frac 1
+
+
+[CNF mód] Načítám .\exam_flat_0.04_2018_3.cnf
+  proměnné: 1275631    klauzule: 1,994,905
+  Průměrná amplituda     : 1.910932
+  Medián amplitudy       : 1.834140
+  Max / min amplituda    : 4.067007 / 0.558216
+  Frakce |proj| > 0.05   : 100.00 %
+  Frakce |proj| > 0.1    : 100.00 %
+  Rozptyl úhlů (variance): 0.000000 rad²
+  Std úhlů               : 0.0000 rad  ≈ 0.00°
+  Koherenční proxy       : 1.000000  (1 = všechny locky dokonale zarovnané)
+
+EXTREME: coherence_u1=0.001385  coherence_z2=1.000000  bimodal_index=721.971
+REJOIN_MASK: true_count = 1994904 of 1994905
+FUSE_KEYS: ['bounded', 'dalpha', 'delta_mean', 'frac', 'grad_cap', 'max_grad', 'max_grad_before', 'mode', 'n_singular', 'singular_idx', 'singular_mask', 'thr', 'threshold_percentile']
+
+[4-BRANCH TEST: Θ = {θ_U1, θ_Z2, θ_Z2+π, θ_TOWER}] (Operator mode: auto-flip enabled)
+  θ_U1    : UNSAT = 388478  φ_spread=1.8119  bimodal_raw=1.6  flipped=50.0%  soft=0.6450
+  θ_Z2    : UNSAT = 388587  φ_spread=1.8119  bimodal_raw=1.6  flipped=50.0%  soft=0.6450
+  θ_Z2+π  : UNSAT = 388579  φ_spread=1.8119  bimodal_raw=1.6  flipped=50.0%  soft=0.6450
+  θ_TOWER : UNSAT = 390182  φ_spread=1.8119  bimodal_raw=1.6  flipped=50.0%  soft=0.6450
+CLOSURE-REJOIN(masked): applied_frac=0.1609 spread_before=1.8119 spread_after=0.1153 neg_before=0.500 neg_after=0.000
+  → Vybrána větev θ_U1 s UNSAT = 388478
+
+[OPERATOR STRUCTURE - θ_U1]
+  Phase spread: 1.8119 rad  (concentration: 0.356)
+  Raw alignment: mean=+0.002  |mean|=0.637
+  Post auto-flip: mean=+0.637  |mean|=0.637
+  Fraction flipped: 50.0%
+  Bimodal signature (raw): ratio=1.56  edge=0.410
+  Soft reading: chance=0.6450  excess=0.157432  sign_mean=+0.002
+  Raw alignment histogram (before auto-flip):
+    -0.90: ████████████████████████████████████████ 0.205
+    -0.70: █████████████████ 0.090
+    -0.50: ██████████████ 0.074
+    -0.30: ███████████ 0.059
+    -0.10: ██████████████ 0.072
+    +0.10: ███████████ 0.058
+    +0.30: ██████████████ 0.073
+    +0.50: ██████████████ 0.074
+    +0.70: █████████████████ 0.090
+    +0.90: ███████████████████████████████████████ 0.205
+
+[BRANCH COMPARISON - Operator mode]
+  Branch    | Phase_spread | Bimodal_raw | Frac_flipped | Edge_mass
+  ----------|--------------|-------------|--------------|----------
+  θ_U1      |    1.8119    |       1.6  |      50.0%   |   0.410
+  θ_Z2      |    1.8119    |       1.6  |      50.0%   |   0.410
+  θ_Z2+π    |    1.8119    |       1.6  |      50.0%   |   0.410
+  θ_TOWER   |    1.8119    |       1.6  |      50.0%   |   0.410
+
+[POLISH] budget:8000000 report_every:100000
+[POLISH] step=0  unsat=337365/1994905  (16.9113%)  init
+[POLISH] step=100000  unsat=205837/1994905  (10.3181%)  clause
+[POLISH] heartbeat step=100001  current=205836  best=205836  move=clause
+[POLISH] step=200000  unsat=123936/1994905  (6.2126%)  clause
+[POLISH] heartbeat step=200001  current=123931  best=123846  move=clause
+[POLISH] step=300000  unsat=73798/1994905  (3.6993%)  clause
+[POLISH] heartbeat step=300001  current=73798  best=73725  move=clause
+[POLISH] step=400000  unsat=48937/1994905  (2.4531%)  clause
+[POLISH] heartbeat step=400001  current=48936  best=48783  move=clause
+[POLISH] step=500000  unsat=39797/1994905  (1.9949%)  clause
+[POLISH] heartbeat step=500001  current=39797  best=39198  move=clause
+[POLISH] heartbeat step=601046  current=34540  best=33993  move=clause
+[POLISH] step=700000  unsat=30954/1994905  (1.5517%)  clause
+[POLISH] heartbeat step=701046  current=30729  best=30437  move=clause
+[POLISH] step=800000  unsat=28536/1994905  (1.4304%)  clause
+[POLISH] heartbeat step=801046  current=28487  best=27908  move=clause
+[POLISH] step=900000  unsat=26243/1994905  (1.3155%)  clause
+[POLISH] heartbeat step=901046  current=26806  best=25968  move=clause
+[POLISH] step=1000000  unsat=24862/1994905  (1.2463%)  clause
+[POLISH] heartbeat step=1001046  current=24718  best=24322  move=clause
+[POLISH] step=1100000  unsat=23462/1994905  (1.1761%)  clause
+[POLISH] heartbeat step=1101046  current=23243  best=22684  move=clause
+[POLISH] step=1200000  unsat=21652/1994905  (1.0854%)  clause
+[POLISH] heartbeat step=1201046  current=21901  best=21345  move=clause
+[POLISH] heartbeat step=1301630  current=20913  best=20328  move=clause
+[POLISH] step=1400000  unsat=20291/1994905  (1.0171%)  clause
+[POLISH] heartbeat step=1401630  current=20170  best=19352  move=clause
+[POLISH] heartbeat step=1501630  current=19273  best=18498  move=clause
+[POLISH] step=1600000  unsat=18014/1994905  (0.9030%)  clause
+[POLISH] heartbeat step=1601630  current=18543  best=17685  move=clause
+[POLISH] step=1700000  unsat=17665/1994905  (0.8855%)  clause
+[POLISH] heartbeat step=1703287  current=17723  best=16986  move=clause
+[POLISH] step=1800000  unsat=17255/1994905  (0.8650%)  clause
+[POLISH] heartbeat step=1803287  current=16990  best=16413  move=clause
+[POLISH] step=1900000  unsat=16508/1994905  (0.8275%)  clause
+[POLISH] heartbeat step=1904469  current=16185  best=15736  move=clause
+[POLISH] step=2000000  unsat=15760/1994905  (0.7900%)  clause
+[POLISH] heartbeat step=2004469  current=15517  best=15185  move=clause
+[POLISH] step=2100000  unsat=15409/1994905  (0.7724%)  clause
+[POLISH] heartbeat step=2105729  current=15314  best=14573  move=clause
+[POLISH] step=2200000  unsat=14655/1994905  (0.7346%)  clause
+[POLISH] heartbeat step=2205729  current=14960  best=14137  move=clause
+[POLISH] step=2300000  unsat=14087/1994905  (0.7061%)  clause
+[POLISH] heartbeat step=2305729  current=14057  best=13583  move=clause
+[POLISH] step=2400000  unsat=13866/1994905  (0.6951%)  clause
+[POLISH] heartbeat step=2405729  current=14357  best=13090  move=clause
+[POLISH] step=2500000  unsat=13493/1994905  (0.6764%)  clause
+[POLISH] heartbeat step=2505729  current=13284  best=12874  move=clause
+[POLISH] step=2600000  unsat=13252/1994905  (0.6643%)  clause
+[POLISH] heartbeat step=2605919  current=13113  best=12454  move=clause
+[POLISH] step=2700000  unsat=12669/1994905  (0.6351%)  clause
+[POLISH] heartbeat step=2705919  current=12260  best=12010  move=clause
+[POLISH] heartbeat step=2807681  current=12324  best=11792  move=clause
+[POLISH] step=2900000  unsat=12124/1994905  (0.6077%)  clause
+[POLISH] heartbeat step=2907830  current=12149  best=11417  move=clause
+[POLISH] heartbeat step=3008162  current=11322  best=11113  move=clause
+[POLISH] step=3100000  unsat=11458/1994905  (0.5744%)  clause
+[POLISH] heartbeat step=3108162  current=11634  best=10825  move=clause
+[POLISH] heartbeat step=3208807  current=11456  best=10565  move=clause
+[POLISH] heartbeat step=3308807  current=10968  best=10308  move=clause
+[POLISH] step=3400000  unsat=11274/1994905  (0.5651%)  clause
+[POLISH] heartbeat step=3408807  current=10452  best=10011  move=clause
+[POLISH] step=3500000  unsat=10711/1994905  (0.5369%)  clause
+[POLISH] heartbeat step=3508807  current=10131  best=9873  move=clause
+[POLISH] heartbeat step=3608807  current=10244  best=9554  move=clause
+[POLISH] heartbeat step=3708807  current=9878  best=9426  move=clause
+[POLISH] step=3800000  unsat=10341/1994905  (0.5184%)  clause
+[POLISH] heartbeat step=3808807  current=9897  best=9189  move=clause
+[POLISH] step=3900000  unsat=9679/1994905  (0.4852%)  clause
+[POLISH] heartbeat step=3910773  current=9946  best=9018  move=clause
+[POLISH] heartbeat step=4010773  current=9070  best=8758  move=clause
+[POLISH] step=4100000  unsat=9525/1994905  (0.4775%)  clause
+[POLISH] heartbeat step=4110773  current=9512  best=8580  move=clause
+[POLISH] step=4200000  unsat=9220/1994905  (0.4622%)  clause
+[POLISH] heartbeat step=4210773  current=8958  best=8447  move=clause
+[POLISH] heartbeat step=4310773  current=8828  best=8230  move=clause
+[POLISH] step=4400000  unsat=8859/1994905  (0.4441%)  clause
+[POLISH] heartbeat step=4412500  current=8458  best=8047  move=clause
+[POLISH] step=4500000  unsat=8358/1994905  (0.4190%)  clause
+[POLISH] heartbeat step=4512500  current=8913  best=7848  move=clause
+[POLISH] step=4600000  unsat=8863/1994905  (0.4443%)  clause
+[POLISH] heartbeat step=4612500  current=8482  best=7721  move=clause
+[POLISH] step=4700000  unsat=8110/1994905  (0.4065%)  clause
+[POLISH] heartbeat step=4712950  current=8482  best=7529  move=clause
+[POLISH] step=4800000  unsat=7773/1994905  (0.3896%)  clause
+[POLISH] heartbeat step=4812950  current=8140  best=7479  move=clause
+[POLISH] step=4900000  unsat=8400/1994905  (0.4211%)  clause
+[POLISH] heartbeat step=4912950  current=7664  best=7324  move=clause
+[POLISH] step=5000000  unsat=8228/1994905  (0.4125%)  clause
+[POLISH] heartbeat step=5012950  current=8350  best=7205  move=clause
+[POLISH] step=5100000  unsat=7455/1994905  (0.3737%)  clause
+[POLISH] heartbeat step=5113933  current=8128  best=7091  move=clause
+[POLISH] heartbeat step=5215738  current=7823  best=6901  move=clause
+[POLISH] heartbeat step=5315738  current=7712  best=6854  move=clause
+[POLISH] step=5400000  unsat=7087/1994905  (0.3553%)  clause
+[POLISH] heartbeat step=5415738  current=7418  best=6702  move=clause
+[POLISH] step=5500000  unsat=7379/1994905  (0.3699%)  clause
+[POLISH] heartbeat step=5515738  current=7633  best=6659  move=clause
+[POLISH] step=5600000  unsat=7154/1994905  (0.3586%)  clause
+[POLISH] heartbeat step=5617059  current=7427  best=6551  move=clause
+[POLISH] heartbeat step=5717059  current=6444  best=6401  move=clause
+[POLISH] heartbeat step=5817059  current=6737  best=6335  move=clause
+[POLISH] step=5900000  unsat=7599/1994905  (0.3809%)  clause
+[POLISH] heartbeat step=5917592  current=7132  best=6224  move=clause
+[POLISH] step=6000000  unsat=6878/1994905  (0.3448%)  clause
+[POLISH] heartbeat step=6017592  current=7153  best=6222  move=clause
+[POLISH] step=6100000  unsat=7025/1994905  (0.3521%)  clause
+[POLISH] heartbeat step=6118604  current=7003  best=6149  move=clause
+[POLISH] heartbeat step=6218604  current=6401  best=6064  move=clause
+[POLISH] step=6300000  unsat=6733/1994905  (0.3375%)  clause
+[POLISH] heartbeat step=6318604  current=6925  best=5983  move=clause
+[POLISH] step=6400000  unsat=6669/1994905  (0.3343%)  clause
+[POLISH] heartbeat step=6418604  current=6688  best=5878  move=clause
+[POLISH] step=6500000  unsat=6399/1994905  (0.3208%)  clause
+[POLISH] heartbeat step=6518604  current=6575  best=5800  move=clause
+[POLISH] step=6600000  unsat=6654/1994905  (0.3335%)  clause
+[POLISH] heartbeat step=6618604  current=6422  best=5800  move=clause
+[POLISH] heartbeat step=6718604  current=6039  best=5657  move=clause
+[POLISH] step=6800000  unsat=6026/1994905  (0.3021%)  clause
+[POLISH] heartbeat step=6819987  current=6330  best=5605  move=clause
+[POLISH] heartbeat step=6919987  current=6014  best=5565  move=clause
+[POLISH] heartbeat step=7021752  current=6150  best=5499  move=clause
+[POLISH] step=7100000  unsat=6505/1994905  (0.3261%)  clause
+[POLISH] heartbeat step=7121752  current=6461  best=5447  move=clause
+[POLISH] step=7200000  unsat=5570/1994905  (0.2792%)  clause
+[POLISH] heartbeat step=7221752  current=6041  best=5431  move=clause
+[POLISH] step=7300000  unsat=5976/1994905  (0.2996%)  clause
+[POLISH] heartbeat step=7321752  current=6411  best=5425  move=clause
+[POLISH] step=7400000  unsat=6664/1994905  (0.3341%)  clause
+[POLISH] heartbeat step=7423521  current=6299  best=5419  move=clause
+[POLISH] heartbeat step=7523521  current=6670  best=5418  move=clause
+[POLISH] step=7600000  unsat=6267/1994905  (0.3142%)  clause
+[POLISH] heartbeat step=7623521  current=6523  best=5396  move=clause
+[POLISH] step=7700000  unsat=6749/1994905  (0.3383%)  clause
+[POLISH] heartbeat step=7723521  current=6410  best=5393  move=clause
+[POLISH] step=7800000  unsat=6190/1994905  (0.3103%)  clause
+[POLISH] heartbeat step=7825279  current=6290  best=5392  move=clause
+[POLISH] step=7900000  unsat=6083/1994905  (0.3049%)  clause
+[POLISH] heartbeat step=7925279  current=5951  best=5392  move=clause
+[POLISH] step=8000000  unsat=5890/1994905  (0.2953%)  clause
+[POLISH] done steps=8000000 current=5890 best=5392
+
+[POLISH] unsat_clauses  : 5392 / 1994905  (0.27%)
+
+[KISSAT] bridge    : repair_kernel_lock
+[KISSAT] semantics : y_v=true == keep DREAM6/POLISH seed bit
+[KISSAT] seed_unsat: 5392 / 1994905
+[KISSAT] lock      : locked=122137 free=1153494 radius=22 max_free_frac=1.000
+[KISSAT] runner    : subprocess.run / windows-safe / bounded timeout
+[KISSAT] input_cnf : C:\Users\Jencek\AppData\Local\Temp\dream6_kissat_repair_xcw_1vrf\repair_locked.cnf
+[KISSAT] cmd       : 'C:\msys\home\Jencek\kissat\build\kissat.exe' --target=2 'C:\Users\Jencek\AppData\Local\Temp\dream6_kissat_repair_xcw_1vrf\repair_locked.cnf'
+[KISSAT] status     : SATISFIABLE  rc=10  time=424.909s
+[KISSAT] stdout_tail:
+v -1275543 -1275544 1275545 -1275546 -1275547 -1275548 -1275549 -1275550
+v -1275551 -1275552 -1275553 -1275554 -1275555 1275556 1275557 -1275558
+v 1275559 1275560 1275561 -1275562 -1275563 1275564 1275565 -1275566 -1275567
+v -1275568 -1275569 -1275570 1275571 1275572 1275573 1275574 1275575 1275576
+v 1275577 1275578 1275579 -1275580 1275581 1275582 1275583 1275584 1275585
+v 1275586 1275587 -1275588 1275589 1275590 1275591 1275592 1275593 1275594
+v 1275595 1275596 1275597 1275598 1275599 1275600 1275601 1275602 1275603
+v -1275604 1275605 1275606 1275607 1275608 1275609 1275610 1275611 1275612
+v 1275613 1275614 1275615 1275616 1275617 1275618 1275619 1275620 1275621
+v -1275622 1275623 1275624 1275625 1275626 1275627 1275628 1275629 1275630
+v 1275631 0
+c
+c ---- [ profiling ] ---------------------------------------------------------
+c
+c         286.31   69.74 %  search
+c         153.05   37.28 %  focused
+c         133.26   32.46 %  stable
+c         122.35   29.80 %  simplify
+c          84.64   20.62 %  probe
+c          49.42   12.04 %  vivify
+c          36.35    8.85 %  eliminate
+c          10.39    2.53 %  sweep
+c           8.55    2.08 %  substitute
+c           7.08    1.72 %  factor
+c           4.83    1.18 %  subsume
+c           4.00    0.97 %  backbone
+c           2.67    0.65 %  transitive
+c           2.56    0.62 %  reduce
+c           2.51    0.61 %  congruence
+c           2.03    0.50 %  walking
+c           0.77    0.19 %  preprocess
+c           0.33    0.08 %  parse
+c           0.14    0.03 %  lucky
+c           0.03    0.01 %  extend
+c =============================================
+c         410.53  100.00 %  total
+c
+c ---- [ statistics ] --------------------------------------------------------
+c
+c chronological:                        12355                2 %  conflicts
+c conflicts:                           754860             1838.67 per second
+c congruent:                            92302                7 %  variables
+c decisions:                         11802781               15.64 per conflict
+c eliminated:                          808852               63 %  variables
+c factored:                              2015                0 %  variables
+c iterations:                             224                0 %  variables
+c propagations:                    6498249616         15828311    per second
+c reductions:                             109             6925    interval
+c reordered:                               12            62905    interval
+c rephased:                                22            34312    interval
+c restarts:                             41184               18    interval
+c strengthened:                        301022                0 %  checks
+c substituted:                          93076                7 %  variables
+c subsumed:                            171435                0 %  checks
+c switched:                                31            24350    interval
+c vivified:                            245156               18 %  checks
+c walks:                                    7           107837    interval
+c
+c ---- [ glue usage ] --------------------------------------------------------
+c
+c focused glue 2 used 480474 clauses 21.65% accumulated 67.45% tier1
+c focused glue 3 used 227743 clauses 10.26% accumulated 77.72%
+c focused glue 4 used 132219 clauses  5.96% accumulated 83.68%
+c focused glue 5 used  87010 clauses  3.92% accumulated 87.60%
+c focused glue 6 used  62689 clauses  2.83% accumulated 90.42% tier2
+c
+c stable glue 2    used 684534 clauses 18.51% accumulated 55.31% tier1
+c stable glue 3    used 356099 clauses  9.63% accumulated 64.94%
+c stable glue 4-12 used 893555 clauses 24.16% accumulated 89.11%
+c stable glue 13   used  32758 clauses  0.89% accumulated 90.00%
+c stable glue 14   used  26819 clauses  0.73% accumulated 90.72% tier2
+c
+c ---- [ resources ] ---------------------------------------------------------
+c
+c maximum-resident-set-size:        226459648 bytes        216 MB
+c process-time:                         6m 51s             410.53 seconds
+c
+c ---- [ shutting down ] -----------------------------------------------------
+c
+c exit 10
+[KISSAT] model_found: True
+[KISSAT] final_unsat: 0 / 1994905
+  Horizon trace: last_positive_eps=0.1  chance=0.679915  excess=0.165964
+
+[STARSEED] Symmetry=0.999999  raw_mean=+2.176e-03  bimodal=1.56
+          STATUS: [STABILIZED]
+          SONG_INDEX: 0.107160
+
+Witness: {'assign_sha256': '4672b45714c43bc8cdc2bdfa636e61a3003ddbac4164ec0d9304f7235233096c', 'unsat': 0, 'unsat_frac': 0.0, 'branch_selected': 'θ_U1', 'branch_theta': 2.4186000143928292, 'theta_U1': 2.4186000143928292, 'theta_Z2': -0.7115712474020437, 'tower_x': 0.75, 'theta_TOWER': 4.71238898038469, 'operator_diag': {'eta_mean': -1.411148373266226, 'eta_std': 0.04402586130972882, 'eta_range': 0.21178150519971473, 'eta_eff_mean': -0.8896889844853012, 'eta_eff_std': 0.42626132859202553, 'grad_variance': 0.00437347711011791, 'grad_max': 0.18017157757674562, 'align_raw_mean': 0.0021762498447527906, 'align_raw_std': 0.7071277325528562, 'align_raw_abs_mean': 0.6366088523913878, 'align_post_mean': 0.636608852391388, 'align_post_std': 0.30783686469565474, 'align_post_abs_mean': 0.636608852391388, 'bimodal_ratio_raw': 1.5637322428515532, 'edge_mass_raw': 0.4096656231750384, 'center_mass_raw': 0.2619793925023999, 'hist_raw': [0.20483331286452236, 0.09033362490945684, 0.07384311533631928, 0.059138655725460613, 0.07185154180274249, 0.05783032274719849, 0.07315887222699828, 0.07384311533631928, 0.09033512874046634, 0.20483231031051605], 'hist_post': [0.0, 0.0, 0.0, 0.0, 0.0, 0.12968186454994096, 0.1322975279524589, 0.14768623067263856, 0.18066875364992319, 0.4096656231750384], 'bins': [-1.0, -0.8, -0.6, -0.3999999999999999, -0.19999999999999996, 0.0, 0.20000000000000018, 0.40000000000000013, 0.6000000000000001, 0.8, 1.0], 'phase_spread': 1.8118935311191267, 'phase_concentration': 0.3556322417378308, 'frac_flipped': 0.5000002506385016, 'frac_coaligned_raw': 0.49999974936149844, 'soft_reading_raw': {'epsilon': 1e-06, 'sign_mean': 0.002176250417098707, 'sign_abs_mean': 0.6366088518216768, 'readable_mean': 0.15743221031453808, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.15743196621937616, 'chance': 0.6449614363044747, 'readable_nonzero_frac': 1.0, 'pass': True}, 'soft_reading_hammered': {'epsilon': 1e-06, 'sign_mean': 0.0021762498447527906, 'sign_abs_mean': 0.6366088523913878, 'readable_mean': 0.1574327318740012, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.15743248777883928, 'chance': 0.6449635730099261, 'readable_nonzero_frac': 1.0, 'pass': True}, 'soft_reading': {'epsilon': 1e-06, 'sign_mean': 0.0021762498447527906, 'sign_abs_mean': 0.6366088523913878, 'readable_mean': 0.1574327318740012, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.15743248777883928, 'chance': 0.6449635730099261, 'readable_nonzero_frac': 1.0, 'pass': True, 'gauss_hammer': {'enabled': True, 'sigma': 1.5, 'alpha': 0.12, 'selected': 'hammered'}}, 'unsat': 388478}, 'operator_diag_all': {'θ_U1': {'eta_mean': -1.411148373266226, 'eta_std': 0.04402586130972882, 'eta_range': 0.21178150519971473, 'eta_eff_mean': -0.8896889844853012, 'eta_eff_std': 0.42626132859202553, 'grad_variance': 0.00437347711011791, 'grad_max': 0.18017157757674562, 'align_raw_mean': 0.0021762498447527906, 'align_raw_std': 0.7071277325528562, 'align_raw_abs_mean': 0.6366088523913878, 'align_post_mean': 0.636608852391388, 'align_post_std': 0.30783686469565474, 'align_post_abs_mean': 0.636608852391388, 'bimodal_ratio_raw': 1.5637322428515532, 'edge_mass_raw': 0.4096656231750384, 'center_mass_raw': 0.2619793925023999, 'hist_raw': [0.20483331286452236, 0.09033362490945684, 0.07384311533631928, 0.059138655725460613, 0.07185154180274249, 0.05783032274719849, 0.07315887222699828, 0.07384311533631928, 0.09033512874046634, 0.20483231031051605], 'hist_post': [0.0, 0.0, 0.0, 0.0, 0.0, 0.12968186454994096, 0.1322975279524589, 0.14768623067263856, 0.18066875364992319, 0.4096656231750384], 'bins': [-1.0, -0.8, -0.6, -0.3999999999999999, -0.19999999999999996, 0.0, 0.20000000000000018, 0.40000000000000013, 0.6000000000000001, 0.8, 1.0], 'phase_spread': 1.8118935311191267, 'phase_concentration': 0.3556322417378308, 'frac_flipped': 0.5000002506385016, 'frac_coaligned_raw': 0.49999974936149844, 'soft_reading_raw': {'epsilon': 1e-06, 'sign_mean': 0.002176250417098707, 'sign_abs_mean': 0.6366088518216768, 'readable_mean': 0.15743221031453808, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.15743196621937616, 'chance': 0.6449614363044747, 'readable_nonzero_frac': 1.0, 'pass': True}, 'soft_reading_hammered': {'epsilon': 1e-06, 'sign_mean': 0.0021762498447527906, 'sign_abs_mean': 0.6366088523913878, 'readable_mean': 0.1574327318740012, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.15743248777883928, 'chance': 0.6449635730099261, 'readable_nonzero_frac': 1.0, 'pass': True}, 'soft_reading': {'epsilon': 1e-06, 'sign_mean': 0.0021762498447527906, 'sign_abs_mean': 0.6366088523913878, 'readable_mean': 0.1574327318740012, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.15743248777883928, 'chance': 0.6449635730099261, 'readable_nonzero_frac': 1.0, 'pass': True, 'gauss_hammer': {'enabled': True, 'sigma': 1.5, 'alpha': 0.12, 'selected': 'hammered'}}, 'unsat': 388478}, 'θ_Z2': {'eta_mean': -1.4111482670784083, 'eta_std': 0.04402565427545977, 'eta_range': 0.21179498351597026, 'eta_eff_mean': -0.8896889758747232, 'eta_eff_std': 0.4262613253507032, 'grad_variance': 0.0043734267566398685, 'grad_max': 0.180488366152169, 'align_raw_mean': 0.0021742750977423735, 'align_raw_std': 0.7071277383110351, 'align_raw_abs_mean': 0.6366088581722279, 'align_post_mean': 0.6366088581722279, 'align_post_std': 0.3078368520137455, 'align_post_abs_mean': 0.6366088581722279, 'bimodal_ratio_raw': 1.5637235105248544, 'edge_mass_raw': 0.4096641193440289, 'center_mass_raw': 0.261979893779403, 'hist_raw': [0.20483231031051605, 0.09033512874046634, 0.07384311533631928, 0.05914015955647011, 0.07185003797173299, 0.05783282913221432, 0.07315686711898561, 0.07384311533631928, 0.09033462746346317, 0.20483180903351286], 'hist_post': [0.0, 0.0, 0.0, 0.0, 0.0, 0.1296828671039473, 0.13229702667545573, 0.14768623067263856, 0.1806697562039295, 0.4096641193440289], 'bins': [-1.0, -0.8, -0.6, -0.3999999999999999, -0.19999999999999996, 0.0, 0.20000000000000018, 0.40000000000000013, 0.6000000000000001, 0.8, 1.0], 'phase_spread': 1.8118956427866924, 'phase_concentration': 0.3556319746663725, 'frac_flipped': 0.5000007519155047, 'frac_coaligned_raw': 0.49999924808449525, 'soft_reading_raw': {'epsilon': 1e-06, 'sign_mean': 0.0021742756902586057, 'sign_abs_mean': 0.6366088575815241, 'readable_mean': 0.15743220661073734, 'baseline_pi0': 2.4409518572099013e-07, 'excess': 0.1574319625155516, 'chance': 0.6449613582090767, 'readable_nonzero_frac': 0.9999994987229969, 'pass': True}, 'soft_reading_hammered': {'epsilon': 1e-06, 'sign_mean': 0.0021742750977423735, 'sign_abs_mean': 0.6366088581722279, 'readable_mean': 0.15743272520963603, 'baseline_pi0': 2.440951857209902e-07, 'excess': 0.1574324811144503, 'chance': 0.6449634827855902, 'readable_nonzero_frac': 0.9999994987229969, 'pass': True}, 'soft_reading': {'epsilon': 1e-06, 'sign_mean': 0.0021742750977423735, 'sign_abs_mean': 0.6366088581722279, 'readable_mean': 0.15743272520963603, 'baseline_pi0': 2.440951857209902e-07, 'excess': 0.1574324811144503, 'chance': 0.6449634827855902, 'readable_nonzero_frac': 0.9999994987229969, 'pass': True, 'gauss_hammer': {'enabled': True, 'sigma': 1.5, 'alpha': 0.12, 'selected': 'hammered'}}, 'unsat': 388587}, 'θ_Z2+π': {'eta_mean': -1.4111482842717322, 'eta_std': 0.044025589332038546, 'eta_range': 0.21181026890046706, 'eta_eff_mean': -0.8896889126198421, 'eta_eff_std': 0.4262614236828657, 'grad_variance': 0.004373471057086715, 'grad_max': 0.1803442218250928, 'align_raw_mean': 0.002176225589907005, 'align_raw_std': 0.7071277142272133, 'align_raw_abs_mean': 0.6366088063735106, 'align_post_mean': 0.6366088063735106, 'align_post_std': 0.30783691759390364, 'align_post_abs_mean': 0.6366088063735106, 'bimodal_ratio_raw': 1.5637235105248541, 'edge_mass_raw': 0.4096641193440289, 'center_mass_raw': 0.26197989377940306, 'hist_raw': [0.20483180903351286, 0.09033462746346317, 0.07384311533631928, 0.05913915700246378, 0.07185053924873616, 0.05783282913221432, 0.07315736839598878, 0.07384311533631928, 0.09033512874046634, 0.20483231031051605], 'hist_post': [0.0, 0.0, 0.0, 0.0, 0.0, 0.12968336838095046, 0.13229652539845255, 0.14768623067263856, 0.1806697562039295, 0.4096641193440289], 'bins': [-1.0, -0.8, -0.6, -0.3999999999999999, -0.19999999999999996, 0.0, 0.20000000000000018, 0.40000000000000013, 0.6000000000000001, 0.8, 1.0], 'phase_spread': 1.8118935453114922, 'phase_concentration': 0.35563223994286147, 'frac_flipped': 0.49999924808449525, 'frac_coaligned_raw': 0.5000007519155047, 'soft_reading_raw': {'epsilon': 1e-06, 'sign_mean': 0.0021762261916442867, 'sign_abs_mean': 0.6366088057703905, 'readable_mean': 0.15743218771228065, 'baseline_pi0': 2.440951809424857e-07, 'excess': 0.15743194361709972, 'chance': 0.6449612934126269, 'readable_nonzero_frac': 0.9999989974459936, 'pass': True}, 'soft_reading_hammered': {'epsilon': 1e-06, 'sign_mean': 0.002176225589907005, 'sign_abs_mean': 0.6366088063735106, 'readable_mean': 0.15743271026014263, 'baseline_pi0': 2.440951809424857e-07, 'excess': 0.1574324661649617, 'chance': 0.6449634341671471, 'readable_nonzero_frac': 0.9999989974459936, 'pass': True}, 'soft_reading': {'epsilon': 1e-06, 'sign_mean': 0.002176225589907005, 'sign_abs_mean': 0.6366088063735106, 'readable_mean': 0.15743271026014263, 'baseline_pi0': 2.440951809424857e-07, 'excess': 0.1574324661649617, 'chance': 0.6449634341671471, 'readable_nonzero_frac': 0.9999989974459936, 'pass': True, 'gauss_hammer': {'enabled': True, 'sigma': 1.5, 'alpha': 0.12, 'selected': 'hammered'}}, 'unsat': 388579}, 'θ_TOWER': {'eta_mean': -1.411148290835657, 'eta_std': 0.04402569080158572, 'eta_range': 0.2117588323348345, 'eta_eff_mean': -0.8896883422635767, 'eta_eff_std': 0.4262620096945663, 'grad_variance': 0.004373567032001081, 'grad_max': 0.18040268819707972, 'align_raw_mean': 0.002174620757330797, 'align_raw_std': 0.7071275418186012, 'align_raw_abs_mean': 0.6366083996388052, 'align_post_mean': 0.6366083996388052, 'align_post_std': 0.30783735134511364, 'align_post_abs_mean': 0.6366083996388052, 'bimodal_ratio_raw': 1.5637281721308374, 'edge_mass_raw': 0.40966612445204154, 'center_mass_raw': 0.2619803950564062, 'hist_raw': [0.20483481669553186, 0.0903326223554505, 0.07384211278231294, 0.05913915700246378, 0.07185154180274249, 0.05783333040921748, 0.07315636584198246, 0.0738441178903256, 0.09033462746346317, 0.2048313077565097], 'hist_post': [0.0, 0.0, 0.0, 0.0, 0.0, 0.12968487221195996, 0.13229552284444623, 0.14768623067263856, 0.1806672498189137, 0.4096661244520416], 'bins': [-1.0, -0.8, -0.6, -0.3999999999999999, -0.19999999999999996, 0.0, 0.20000000000000018, 0.40000000000000013, 0.6000000000000001, 0.8, 1.0], 'phase_spread': 1.8118951619590555, 'phase_concentration': 0.3556320354786261, 'frac_flipped': 0.5000002506385016, 'frac_coaligned_raw': 0.49999974936149844, 'soft_reading_raw': {'epsilon': 1e-06, 'sign_mean': 0.0021746213651845387, 'sign_abs_mean': 0.636608399029298, 'readable_mean': 0.1574316014286359, 'baseline_pi0': 2.440951803488672e-07, 'excess': 0.15743135733345556, 'chance': 0.6449588931162245, 'readable_nonzero_frac': 0.9999994987229969, 'pass': True}, 'soft_reading_hammered': {'epsilon': 1e-06, 'sign_mean': 0.002174620757330797, 'sign_abs_mean': 0.6366083996388052, 'readable_mean': 0.15743212299355855, 'baseline_pi0': 2.440951803488672e-07, 'excess': 0.1574318788983782, 'chance': 0.6449610298438809, 'readable_nonzero_frac': 0.9999994987229969, 'pass': True}, 'soft_reading': {'epsilon': 1e-06, 'sign_mean': 0.002174620757330797, 'sign_abs_mean': 0.6366083996388052, 'readable_mean': 0.15743212299355855, 'baseline_pi0': 2.440951803488672e-07, 'excess': 0.1574318788983782, 'chance': 0.6449610298438809, 'readable_nonzero_frac': 0.9999994987229969, 'pass': True, 'gauss_hammer': {'enabled': True, 'sigma': 1.5, 'alpha': 0.12, 'selected': 'hammered'}}, 'unsat': 390182}}, 'soft_reading': {'epsilon': 1e-06, 'sign_mean': 0.15970570550321656, 'sign_abs_mean': 0.7761094626289833, 'readable_mean': 0.1885801773741519, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.18857993327898998, 'chance': 0.7725672717339789, 'readable_nonzero_frac': 1.0, 'pass': True, 'gauss_hammer': {'enabled': True, 'sigma': 1.5, 'alpha': 0.12, 'selected': 'hammered'}}, 'soft_reading_raw': {'epsilon': 1e-06, 'sign_mean': 0.002176250417098707, 'sign_abs_mean': 0.6366088518216768, 'readable_mean': 0.15743221031453808, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.15743196621937616, 'chance': 0.6449614363044747, 'readable_nonzero_frac': 1.0, 'pass': True}, 'soft_reading_hammered': {'epsilon': 1e-06, 'sign_mean': 0.15970570550321656, 'sign_abs_mean': 0.7761094626289833, 'readable_mean': 0.1885801773741519, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.18857993327898998, 'chance': 0.7725672717339789, 'readable_nonzero_frac': 1.0, 'pass': True}, 'soft_reading_horizon': {'trace': [{'epsilon': 1e-07, 'readable_mean': 0.1885801773739727, 'baseline_pi0': 2.4409516190733985e-08, 'excess': 0.18858015296445652, 'chance': 0.7725681717332449, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.2451970847350318e-07, 'readable_mean': 0.18858017737397367, 'baseline_pi0': 3.0394658400494514e-08, 'excess': 0.18858014697931527, 'chance': 0.7725681472135404, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.5505157798326253e-07, 'readable_mean': 0.18858017737397523, 'baseline_pi0': 3.7847340031813e-08, 'excess': 0.1885801395266352, 'chance': 0.7725681166816771, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.9306977288832497e-07, 'readable_mean': 0.18858017737397761, 'baseline_pi0': 4.7127397472589016e-08, 'excess': 0.18858013024658013, 'chance': 0.7725680786634921, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 2.404099183509974e-07, 'readable_mean': 0.18858017737398133, 'baseline_pi0': 5.868289794401707e-08, 'excess': 0.18858011869108338, 'chance': 0.7725680313233618, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 2.9935772947204905e-07, 'readable_mean': 0.18858017737398708, 'baseline_pi0': 7.307177344369345e-08, 'excess': 0.18858010430221364, 'chance': 0.7725679723755743, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 3.727593720314938e-07, 'readable_mean': 0.18858017737399604, 'baseline_pi0': 9.098875926850581e-08, 'excess': 0.18858008638523677, 'chance': 0.7725678989739684, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 4.641588833612782e-07, 'readable_mean': 0.18858017737400987, 'baseline_pi0': 1.1329893778480128e-07, 'excess': 0.18858006407507208, 'chance': 0.7725678075745137, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 5.779692884153313e-07, 'readable_mean': 0.18858017737403135, 'baseline_pi0': 1.4107950703321028e-07, 'excess': 0.18858003629452433, 'chance': 0.7725676937641968, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 7.196856730011514e-07, 'readable_mean': 0.18858017737406466, 'baseline_pi0': 1.756717908736089e-07, 'excess': 0.1885800017022738, 'chance': 0.7725675520479486, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 8.96150501946605e-07, 'readable_mean': 0.18858017737411625, 'baseline_pi0': 2.1874600186600042e-07, 'excess': 0.18857995862811439, 'chance': 0.772567375583331, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.1158839925077481e-06, 'readable_mean': 0.1885801773741963, 'baseline_pi0': 2.723818838209876e-07, 'excess': 0.18857990499231247, 'chance': 0.7725671558501683, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.389495494373136e-06, 'readable_mean': 0.1885801773743204, 'baseline_pi0': 3.3916912766852985e-07, 'excess': 0.18857983820519272, 'chance': 0.7725668822391749, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.7301957388458943e-06, 'readable_mean': 0.1885801773745128, 'baseline_pi0': 4.2233240900497807e-07, 'excess': 0.18857975504210378, 'chance': 0.7725665415397186, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 2.1544346900318822e-06, 'readable_mean': 0.18858017737481114, 'baseline_pi0': 5.258870844821218e-07, 'excess': 0.18857965148772665, 'chance': 0.7725661173019897, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 2.6826957952797274e-06, 'readable_mean': 0.18858017737527374, 'baseline_pi0': 6.548330644969449e-07, 'excess': 0.18857952254220925, 'chance': 0.7725655890427796, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 3.3404849835132442e-06, 'readable_mean': 0.188580177375991, 'baseline_pi0': 8.153962228997028e-07, 'excess': 0.1885793619797681, 'chance': 0.7725649312565298, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 4.159562163071843e-06, 'readable_mean': 0.18858017737710314, 'baseline_pi0': 1.0153289996586663e-06, 'excess': 0.1885791620481035, 'chance': 0.7725641121839065, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 5.179474679231212e-06, 'readable_mean': 0.18858017737882743, 'baseline_pi0': 1.26428471042191e-06, 'excess': 0.188578913094117, 'chance': 0.7725630922784543, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 6.449466771037621e-06, 'readable_mean': 0.1885801773815011, 'baseline_pi0': 1.5742836356924362e-06, 'excess': 0.1885786030978654, 'chance': 0.7725618222973158, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 8.030857221391521e-06, 'readable_mean': 0.1885801773856466, 'baseline_pi0': 1.9602933937102928e-06, 'excess': 0.1885782170922529, 'chance': 0.7725602409238487, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1e-05, 'readable_mean': 0.18858017739207428, 'baseline_pi0': 2.4409516190733987e-06, 'excess': 0.1885777364404552, 'chance': 0.7725582718074028, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.2451970847350319e-05, 'readable_mean': 0.18858017740204047, 'baseline_pi0': 3.039465840049452e-06, 'excess': 0.18857713793620043, 'chance': 0.7725558198773845, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.5505157798326223e-05, 'readable_mean': 0.18858017741749328, 'baseline_pi0': 3.7847340031812923e-06, 'excess': 0.1885763926834901, 'chance': 0.7725527667537401, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 1.9306977288832496e-05, 'readable_mean': 0.18858017744145303, 'baseline_pi0': 4.712739747258902e-06, 'excess': 0.18857546470170578, 'chance': 0.772548965032407, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 2.404099183509974e-05, 'readable_mean': 0.18858017747860303, 'baseline_pi0': 5.8682897944017065e-06, 'excess': 0.18857430918880863, 'chance': 0.7725442311700556, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 2.9935772947204902e-05, 'readable_mean': 0.1885801775362047, 'baseline_pi0': 7.3071773443693446e-06, 'excess': 0.18857287035886033, 'chance': 0.7725383366249238, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 3.727593720314938e-05, 'readable_mean': 0.18858017762551693, 'baseline_pi0': 9.098875926850582e-06, 'excess': 0.1885710787495901, 'chance': 0.7725309968265589, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 4.641588833612772e-05, 'readable_mean': 0.188580177763997, 'baseline_pi0': 1.1329893778480103e-05, 'excess': 0.18856884787021852, 'chance': 0.772521857442746, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 5.7796928841533134e-05, 'readable_mean': 0.18858017797871254, 'baseline_pi0': 1.410795070332103e-05, 'excess': 0.1885660700280092, 'chance': 0.7725104772818793, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 7.196856730011514e-05, 'readable_mean': 0.18858017831163235, 'baseline_pi0': 1.756717908736089e-05, 'excess': 0.188562611132545, 'chance': 0.7724963070073143, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 8.96150501946605e-05, 'readable_mean': 0.1885801788278298, 'baseline_pi0': 2.1874600186600043e-05, 'excess': 0.1885583042276432, 'chance': 0.7724786626391583, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.0001115883992507748, 'readable_mean': 0.18858017962820206, 'baseline_pi0': 2.7238188382098758e-05, 'excess': 0.18855294143981996, 'chance': 0.7724566925690377, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.00013894954943731373, 'readable_mean': 0.18858018086919184, 'baseline_pi0': 3.391691276685302e-05, 'excess': 0.188546263956425, 'chance': 0.7724293365028921, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.00017301957388458943, 'readable_mean': 0.1885801827933661, 'baseline_pi0': 4.2233240900497806e-05, 'excess': 0.1885379495524656, 'chance': 0.7723952743613307, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.00021544346900318823, 'readable_mean': 0.18858018577682856, 'baseline_pi0': 5.258870844821218e-05, 'excess': 0.18852759706838035, 'chance': 0.7723528626887506, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.00026826957952797245, 'readable_mean': 0.188580190402734, 'baseline_pi0': 6.548330644969442e-05, 'excess': 0.1885147070962843, 'chance': 0.7723000555294637, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.00033404849835132444, 'readable_mean': 0.1885801975752729, 'baseline_pi0': 8.153962228997029e-05, 'excess': 0.18849865795298293, 'chance': 0.7722343059948318, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.0004159562163071843, 'readable_mean': 0.1885802086964065, 'baseline_pi0': 0.00010153289996586662, 'excess': 0.18847867579644062, 'chance': 0.7721524438375236, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.0005179474679231208, 'readable_mean': 0.18858022593989704, 'baseline_pi0': 0.00012642847104219087, 'excess': 0.18845379746885485, 'chance': 0.7720505232284002, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.000644946677103762, 'readable_mean': 0.18858025267619483, 'baseline_pi0': 0.00015742836356924362, 'excess': 0.18842282431262558, 'chance': 0.7719236335514926, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.0008030857221391513, 'readable_mean': 0.1885802941312311, 'baseline_pi0': 0.00019602933937102907, 'excess': 0.18838426479186007, 'chance': 0.7717656643379119, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.001, 'readable_mean': 0.18858035840788212, 'baseline_pi0': 0.00024409516190733986, 'excess': 0.18833626324597477, 'chance': 0.7715690133862502, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.001245197084735032, 'readable_mean': 0.1885804580697551, 'baseline_pi0': 0.0003039465840049452, 'excess': 0.18827651148575014, 'chance': 0.7713242245925785, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.0015505157798326222, 'readable_mean': 0.18858061259684863, 'baseline_pi0': 0.0003784734003181292, 'excess': 0.1882021391965305, 'chance': 0.771019538958344, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.0019306977288832496, 'readable_mean': 0.18858085219303303, 'baseline_pi0': 0.00047127397472589014, 'excess': 0.18810957821830715, 'chance': 0.7706403385780508, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.002404099183509969, 'readable_mean': 0.18858122368946564, 'baseline_pi0': 0.0005868289794401694, 'excess': 0.18799439471002546, 'chance': 0.7701684590562234, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.0029935772947204905, 'readable_mean': 0.1885817996975845, 'baseline_pi0': 0.0007307177344369345, 'excess': 0.18785108196314756, 'chance': 0.7695813407136988, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.003727593720314938, 'readable_mean': 0.18858269280014134, 'baseline_pi0': 0.000909887592685058, 'excess': 0.18767280520745627, 'chance': 0.7688509831175158, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.004641588833612773, 'readable_mean': 0.18858407755263062, 'baseline_pi0': 0.0011329893778480105, 'excess': 0.18745108817478262, 'chance': 0.7679426610068263, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.005779692884153313, 'readable_mean': 0.18858622459206678, 'baseline_pi0': 0.001410795070332103, 'excess': 0.1871754295217347, 'chance': 0.7668133528677676, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.007196856730011514, 'readable_mean': 0.18858955351167894, 'baseline_pi0': 0.0017567179087360889, 'excess': 0.18683283560294286, 'chance': 0.7654098268162334, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.00896150501946605, 'readable_mean': 0.18859471481632267, 'baseline_pi0': 0.002187460018660004, 'excess': 0.18640725479766268, 'chance': 0.7636663231680948, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.01115883992507748, 'readable_mean': 0.18860271692925407, 'baseline_pi0': 0.0027238188382098755, 'excess': 0.1858788980910442, 'chance': 0.7615017710217605, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.01389495494373136, 'readable_mean': 0.18861512295875157, 'baseline_pi0': 0.0033916912766852984, 'excess': 0.1852234316820663, 'chance': 0.758816480564328, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.017301957388458945, 'readable_mean': 0.1886343554054772, 'baseline_pi0': 0.0042233240900497815, 'excess': 0.18441103131542744, 'chance': 0.7554882688935703, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.021544346900318822, 'readable_mean': 0.18866416769966168, 'baseline_pi0': 0.005258870844821218, 'excess': 0.18340529685484047, 'chance': 0.7513680132820943, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.026826957952797218, 'readable_mean': 0.18871037313468317, 'baseline_pi0': 0.006548330644969435, 'excess': 0.18216204248971374, 'chance': 0.746274694940973, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.03340484983513244, 'readable_mean': 0.1887819698595804, 'baseline_pi0': 0.008153962228997029, 'excess': 0.18062800763058337, 'chance': 0.739990117863995, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.04159562163071843, 'readable_mean': 0.18889287276965644, 'baseline_pi0': 0.010153289996586662, 'excess': 0.17873958277306978, 'chance': 0.7322536889944106, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.05179474679231202, 'readable_mean': 0.18906456948592718, 'baseline_pi0': 0.012642847104219073, 'excess': 0.1764217223817081, 'chance': 0.7227579645677542, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.06449466771037621, 'readable_mean': 0.1893301698676131, 'baseline_pi0': 0.015742836356924365, 'excess': 0.17358733351068875, 'chance': 0.7111461454359858, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.08030857221391505, 'readable_mean': 0.18974052664516575, 'baseline_pi0': 0.019602933937102888, 'excess': 0.17013759270806286, 'chance': 0.6970133753488781, 'readable_nonzero_frac': 1.0, 'pass': True}, {'epsilon': 0.1, 'readable_mean': 0.19037336852141654, 'baseline_pi0': 0.024409516190733987, 'excess': 0.16596385233068256, 'chance': 0.679914550674313, 'readable_nonzero_frac': 1.0, 'pass': True}], 'first_fail_index': None, 'last_positive_index': 63, 'epsilon_horizon_est': None, 'last_positive': {'epsilon': 0.1, 'readable_mean': 0.19037336852141654, 'baseline_pi0': 0.024409516190733987, 'excess': 0.16596385233068256, 'chance': 0.679914550674313, 'readable_nonzero_frac': 1.0, 'pass': True}, 'first_fail': None}, 'luck': {'selected_branch': 'θ_U1', 'reference_unsat': 388587.0, 'selected_unsat': 388478.0, 'branch_gain': 109.0, 'gamma_ij': 0.18857993327898998, 'gamma_rel': 0.031147657886393232, 'ref_soft': 0.15743227539259674, 'selected_soft': 0.18857993327898998, 'positive_transition': True, 'better_branch': True, 'luck': True}, 'selected_post_rejoin': {'soft_reading': {'epsilon': 1e-06, 'sign_mean': 0.15970570550321656, 'sign_abs_mean': 0.7761094626289833, 'readable_mean': 0.1885801773741519, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.18857993327898998, 'chance': 0.7725672717339789, 'readable_nonzero_frac': 1.0, 'pass': True, 'gauss_hammer': {'enabled': True, 'sigma': 1.5, 'alpha': 0.12, 'selected': 'hammered'}}, 'soft_reading_raw': {'epsilon': 1e-06, 'sign_mean': 0.002176250417098707, 'sign_abs_mean': 0.6366088518216768, 'readable_mean': 0.15743221031453808, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.15743196621937616, 'chance': 0.6449614363044747, 'readable_nonzero_frac': 1.0, 'pass': True}, 'soft_reading_hammered': {'epsilon': 1e-06, 'sign_mean': 0.15970570550321656, 'sign_abs_mean': 0.7761094626289833, 'readable_mean': 0.1885801773741519, 'baseline_pi0': 2.4409516190733983e-07, 'excess': 0.18857993327898998, 'chance': 0.7725672717339789, 'readable_nonzero_frac': 1.0, 'pass': True}, 'phasor_abs_mean': 0.24409511248732113}, 'gauss_hammer': {'enabled': True, 'sigma': 1.5, 'alpha': 0.12}, 'drive_stats': {'amp_mean': 0.24409511248732113, 'amp_median': 0.2468478937023272, 'gate_mean': 0.6551765385083957, 'drive_mean': 0.15860730948422982, 'drive_median': 0.18396444346678917, 'drive_min': 0.014625523895603199, 'drive_max': 3.6126242074838424, 'drive_nonzero_frac': 1.0}, 'score_stats': {'min': -8.732717327530434, 'max': 11.274587097742277, 'mean': -0.05982613815308029, 'std': 0.2626560526960973}, 'annihilation': {'symmetry_balance': 0.9999994987229968, 'song_index': 0.10715982105067451, 'annihilation_pass': False, 'criteria': {'abs_align_raw_mean_lt': 0.001, 'symmetry_balance_gt': 0.999, 'bimodal_ratio_raw_gt': 1000000.0, 'target_frac_flipped': 0.5}, 'cert_pass': False}}
+
+=== DREAM6 Operator Certifier (qp)
+C=1994905  T=208  m=52  d=12  mode=sat
+shared_carrier=True  shared_misphase=True  unsat_neg_frac=0.25
+ipc_weights=qp
+dream6: K=4.0  noise_sigma=0.0  dt=0.05  mu=0.9999954637353263  mu_E=0.9999952540504147  h=0.4  tail_frac=0.33
+S2 radar: rho=3.42797  <= d*kappa=5.01923  pass=True
+CLOSURE: Θ=1.51038  τ_refined=208.151  λ=0.1
+         residue_compression=52
+         FUSE: n_singular=1994904  frac=1  max_grad=0.996  delta_mean=1.571  cap=1.000  bounded=True
+Spectral: lambda_max(G_H)=3.06416  mu_dec=1.536e-06
+IPC: beta=0.233959  delta=0  mu_sat_min=0.0547368
+Bands: lam_unsat_ceiling=6.01923  mu_unsat_max=3.0173e-06
+tau=0.0273699  Delta=0.0273669  separated=True
+Coherence R(t): mean=18327.5  min=12770.8  max=23037.5  tail_mean=18426.2  tail_ema=21956.9  tail_frac=0.33
+Coherence tail: mean_tail=18426.2  ema_tail=21956.9  tail_frac=0.33
+Soft-reading: chance=0.772567  excess=0.18858  nonzero_frac=1  pass=True
+Luck diag: selected=θ_U1  gamma_ij=0.18858  branch_gain=109  luck=True
+Horizon(last+): eps=0.1  chance=0.679915  excess=0.165964
+==============================================================
+
+3080.2031030654907
+PS D:\HIT\PythonProject>
+PS D:\HIT\PythonProject> python.exe .\DREAM6_model_certificate.py .\exam_flat_0.04_2018_3.cnf .\exam_flat_0.04_2018_3.model
+nvars: 1275631
+clauses_read: 1994905  header_clauses: 1994905
+violated: 0
+SAT
+PS D:\HIT\PythonProject>
+PS D:\HIT\PythonProject>
