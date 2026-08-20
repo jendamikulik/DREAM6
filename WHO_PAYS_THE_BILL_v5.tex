@@ -1,0 +1,4629 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2.55cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{bm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{problem}[theorem]{Open Problem}
+
+\newcommand{\Hh}{\mathrm H}
+\newcommand{\I}{\mathrm I}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\MEC}{\operatorname{MEC}}
+\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\TC}{\operatorname{TC}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Csyn}{C^{\mathrm{syn}}}
+\newcommand{\Ccausal}{C^{\mathrm{causal}}}
+\newcommand{\CinfSyn}{C_{\infty}^{\mathrm{syn}}}
+\newcommand{\CinfCausal}{C_{\infty}^{\mathrm{causal}}}
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cY}{\mathcal Y}
+\newcommand{\cM}{\mathcal M}
+\newcommand{\cH}{\mathcal H}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+
+\title{
+\textbf{Who Pays the Bill?}\\[1mm]
+\large
+Counterfactual Identity, the Causal Shannon Floor,\\
+Spectral Ledgers, and Orbit Resolution
+}
+
+\author{Jan Mikulík}
+\date{20 August 2026\\[1mm]\textbf{Version 5}}
+
+\begin{document}
+\maketitle
+
+% ============================================================
+\begin{abstract}
+% ============================================================
+
+We study the minimum Shannon entropy required by exact latent
+realizations of a finite memoryless controlled channel once the
+counterfactual realization contract is specified.
+
+Four contracts are separated.
+Chosen-path sampling requires only the output actually requested.
+A one-step counterfactual table jointly defines the outputs of all
+actions at one time.
+The synchronous stable-event contract C3-S requires a single
+time/action coordinate to retain the same latent identity across
+mutually exclusive histories.
+The general causal contract C3-C allows the corresponding latent event
+to depend on the realized history.
+
+For C3-S we retain the synchronous block theory developed in earlier
+versions.
+The block cost is subadditive, hidden cross-counterfactual synergy can
+strictly lower the naive repeated one-shot cost, and for two actions
+\(P,Q\) one has the information-spectrum converse
+\[
+C_n^{\mathrm{syn}}(P,Q)
+\ge
+\frac n2
+\left[
+H(P)+H(Q)+W_1(\mu_P,\mu_Q)
+\right],
+\]
+where \(\mu_P,\mu_Q\) are the laws of one-symbol surprisal.
+For the equal-entropy three-outcome crash test,
+\[
+1.728465468745531
+\le
+C_\infty^{\mathrm{syn}}
+\le
+1.939147788079282.
+\]
+
+For C3-C we prove a different asymptotic theorem.
+For every finite two-action memoryless controlled channel,
+\[
+\boxed{
+C_\infty^{\mathrm{causal}}(P,Q)
+=
+\max\{H(P),H(Q)\}.
+}
+\]
+The upper bound is constructive.
+Long output streams are divided into blocks, neighboring \(P\)- and
+reversed \(Q\)-blocks are coupled nearly at the larger Shannon entropy,
+and the resulting dependence is placed beyond a causal anti-diagonal
+that no horizon-\(n\) realized history can cross.
+For the crash-test pair,
+\[
+\boxed{
+C_\infty^{\mathrm{causal}}
+=
+1.5
+<
+1.728465468745531
+\le
+C_\infty^{\mathrm{syn}}.
+}
+\]
+
+Version 5 places these results inside one commutative operator-algebraic
+representation.
+A finite classical latent law is represented by one probability vector
+\(\psi\) and a commutative algebra of multiplication operators.
+Stable synchronous identity becomes identification of event projections
+across histories.
+For each action distribution \(P\), self-information is represented by
+a diagonal surprisal operator \(L_P\), whose vector spectral measure is
+exactly the surprisal law \(\mu_P\).
+Thus entropy, varentropy, higher moments, lattice phase, and the full
+characteristic function are different probes of one spectral ledger.
+
+This yields the compact comparison
+\[
+\boxed{
+C_\infty^{\mathrm{causal}}
+=
+\max_a \langle \psi_a,L_a\psi_a\rangle,
+}
+\]
+for two actions, while
+\[
+\boxed{
+C_\infty^{\mathrm{syn}}
+\ge
+\frac12
+\left[
+\langle L_P\rangle+
+\langle L_Q\rangle+
+d_{\mathrm{Lip}}(P,Q)
+\right],
+}
+\]
+where
+\[
+d_{\mathrm{Lip}}(P,Q)
+=
+W_1(\mu_P,\mu_Q).
+\]
+In this precise sense, the causal contract pays asymptotically for the
+largest mean surprisal, whereas stable synchronous identity can retain
+a cost determined by the full surprisal spectrum.
+
+Finally, we connect this spectral ledger to a scale-orbit calculation
+from compactly supported polynomial kernels.
+Unitary dilation produces a Mellin spectral measure, and every such
+finite-energy orbit measure defines a valid spectral probe of surprisal
+mismatch and hence a synchronous lower-bound certificate.
+The hard-edged \(k=0\) kernel is singular and reproduces exactly the
+\(\min/\max\) scalar identity underlying the Wasserstein converse.
+Smoother kernels define a family of softer spectral auditors.
+
+The resulting framework does not identify an ontology and does not
+claim that one physical vector underlies reality.
+It gives a unified representation of the accounting problem:
+one state vector, an algebra acting on it, and a spectral ledger
+recording which distinctions the realization contract is required to
+preserve.
+\end{abstract}
+
+
+% ============================================================
+\section{Introduction: the bill depends on the contract}
+% ============================================================
+
+Suppose an observable controlled system is specified by a finite family
+of output laws
+\[
+W=\{P_a:a\in\cA\}.
+\]
+The system is memoryless in the operational sense that, for every
+adaptive nonanticipative action policy,
+\[
+\Pr(Y_t=y\mid A_{1:t},Y_{1:t-1})
+=
+P_{A_t}(y).
+\tag{1.1}
+\]
+
+The observable law does not uniquely determine the latent structure that
+realizes it.
+A realization may define only the output that is actually requested,
+or it may be required to assign definite values to mutually exclusive
+alternatives.
+If it does the latter, one must still specify whether ``the same''
+future event is required to have the same latent identity across
+different histories.
+
+The central resource question of this paper is therefore not
+
+\[
+\text{``How much randomness does the observable law contain?''}
+\]
+
+but
+
+\begin{center}
+\fbox{
+\begin{minipage}{0.84\textwidth}
+\centering
+\textbf{What information must an exact realization carry under a
+specified counterfactual identity contract?}
+\end{minipage}}
+\end{center}
+
+The distinction is essential.
+The same observable channel will be shown to have different asymptotic
+source costs under different latent identity requirements.
+
+The paper has two intertwined layers.
+
+First, an operational counterfactual layer distinguishes a synchronous
+stable-event realization from a general history-indexed causal response
+tree and computes or bounds their minimum latent Shannon entropies.
+
+Second, an algebraic-spectral layer shows that the principal objects can
+be represented by one classical state vector and a commutative algebra
+of observables.
+The self-information structure of each action is then the spectral
+measure of one diagonal operator in one vector state.
+
+The purpose of the second layer is not to replace the first.
+It explains why the first layer, the information-spectrum converse, the
+kernel scale-reduction calculation, the arithmetic obstruction, and the
+causal/synchronous separation belong to one mathematical architecture.
+
+
+% ============================================================
+\section{Priority convention and current literature map}
+% ============================================================
+
+This paper uses several standard theories and deliberately avoids
+claiming novelty for them.
+
+Minimum-entropy coupling is classical information theory
+\cite{Kovacevic2015}.
+Information-spectrum converses for minimum-entropy coupling and
+functional representation are known \cite{ShkelYadav2023}.
+Approximation algorithms for multi-marginal MEC are known
+\cite{Li2021}, and the two-marginal profile method gives a
+\(\log_2(e)/e\) additive guarantee for the standard greedy coupling
+\cite{Compton2023}.
+As of 2026, a polynomial-time approximation scheme is also known for a
+constant number of marginals \cite{Compton2026PTAS}.
+Thus the profile theorem is used below as a clean analytic block-coupling
+ingredient, not as a claim about the current algorithmic frontier.
+
+Exact common information and exact channel synthesis provide neighboring
+multi-letter viewpoints \cite{KumarLiElGamal,YuTanExact}.
+Online entropy-efficient exact sampling and randomness recycling have
+advanced substantially, including near-Shannon online samplers and
+space--entropy lower bounds \cite{DraperSaad2026,DraperHarrisSaad2026,
+DraperSaadSpace2026}.
+
+The relation between scale invariance and Mellin analysis is standard;
+a recent systematic tutorial develops the scale-invariant analogue of
+shift-invariant signal theory explicitly through Mellin methods
+\cite{GuptaSinghAggarwalJoshi2025}.
+The use of Hilbert-space distribution embeddings and maximum mean
+discrepancy is established \cite{Sriperumbudur2010,Gretton2012}.
+Recent work also develops MMD-type two-sample procedures invariant under
+general group actions \cite{GiacofciMeynaouiPodgorny2026}.
+Zolotarev distances and their Fourier analysis are classical and remain
+active tools for higher-order probability comparison
+\cite{BobkovLedoux2026}.
+
+Common-random-number implementations with stable event keys are a
+particularly close practical neighbor to the distinction between
+execution-path identity and event identity made here
+\cite{BuffaloPearsonKlein2026}.
+
+The operator-algebraic representation of a classical probability law by
+a vector state on a commutative algebra, the spectral theorem, Bochner's
+theorem, and the GNS construction are standard mathematics.
+
+Accordingly, throughout the paper:
+\begin{quote}
+``derived here'' means derived inside the present argument, not claimed
+as historically first.
+\end{quote}
+
+The specific combination studied here is narrower:
+minimum Shannon entropy under all synchronous transversals versus a
+history-indexed causal realization; the exact two-action causal
+Shannon-floor construction; the finite-horizon residual analysis; and
+the use of orbit spectral measures as resolution certificates for this
+counterfactual source-cost problem.
+
+
+% ============================================================
+\section{Four realization contracts}
+% ============================================================
+
+Let \(\cA\) and \(\cY\) be finite.
+
+\paragraph{C1: chosen-path sampling.}
+At time \(t\), the action \(A_t\) is already known.
+Only
+\[
+Y_t\sim P_{A_t}
+\]
+must be generated.
+
+\paragraph{C2: one-step counterfactual table.}
+Before the action is selected, a latent variable fixes
+\[
+F=(F(a))_{a\in\cA},
+\qquad
+F(a)\sim P_a.
+\tag{3.1}
+\]
+All action outputs are jointly defined, although only one is exposed.
+
+\paragraph{C3-S: synchronous stable-event table.}
+For horizon \(n\), one latent source fixes
+\[
+F=(F_t(a))_{1\le t\le n,\ a\in\cA}.
+\tag{3.2}
+\]
+The same coordinate \((t,a)\) denotes the same latent event across all
+histories.
+
+\paragraph{C3-C: history-indexed causal tree.}
+A general deterministic seed fixes
+\[
+F_t(h_{t-1},a).
+\tag{3.3}
+\]
+The latent event corresponding to the same time/action pair may depend
+on the prior history \(h_{t-1}\).
+
+Thus
+\[
+\boxed{
+\text{C3-S is C3-C plus stable cross-history event identity.}
+}
+\tag{3.4}
+\]
+
+The paper asks what additional source entropy that identity can force.
+
+
+% ============================================================
+\section{The one-shot counterfactual bill}
+% ============================================================
+
+Define
+\[
+h_{\max}
+:=
+\max_{a\in\cA} H(P_a).
+\tag{4.1}
+\]
+
+Under C2 the minimum latent entropy is
+\[
+C_1(W)
+:=
+\min
+\left\{
+H(F):
+\Law(F(a))=P_a,\ \forall a
+\right\}.
+\tag{4.2}
+\]
+
+Hence
+\[
+\boxed{
+C_1(W)
+=
+\MEC(P_a:a\in\cA).
+}
+\tag{4.3}
+\]
+
+The one-shot surcharge above the largest observable entropy is
+\[
+r_1(W)
+=
+C_1(W)-h_{\max}\ge0.
+\tag{4.4}
+\]
+
+This quantity must not be multiplied by time without proving that the
+multi-step realization contract forces independent one-step tables.
+
+
+% ============================================================
+\section{The equal-entropy crash test}
+% ============================================================
+
+The concrete test pair used throughout the paper is
+\[
+P=
+\left(
+\frac12,\frac14,\frac14
+\right),
+\qquad
+Q=(q,q,1-2q),
+\tag{5.1}
+\]
+where \(q\in(1/3,1/2)\) is the unique solution of
+\[
+-2q\log_2q-(1-2q)\log_2(1-2q)
+=
+\frac32.
+\tag{5.2}
+\]
+
+Numerically,
+\[
+q
+=
+0.41003242818198557608\ldots
+\tag{5.3}
+\]
+and
+\[
+H(P)=H(Q)=1.5.
+\tag{5.4}
+\]
+
+The probability spectra are not permutations.
+
+A one-shot minimum-entropy coupling has nonzero atom probabilities
+\[
+q,\qquad
+\frac14,\qquad
+1-2q,\qquad
+\frac12-q,\qquad
+2q-\frac34.
+\tag{5.5}
+\]
+
+Therefore
+\[
+\boxed{
+C_1(P,Q)
+=
+2.0539185856072597\ldots
+}
+\tag{5.6}
+\]
+and
+\[
+E_1
+:=
+C_1-1.5
+=
+0.5539185856072597\ldots.
+\tag{5.7}
+\]
+
+
+% ============================================================
+\section{Synchronous stable-event blocks}
+% ============================================================
+
+For horizon \(n\), let
+\[
+F=(F_t(a))_{1\le t\le n,\ a\in\cA}.
+\]
+
+\begin{definition}[Synchronous policy-safe law]
+A law \(\Gamma\) of \(F\) is synchronous policy-safe if
+\[
+\Law_\Gamma
+\left(
+F_1(a_1),\ldots,F_n(a_n)
+\right)
+=
+\bigotimes_{t=1}^nP_{a_t}
+\tag{6.1}
+\]
+for every deterministic action word
+\[
+a^n=(a_1,\ldots,a_n)\in\cA^n.
+\]
+\end{definition}
+
+\begin{proposition}[Transversal criterion]
+A synchronous table law is policy-safe if and only if it realizes the
+memoryless controlled channel exactly under every deterministic
+nonanticipative policy.
+The same holds for randomized policies whose private randomization is
+independent of the table.
+\end{proposition}
+
+\begin{proof}
+Necessity follows from policies that ignore history.
+
+Conversely, fix a deterministic policy and an output string \(y^n\).
+Along this output branch the policy determines an action word
+\[
+a_t=a_t(y^{t-1}).
+\]
+The branch event is the corresponding transversal event, whose
+probability is
+\[
+\prod_{t=1}^nP_{a_t(y^{t-1})}(y_t)
+\]
+by (6.1).
+\end{proof}
+
+Define
+\[
+\Csyn_n(W)
+:=
+\min
+\{
+H(F):
+F\text{ is synchronous policy-safe}
+\}.
+\tag{6.2}
+\]
+
+\begin{proposition}[Subadditivity and prefix lower bound]
+For all \(m,n\ge1\),
+\[
+\Csyn_{m+n}
+\le
+\Csyn_m+\Csyn_n,
+\tag{6.3}
+\]
+and
+\[
+\Csyn_{m+n}
+\ge
+mh_{\max}+\Csyn_n.
+\tag{6.4}
+\]
+Consequently,
+\[
+\CinfSyn
+:=
+\lim_{n\to\infty}\frac{\Csyn_n}{n}
+=
+\inf_{n\ge1}\frac{\Csyn_n}{n}.
+\tag{6.5}
+\]
+\end{proposition}
+
+\begin{proof}
+Independent concatenation gives (6.3).
+
+For (6.4), expose an entropy-maximizing action for the first
+\(m\) times and retain the complete future \(n\)-step synchronous table.
+Conditioned on each realized prefix, the future table remains feasible.
+The corresponding projection of the full source therefore has entropy
+at least
+\[
+mh_{\max}+\Csyn_n.
+\]
+Fekete's lemma yields (6.5).
+\end{proof}
+
+
+% ============================================================
+\section{The synchronous observable space}
+% ============================================================
+
+Suppose action \(a\) has output alphabet size \(d_a\).
+At one time the complete counterfactual state lies in
+\[
+R=\prod_{a\in\cA}\cY_a.
+\]
+
+Let \(V_a\) be the real vector space of functions on \(R\) depending
+only on coordinate \(a\), and define
+\[
+\cO
+=
+\sum_{a\in\cA}V_a.
+\tag{7.1}
+\]
+
+\begin{proposition}[Observable-space dimension and block rank]
+The one-time observable space has dimension
+\[
+\boxed{
+d_{\mathrm{obs}}
+=
+1+\sum_{a\in\cA}(d_a-1).
+}
+\tag{7.2}
+\]
+The row space generated by all \(n\)-time transversal marginal
+constraints is
+\[
+\cO^{\otimes n}.
+\tag{7.3}
+\]
+Hence
+\[
+\boxed{
+\operatorname{rank}A_n
+=
+d_{\mathrm{obs}}^n.
+}
+\tag{7.4}
+\]
+\end{proposition}
+
+For two ternary actions,
+\[
+|R|=9,\qquad d_{\mathrm{obs}}=5,
+\]
+so
+\[
+\operatorname{rank}A_n=5^n,
+\qquad
+\dim\ker A_n=9^n-5^n.
+\tag{7.5}
+\]
+
+The kernel is the linear space in which hidden interactions may live
+without changing any permitted transversal marginal.
+
+
+% ============================================================
+\section{Hidden counterfactual synergy}
+% ============================================================
+
+Let \(\gamma\) be a one-time coupling of the action marginals on the
+complete one-time state \(R\).
+
+Assume there exists bounded nonzero \(h:R\to\R\) such that
+\[
+\E_\gamma h=0,
+\qquad
+\E_\gamma[h\mid R(a)]=0
+\quad
+\forall a.
+\tag{8.1}
+\]
+
+\begin{proposition}[Hidden-interaction perturbation]
+For sufficiently small nonzero \(\varepsilon\),
+\[
+\Gamma_\varepsilon(r,s)
+=
+\gamma(r)\gamma(s)
+\left(
+1+\varepsilon h(r)h(s)
+\right)
+\tag{8.2}
+\]
+is a two-step synchronous policy-safe law.
+Its one-time marginals are both \(\gamma\), but
+\[
+I(R_1;R_2)>0,
+\]
+and therefore
+\[
+H(R_1,R_2)
+<
+2H(\gamma).
+\tag{8.3}
+\]
+\end{proposition}
+
+\begin{proof}
+For small enough \(|\varepsilon|\), nonnegativity holds.
+Every selectable cross-time marginal annihilates the perturbation term
+through the conditional-mean assumptions in (8.1).
+Thus all transversal laws remain products.
+The joint law is nevertheless nonproduct.
+\end{proof}
+
+
+% ============================================================
+\subsection{Explicit 23-atom synchronous witness}
+% ============================================================
+
+For the crash-test pair, Appendix~\ref{app:witness} gives an explicit
+two-step law \(\widetilde G\) with 23 positive atoms satisfying all four
+transversal product laws
+\[
+(P,P),\quad(P,Q),\quad(Q,P),\quad(Q,Q).
+\]
+
+Its entropy is
+\[
+\boxed{
+H(\widetilde G)
+=
+3.878295576158564\ldots.
+}
+\tag{8.4}
+\]
+
+Therefore
+\[
+\boxed{
+\Csyn_2
+\le
+3.878295576158564
+<
+2C_1,
+}
+\tag{8.5}
+\]
+and
+\[
+\boxed{
+\CinfSyn
+\le
+1.939147788079282.
+}
+\tag{8.6}
+\]
+
+
+% ============================================================
+\subsection{Net hidden synergy}
+% ============================================================
+
+For a synchronous policy-safe law let
+\[
+R_t=(F_t(a))_{a\in\cA}
+\]
+be the complete one-time table and define temporal total correlation
+\[
+\TC(R_{1:n})
+=
+\sum_{t=1}^nH(R_t)-H(R_{1:n}).
+\tag{8.7}
+\]
+
+Since \(H(R_t)\ge C_1\),
+\[
+H(R_{1:n})
+=
+nC_1
++
+\sum_t(H(R_t)-C_1)
+-
+\TC(R_{1:n}).
+\]
+
+Thus
+\[
+\boxed{
+nC_1-\Csyn_n
+=
+\max_{\Gamma\ \mathrm{policy\text{-}safe}}
+\left[
+\TC_\Gamma(R_{1:n})
+-
+\sum_t
+\bigl(
+H_\Gamma(R_t)-C_1
+\bigr)
+\right].
+}
+\tag{8.8}
+\]
+
+The saving below \(nC_1\) is therefore temporal hidden dependence minus
+the one-time entropy premium required to support that dependence.
+
+
+% ============================================================
+\section{Synchronous information-spectrum geometry}
+% ============================================================
+
+For a finite law \(P=(p_i)\), define the surprisal variable
+\[
+\imath_P(X)
+=
+-\log_2P(X),
+\qquad
+X\sim P,
+\tag{9.1}
+\]
+and its law
+\[
+\mu_P
+=
+\Law(\imath_P(X)).
+\tag{9.2}
+\]
+
+\begin{theorem}[Two-action information-spectrum converse]
+For every synchronous policy-safe \(n\)-block,
+\[
+\boxed{
+H(F)
+\ge
+\frac n2
+\left[
+H(P)+H(Q)+W_1(\mu_P,\mu_Q)
+\right].
+}
+\tag{9.3}
+\]
+Consequently,
+\[
+\boxed{
+\CinfSyn(P,Q)
+\ge
+\frac12
+\left[
+H(P)+H(Q)+W_1(\mu_P,\mu_Q)
+\right].
+}
+\tag{9.4}
+\]
+\end{theorem}
+
+\begin{proof}
+Fix a positive-probability full-table atom
+\[
+f=(x_1,z_1,\ldots,x_n,z_n)
+\]
+with probability \(\Gamma(f)\).
+
+For every subset \(S\subseteq[n]\), the same atom lies in the
+transversal selecting \(P\) on \(S\) and \(Q\) on \(S^c\).
+Therefore
+\[
+\Gamma(f)
+\le
+\prod_{t\in S}P(x_t)
+\prod_{t\notin S}Q(z_t).
+\]
+Minimizing over \(S\) separates coordinatewise:
+\[
+\Gamma(f)
+\le
+\prod_{t=1}^n
+\min\{P(x_t),Q(z_t)\}.
+\tag{9.5}
+\]
+Hence
+\[
+-\log_2\Gamma(f)
+\ge
+\sum_{t=1}^n
+\max\{
+\imath_P(x_t),\imath_Q(z_t)
+\}.
+\]
+Average over the full-table law and use
+\[
+\max(u,v)
+=
+\frac12(u+v+|u-v|).
+\]
+At each time the pair of surprisals is some coupling of
+\(\mu_P,\mu_Q\); the minimum expected \(|u-v|\) is their
+one-dimensional Wasserstein distance.
+\end{proof}
+
+If
+\[
+H(P)=H(Q)=h,
+\]
+then
+\[
+\boxed{
+\CinfSyn(P,Q)
+\ge
+h+\frac12W_1(\mu_P,\mu_Q).
+}
+\tag{9.6}
+\]
+
+
+% ============================================================
+\subsection{Multi-action quantile envelope}
+% ============================================================
+
+For each action \(a\), let
+\[
+U_a=-\log_2P_a(Y_a),
+\qquad
+Y_a\sim P_a,
+\]
+with law \(\mu_a\).
+
+Define
+\[
+\mathcal T(P_a:a\in\cA)
+=
+\inf_{\eta\in\Pi(\mu_a:a\in\cA)}
+\E_\eta\max_{a\in\cA}U_a.
+\tag{9.7}
+\]
+
+\begin{lemma}[Quantile envelope]
+For finite-support laws,
+\[
+\boxed{
+\mathcal T(P_a:a\in\cA)
+=
+\int_0^1
+\max_{a\in\cA}
+F_{\mu_a}^{-1}(u)\,\dd u.
+}
+\tag{9.8}
+\]
+\end{lemma}
+
+\begin{proof}
+For every coupling,
+\[
+\Pr(\max_aU_a\le t)
+\le
+\min_aF_{\mu_a}(t).
+\]
+The comonotone quantile coupling attains equality.
+\end{proof}
+
+\begin{theorem}[Multi-action synchronous converse]
+\[
+\boxed{
+\Csyn_n(P_a:a\in\cA)
+\ge
+n
+\int_0^1
+\max_{a\in\cA}
+F_{\mu_a}^{-1}(u)\,\dd u.
+}
+\tag{9.9}
+\]
+\end{theorem}
+
+
+% ============================================================
+\section{The certified synchronous crash-test interval}
+% ============================================================
+
+For
+\[
+P=\left(\frac12,\frac14,\frac14\right)
+\]
+one has
+\[
+\mu_P
+=
+\frac12\delta_1+\frac12\delta_2.
+\tag{10.1}
+\]
+
+For \(Q=(q,q,1-2q)\),
+\[
+\mu_Q
+=
+2q\,\delta_{-\log_2q}
++
+(1-2q)\delta_{-\log_2(1-2q)}.
+\tag{10.2}
+\]
+
+Direct quantile evaluation gives
+\[
+W_1(\mu_P,\mu_Q)
+=
+0.4569309374910615\ldots.
+\tag{10.3}
+\]
+
+Therefore
+\[
+\boxed{
+1.728465468745531
+\le
+\CinfSyn
+\le
+1.939147788079282.
+}
+\tag{10.4}
+\]
+
+At depth two,
+\[
+3.553918585607260
+\le
+\Csyn_2
+\le
+3.878295576158564.
+\tag{10.5}
+\]
+
+The upper endpoint is an explicit witness value, not a proof of
+two-step optimality.
+
+
+% ============================================================
+\section{Counterfactual breadth}
+% ============================================================
+
+Let
+\[
+\cG\subseteq\{P,Q\}^n
+\]
+be only a selected family of action strings required to have the correct
+transversal law, and let \(C_n(\cG)\) be the minimum table entropy under
+those constraints.
+
+For a full atom define
+\[
+M_t
+=
+\max\{\imath_P(X_t),\imath_Q(Z_t)\},
+\]
+and
+\[
+\Delta_t
+=
+|\imath_P(X_t)-\imath_Q(Z_t)|.
+\]
+
+Let \(s\in\{P,Q\}^n\) select the locally more surprising action.
+For \(g\in\cG\), define
+\[
+d_\Delta(s,g)
+=
+\sum_{t:s_t\ne g_t}\Delta_t.
+\tag{11.1}
+\]
+
+Then
+\[
+-\log_2\Gamma(f)
+\ge
+\sum_tM_t-d_\Delta(s,\cG),
+\tag{11.2}
+\]
+where
+\[
+d_\Delta(s,\cG)
+=
+\min_{g\in\cG}d_\Delta(s,g).
+\]
+
+If
+\[
+D
+=
+\max_{x,z}
+|\imath_P(x)-\imath_Q(z)|
+\tag{11.3}
+\]
+and
+\[
+r(\cG)
+=
+\max_s\min_{g\in\cG}d_H(s,g),
+\tag{11.4}
+\]
+then
+\[
+\boxed{
+C_n(\cG)
+\ge
+n\mathcal T(P,Q)-Dr(\cG).
+}
+\tag{11.5}
+\]
+
+Thus breadth is governed by covering geometry, not only by the number of
+counterfactual strings.
+
+
+% ============================================================
+\section{History-indexed causal trees}
+% ============================================================
+
+\begin{definition}[Causal-tree entropy]
+Let
+\[
+\Ccausal_n(W)
+\]
+be the minimum Shannon entropy of a finite random deterministic
+history-indexed response tree whose induced output process realizes the
+memoryless controlled channel exactly under every adaptive
+nonanticipative policy.
+\end{definition}
+
+At horizon one,
+\[
+\Ccausal_1=C_1.
+\tag{12.1}
+\]
+
+Every synchronous table is a causal tree via
+\[
+F_t(h,a)=F_t(a),
+\]
+so
+\[
+\boxed{
+\Ccausal_n\le\Csyn_n.
+}
+\tag{12.2}
+\]
+
+
+% ============================================================
+\subsection{The action-tree quotient}
+% ============================================================
+
+For a deterministic causal seed and action word
+\[
+a^t=(a_1,\ldots,a_t),
+\]
+let \(Z_{a^t}\) be the output reached at depth \(t\) by feeding this
+action word to the seed.
+
+\begin{proposition}[Action-tree characterization]
+A random action-labelled tree is an exact horizon-\(n\) causal
+realization if and only if
+\[
+\boxed{
+\Law
+\left(
+Z_{a_1},
+Z_{a_1a_2},
+\ldots,
+Z_{a_1\cdots a_n}
+\right)
+=
+\bigotimes_{t=1}^nP_{a_t}
+}
+\tag{12.3}
+\]
+for every deterministic action word \(a^n\).
+
+Consequently,
+\[
+\boxed{
+\Ccausal_n
+=
+\min
+H\left(
+(Z_v)_{v\in\cA^{\le n}}
+\right)
+}
+\tag{12.4}
+\]
+over all random action trees satisfying (12.3).
+\end{proposition}
+
+\begin{proof}
+Every history-indexed tree induces such an action tree.
+
+Conversely, for a deterministic adaptive policy and target output
+string \(y^n\), that output string determines one action word along the
+branch:
+\[
+a_t=a_t(y^{t-1}).
+\]
+The target event is exactly the corresponding path event in the action
+tree, and (12.3) supplies its product probability.
+\end{proof}
+
+
+% ============================================================
+\subsection{Causal prefix recursion and residual entropy}
+% ============================================================
+
+\begin{proposition}[Causal prefix lower bound]
+For every \(n\ge1\),
+\[
+\boxed{
+\Ccausal_n
+\ge
+C_1+(n-1)h_{\max}.
+}
+\tag{12.5}
+\]
+Moreover,
+\[
+\Ccausal_{m+n}
+\le
+\Ccausal_m+\Ccausal_n.
+\tag{12.6}
+\]
+Hence
+\[
+\CinfCausal
+=
+\lim_{n\to\infty}\frac{\Ccausal_n}{n}
+\tag{12.7}
+\]
+exists and
+\[
+h_{\max}
+\le
+\CinfCausal
+\le
+\CinfSyn.
+\tag{12.8}
+\]
+\end{proposition}
+
+Assume now that all actions have the same entropy
+\[
+H(P_a)=h.
+\]
+
+Define
+\[
+E_n
+=
+\Ccausal_n-nh.
+\tag{12.9}
+\]
+
+For any fixed deterministic policy \(\pi\), its realized output
+trajectory \(Y_\pi^n\) is a deterministic function of the causal seed
+\(S_n\), and
+\[
+H(Y_\pi^n)=nh.
+\]
+Therefore
+\[
+\boxed{
+H(S_n)
+=
+nh+H(S_n\mid Y_\pi^n).
+}
+\tag{12.10}
+\]
+
+Minimizing,
+\[
+\boxed{
+E_n
+=
+\inf_{S_n}
+H(S_n\mid Y_\pi^n).
+}
+\tag{12.11}
+\]
+
+The prefix lower bound and block concatenation imply
+\[
+E_{n+1}\ge E_n,
+\qquad
+E_{m+n}\le E_m+E_n.
+\tag{12.12}
+\]
+
+Thus \(E_n\) is nonnegative, nondecreasing, and subadditive, while
+\[
+\boxed{
+\CinfCausal-h
+=
+\lim_{n\to\infty}\frac{E_n}{n}.
+}
+\tag{12.13}
+\]
+
+
+% ============================================================
+\section{Exact causal Bellman--MEC recursion}
+% ============================================================
+
+Let \(\cM_n\) be the set of exact depth-\(n\) action-tree laws.
+
+At a root action \(a\), write
+\[
+B_a=(Y_a,T_a).
+\]
+Conditional on \(Y_a=y\), let
+\[
+K_{a,y}
+=
+\Law(T_a\mid Y_a=y)
+\in\cM_n.
+\]
+
+The marginal law of the complete \(a\)-branch is
+\[
+M_a
+=
+\bigoplus_yP_a(y)K_{a,y}.
+\tag{13.1}
+\]
+
+\begin{theorem}[Exact causal Bellman--MEC recursion]
+\[
+\boxed{
+\Ccausal_{n+1}
+=
+\inf_{\{K_{a,y}\in\cM_n\}}
+\MEC(M_a:a\in\cA).
+}
+\tag{13.2}
+\]
+\end{theorem}
+
+\begin{proof}
+Once the conditional continuation laws are fixed, each root-action
+branch has prescribed marginal \(M_a\).
+Distinct root actions are mutually exclusive branches of the action
+tree and may be coupled arbitrarily.
+The least possible entropy of their common latent specification is the
+multi-marginal MEC.
+Finally minimize over the child laws.
+\end{proof}
+
+
+% ============================================================
+\subsection{Shape versus join}
+% ============================================================
+
+For equal-entropy actions define
+\[
+e_a
+=
+\sum_yP_a(y)
+\left[
+H(K_{a,y})-\Ccausal_n
+\right]\ge0.
+\tag{13.3}
+\]
+Then
+\[
+H(M_a)
+=
+h+\Ccausal_n+e_a.
+\tag{13.4}
+\]
+
+Define
+\[
+\Delta_{\mathrm{shape}}
+=
+\max_ae_a
+\tag{13.5}
+\]
+and
+\[
+\Delta_{\mathrm{join}}
+=
+\MEC(M_a:a\in\cA)-\max_aH(M_a).
+\tag{13.6}
+\]
+
+Both are nonnegative, and
+\[
+\boxed{
+E_{n+1}-E_n
+=
+\inf_K
+\left(
+\Delta_{\mathrm{shape}}
++
+\Delta_{\mathrm{join}}
+\right).
+}
+\tag{13.7}
+\]
+
+This identity isolates the finite-horizon causal tension:
+continuations can be reshaped to make root branches easier to join, but
+departing from optimal child entropy has a cost.
+
+
+% ============================================================
+\section{Finite-depth rigidity}
+% ============================================================
+
+For the crash-test pair, the one-step \(3\times3\) transportation
+polytope has 18 vertices.
+Up to permutation their nonzero spectra fall into five types.
+The minimum type is
+\[
+\lambda_\star
+=
+\left(
+q,\frac14,1-2q,\frac12-q,2q-\frac34
+\right).
+\tag{14.1}
+\]
+
+Appendix~\ref{app:rigidity} verifies that for
+\[
+\frac38<q<\frac5{12}
+\tag{14.2}
+\]
+this spectrum strictly majorizes each competing vertex spectrum.
+By strict Schur concavity, every one-step entropy minimizer therefore
+has the same nonzero atom multiset \(\lambda_\star\).
+
+\begin{theorem}[Strict depth-two causal excess]
+For the crash-test pair,
+\[
+\boxed{
+\Ccausal_2>h+C_1.
+}
+\tag{14.3}
+\]
+Equivalently,
+\[
+\boxed{
+E_2>E_1.
+}
+\tag{14.4}
+\]
+\end{theorem}
+
+\begin{proof}
+Assume equality.
+For root action \(a\), let \(B_a=(Y_a,T_a)\).
+Every conditional child law \(K_{a,y}\) is a valid one-step coupling,
+so
+\[
+H(K_{a,y})\ge C_1.
+\]
+Thus
+\[
+H(B_a)
+=
+h+\sum_yP_a(y)H(K_{a,y})
+\ge
+h+C_1.
+\]
+Since \(B_a\) is a deterministic function of the full depth-two seed,
+global equality forces equality at every stage.
+Every \(K_{a,y}\) is therefore a one-step minimizer and has spectrum
+\(\lambda_\star\).
+
+Hence
+\[
+\spec(B_P)
+=
+\spec(P\otimes\lambda_\star),
+\qquad
+\spec(B_Q)
+=
+\spec(Q\otimes\lambda_\star).
+\]
+Both branch objects have the same entropy as the full seed and are
+deterministic images of it, so they must be invertible images on
+positive support and therefore have the same atom multiset.
+Thus
+\[
+P\otimes\lambda_\star
+\equiv_{\mathrm{perm}}
+Q\otimes\lambda_\star.
+\]
+Power-sum cancellation implies equality of the probability spectra of
+\(P\) and \(Q\), contradiction.
+\end{proof}
+
+The finite causal excess is therefore real.
+The remaining issue is whether it can be made sublinear.
+
+
+% ============================================================
+\section{Low-entropy couplings of long product blocks}
+% ============================================================
+
+Let
+\[
+V_P
+=
+\Var[-\log_2P(X)],
+\qquad
+V_Q
+=
+\Var[-\log_2Q(Y)].
+\tag{15.1}
+\]
+
+The two-marginal profile method of Compton et al. gives a greedy coupling
+\(G(A,B)\) satisfying
+\[
+H(G(A,B))
+\le
+H(\operatorname{PROFILE}(A,B))
++
+c_0,
+\tag{15.2}
+\]
+where
+\[
+c_0=\frac{\log_2e}{e}.
+\tag{15.3}
+\]
+
+For two finite distributions, the profile entropy can be written in
+surprisal quantiles as
+\[
+\boxed{
+H(\operatorname{PROFILE}(A,B))
+=
+\frac12
+\left[
+H(A)+H(B)+W_1(\mu_A,\mu_B)
+\right].
+}
+\tag{15.4}
+\]
+
+\begin{lemma}[Product-block coupling bound]
+Let
+\[
+h_\star=\max\{H(P),H(Q)\},
+\qquad
+A_0
+=
+\frac12(\sqrt{V_P}+\sqrt{V_Q}).
+\]
+For every \(L\ge1\), there exists
+\[
+J_L\in\Pi(P^{\otimes L},Q^{\otimes L})
+\]
+such that
+\[
+\boxed{
+H(J_L)
+\le
+Lh_\star+A_0\sqrt L+c_0.
+}
+\tag{15.5}
+\]
+\end{lemma}
+
+\begin{proof}
+The product surprisal is a sum of \(L\) i.i.d. surprisals.
+By the triangle inequality,
+\[
+W_1(\mu_{P^L},\mu_{Q^L})
+\le
+L|H(P)-H(Q)|
++
+\sqrt{LV_P}
++
+\sqrt{LV_Q}.
+\]
+Insert this into (15.4) and then use (15.2).
+\end{proof}
+
+
+% ============================================================
+\section{The anti-diagonal causal construction}
+% ============================================================
+
+Fix
+\[
+n=mL.
+\]
+Introduce two length-\(n\) streams
+\[
+X_1,\ldots,X_n,
+\qquad
+W_1,\ldots,W_n
+\]
+divided into \(m\) consecutive blocks
+\[
+X^{(1)},\ldots,X^{(m)},
+\qquad
+W^{(1)},\ldots,W^{(m)}
+\]
+of length \(L\).
+
+Construct the seed from independent components as follows:
+\[
+X^{(1)}\sim P^L,
+\qquad
+W^{(m)}\sim Q^L,
+\]
+and, for every \(j=1,\ldots,m-1\),
+\[
+(W^{(j)},X^{(j+1)})\sim J_L,
+\tag{16.1}
+\]
+independently across \(j\).
+
+Reverse the \(W\)-stream:
+\[
+Z_k=W_{n+1-k}.
+\tag{16.2}
+\]
+
+The causal response rule is:
+on the \(r\)-th occurrence of action \(P\), output \(X_r\);
+on the \(s\)-th occurrence of action \(Q\), output \(Z_s\).
+
+\begin{lemma}[Anti-diagonal invisibility]
+No action history of length at most \(n\) can observe both sides of one
+coupled pair
+\[
+(W^{(j)},X^{(j+1)}).
+\]
+\end{lemma}
+
+\begin{proof}
+To see any coordinate of \(X^{(j+1)}\), the history needs at least
+\[
+jL+1
+\]
+occurrences of \(P\).
+To see any coordinate of \(W^{(j)}\) through the reversed \(Q\)-stream,
+it needs at least
+\[
+n-jL+1
+\]
+occurrences of \(Q\).
+Seeing both requires at least
+\[
+(jL+1)+(n-jL+1)=n+2
+\]
+actions.
+\end{proof}
+
+\begin{proposition}[Exactness of the anti-diagonal source]
+The construction above is an exact horizon-\(n\) history-indexed causal
+realization of the memoryless channel \(\{P,Q\}\).
+\end{proposition}
+
+\begin{proof}
+Fix a deterministic action word.
+By the anti-diagonal lemma, the realized path exposes at most one
+marginal side of each coupled component.
+That exposed side has exactly product law \(P^L\) or \(Q^L\), and the
+different components are independent.
+Hence the complete realized path has the required product law.
+
+For an adaptive policy and a target output string, the output string
+determines one action word along the branch, so the same argument
+applies.
+\end{proof}
+
+The source entropy is
+\[
+H(S_n)
+=
+LH(P)+LH(Q)+(m-1)H(J_L).
+\tag{16.3}
+\]
+
+Therefore
+\[
+\boxed{
+H(S_n)
+\le
+nh_\star
++
+Lh_{\min}
++
+(m-1)(A_0\sqrt L+c_0),
+}
+\tag{16.4}
+\]
+where
+\[
+h_{\min}=\min\{H(P),H(Q)\}.
+\]
+
+
+% ============================================================
+\section{The causal Shannon-floor theorem}
+% ============================================================
+
+\begin{theorem}[Causal Shannon floor for two actions]
+For arbitrary finite probability distributions \(P,Q\),
+\[
+\boxed{
+\CinfCausal(P,Q)
+=
+\max\{H(P),H(Q)\}.
+}
+\tag{17.1}
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+h_\star=\max\{H(P),H(Q)\}.
+\]
+
+The fixed policy that always selects an entropy-maximizing action
+produces an \(n\)-step output trajectory of entropy \(nh_\star\).
+Since this trajectory is a deterministic projection of the causal seed,
+\[
+\Ccausal_n\ge nh_\star.
+\]
+
+For the upper bound, use the anti-diagonal construction with
+\(n=mL\).
+By (16.4),
+\[
+\frac{\Ccausal_{mL}}{mL}
+\le
+h_\star
++
+\frac{h_{\min}}m
++
+\frac{A_0}{\sqrt L}
++
+\frac{c_0}{L}.
+\]
+Let \(m,L\to\infty\).
+\end{proof}
+
+\begin{corollary}[Sublinear finite-horizon residual]
+For fixed finite \(P,Q\),
+\[
+\boxed{
+\Ccausal_n
+\le
+nh_\star+O(n^{2/3}).
+}
+\tag{17.2}
+\]
+For equal-entropy actions,
+\[
+\boxed{
+E_n=O(n^{2/3}).
+}
+\tag{17.3}
+\]
+\end{corollary}
+
+\begin{proof}
+Take \(L\asymp n^{2/3}\) and \(m\asymp n^{1/3}\) in
+(16.4).
+A terminal incomplete block costs only \(O(L)\).
+\end{proof}
+
+
+% ============================================================
+\section{Strict asymptotic separation for the crash test}
+% ============================================================
+
+Since
+\[
+H(P)=H(Q)=1.5,
+\]
+the causal Shannon-floor theorem gives
+\[
+\boxed{
+\CinfCausal=1.5.
+}
+\tag{18.1}
+\]
+
+Together with the synchronous interval,
+\[
+\boxed{
+1.5
+=
+\CinfCausal
+<
+1.728465468745531
+\le
+\CinfSyn
+\le
+1.939147788079282
+<
+C_1.
+}
+\tag{18.2}
+\]
+
+Hence
+\[
+\boxed{
+\CinfSyn-\CinfCausal
+\ge
+0.228465468745531.
+}
+\tag{18.3}
+\]
+
+The gap is not a cost of adaptive sampling itself.
+It is certified under the stronger requirement that the same
+time/action event retain one common latent identity across mutually
+exclusive histories.
+
+
+% ============================================================
+\section{Finite non-attainment and asymptotic attainment}
+% ============================================================
+
+For the crash test,
+\[
+E_1>0.
+\]
+Since \(E_n\) is nondecreasing,
+\[
+E_n\ge E_1
+\qquad
+\forall n.
+\tag{19.1}
+\]
+
+Thus
+\[
+\boxed{
+\Ccausal_n>1.5n
+\qquad
+\text{for every finite }n.
+}
+\tag{19.2}
+\]
+
+Nevertheless,
+\[
+E_n=O(n^{2/3}),
+\]
+so
+\[
+\frac{E_n}{n}\to0.
+\tag{19.3}
+\]
+
+The Shannon floor is therefore an asymptotic rate, not a finite-horizon
+exact equality.
+
+
+% ============================================================
+\section{The one-vector classical representation}
+\label{sec:onevector}
+% ============================================================
+
+We now recast the finite latent model algebraically.
+
+Let \(\Omega=\supp\Gamma\) be the positive support of a finite latent
+law \(\Gamma\).
+Define
+\[
+\cH_\Gamma=\ell^2(\Omega)
+\]
+and
+\[
+\boxed{
+\psi_\Gamma(\omega)=\sqrt{\Gamma(\omega)}.
+}
+\tag{20.1}
+\]
+
+Every real random variable \(f:\Omega\to\R\) defines the multiplication
+operator
+\[
+M_f\xi(\omega)
+=
+f(\omega)\xi(\omega).
+\tag{20.2}
+\]
+
+Then
+\[
+\boxed{
+\E_\Gamma f
+=
+\ip{\psi_\Gamma}{M_f\psi_\Gamma}.
+}
+\tag{20.3}
+\]
+
+For an event \(E\subseteq\Omega\),
+\[
+\Pi_E=M_{\1_E}
+\]
+is an orthogonal projection and
+\[
+\boxed{
+\Gamma(E)
+=
+\ip{\psi_\Gamma}{\Pi_E\psi_\Gamma}.
+}
+\tag{20.4}
+\]
+
+Thus every finite classical source may be represented as
+\[
+\boxed{
+\text{one normalized vector }\psi_\Gamma
++
+\text{the commutative algebra }
+\cA_\Gamma\simeq\ell^\infty(\Omega).
+}
+\tag{20.5}
+\]
+
+Because \(\Gamma\) has positive support, \(\psi_\Gamma\) is cyclic for
+the multiplication algebra:
+\[
+\overline{\cA_\Gamma\psi_\Gamma}
+=
+\cH_\Gamma.
+\tag{20.6}
+\]
+
+\begin{remark}[The priced entropy remains Shannon entropy]
+This is a Hilbert-space representation of classical probability.
+The algebra is commutative and no quantum probability is introduced.
+
+The resource priced in this paper is
+\[
+H(\Gamma)
+=
+-\sum_\omega
+|\psi_\Gamma(\omega)|^2
+\log_2|\psi_\Gamma(\omega)|^2.
+\tag{20.7}
+\]
+It is not the von Neumann entropy of the rank-one operator
+\(
+|\psi_\Gamma\rangle\langle\psi_\Gamma|
+\).
+\end{remark}
+
+
+% ============================================================
+\section{Stable identity as operator identification}
+% ============================================================
+
+For a synchronous table define the event projections
+\[
+E_{t,a,y}
+=
+\1\{F_t(a)=y\}
+\in\cA_\Gamma.
+\tag{21.1}
+\]
+
+The transversal condition becomes
+\[
+\boxed{
+\ip{\psi_\Gamma}{
+\left(
+\prod_{t=1}^n E_{t,a_t,y_t}
+\right)
+\psi_\Gamma
+}
+=
+\prod_{t=1}^nP_{a_t}(y_t).
+}
+\tag{21.2}
+\]
+
+The defining identity requirement of C3-S is that
+\[
+E_{t,a,y}
+\]
+is literally the same projection for all histories that might precede
+time \(t\).
+
+For C3-C the corresponding projection is
+\[
+E_{t,h,a,y},
+\tag{21.3}
+\]
+and different histories may induce different projections.
+
+Hence
+\[
+\boxed{
+\begin{aligned}
+\text{C3-S:}\quad&
+E_{t,h,a,y}\equiv E_{t,a,y}
+\quad\forall h,
+\\
+\text{C3-C:}\quad&
+E_{t,h,a,y}
+\text{ may depend on }h.
+\end{aligned}
+}
+\tag{21.4}
+\]
+
+Thus stable synchronous identity is an algebraic identification of
+observables across mutually exclusive histories.
+
+
+% ============================================================
+\section{The surprisal operator and spectral ledger}
+% ============================================================
+
+Let
+\[
+P=(p_1,\ldots,p_N)
+\]
+have positive support.
+Define
+\[
+\psi_P
+=
+(\sqrt{p_1},\ldots,\sqrt{p_N})^\top
+\in\C^N
+\tag{22.1}
+\]
+and the diagonal surprisal operator
+\[
+\boxed{
+L_P
+=
+\operatorname{diag}
+(-\log_2p_1,\ldots,-\log_2p_N).
+}
+\tag{22.2}
+\]
+
+The vector spectral measure of \(L_P\) in \(\psi_P\) is exactly
+\[
+\mu_P=\Law[-\log_2P(X)].
+\tag{22.3}
+\]
+
+Indeed, for every Borel set \(B\),
+\[
+\boxed{
+\mu_P(B)
+=
+\ip{\psi_P}{E_{L_P}(B)\psi_P}.
+}
+\tag{22.4}
+\]
+
+Therefore
+\[
+\boxed{
+H(P)
+=
+\ip{\psi_P}{L_P\psi_P},
+}
+\tag{22.5}
+\]
+and
+\[
+\boxed{
+V_P
+=
+\ip{\psi_P}{
+(L_P-H(P)I)^2\psi_P
+}.
+}
+\tag{22.6}
+\]
+
+More generally,
+\[
+\E[\imath_P(X)^m]
+=
+\ip{\psi_P}{L_P^m\psi_P}.
+\tag{22.7}
+\]
+
+The full characteristic function is
+\[
+\boxed{
+\Phi_P(t)
+=
+\ip{\psi_P}{e^{itL_P}\psi_P}
+=
+\int e^{itu}\,\dd\mu_P(u).
+}
+\tag{22.8}
+\]
+
+If
+\[
+Z_P(s)
+=
+\sum_jp_j^s,
+\tag{22.9}
+\]
+then
+\[
+\boxed{
+\Phi_P(t)
+=
+Z_P
+\left(
+1-\frac{it}{\ln2}
+\right).
+}
+\tag{22.10}
+\]
+
+We call \(\Phi_P\), equivalently \(\mu_P\), the
+\emph{surprisal spectral ledger}.
+
+It is complete for finite probability spectra:
+if \(u=-\log_2p\) is an atom of \(\mu_P\) with mass \(m_u\), then the
+multiplicity of the original probability \(p\) is
+\[
+\boxed{
+N_p=m_u2^u.
+}
+\tag{22.11}
+\]
+Thus \(\mu_P\) determines the nonzero probability multiset of \(P\) up
+to permutation.
+
+
+% ============================================================
+\section{Lipschitz distance between spectral states}
+% ============================================================
+
+Define
+\[
+\boxed{
+d_{\mathrm{Lip}}(P,Q)
+=
+\sup_{\operatorname{Lip}(f)\le1}
+\left|
+\ip{\psi_P}{f(L_P)\psi_P}
+-
+\ip{\psi_Q}{f(L_Q)\psi_Q}
+\right|.
+}
+\tag{23.1}
+\]
+
+By the spectral theorem and Kantorovich--Rubinstein duality,
+\[
+\boxed{
+d_{\mathrm{Lip}}(P,Q)
+=
+W_1(\mu_P,\mu_Q).
+}
+\tag{23.2}
+\]
+
+The two principal asymptotic theorems can therefore be written in one
+language.
+
+For two actions,
+\[
+\boxed{
+\CinfCausal(P,Q)
+=
+\max
+\{
+\ip{\psi_P}{L_P\psi_P},
+\ip{\psi_Q}{L_Q\psi_Q}
+\}.
+}
+\tag{23.3}
+\]
+
+The synchronous converse gives
+\[
+\boxed{
+\CinfSyn(P,Q)
+\ge
+\frac12
+\left[
+\ip{\psi_P}{L_P\psi_P}
++
+\ip{\psi_Q}{L_Q\psi_Q}
++
+d_{\mathrm{Lip}}(P,Q)
+\right].
+}
+\tag{23.4}
+\]
+
+For equal entropy,
+\[
+\boxed{
+\CinfCausal=h,
+\qquad
+\CinfSyn
+\ge
+h+\frac12d_{\mathrm{Lip}}(P,Q).
+}
+\tag{23.5}
+\]
+
+This is the central algebraic reading of Version 5:
+
+\begin{center}
+\fbox{
+\begin{minipage}{0.84\textwidth}
+For a finite two-action channel, the history-indexed causal rate is
+determined by the largest first spectral moment of surprisal.
+
+The stable synchronous identity contract can remain sensitive to the
+shape of the complete surprisal spectral measure.
+\end{minipage}}
+\end{center}
+
+
+% ============================================================
+\section{Moment blindness as incomplete functional calculus}
+% ============================================================
+
+Matching the first \(R\) surprisal moments means
+\[
+\ip{\psi_P}{L_P^m\psi_P}
+=
+\ip{\psi_Q}{L_Q^m\psi_Q},
+\qquad
+m=0,\ldots,R.
+\tag{24.1}
+\]
+
+Thus the two spectral states agree on the finite polynomial family
+\[
+I,L,\ldots,L^R.
+\]
+
+They need not agree on the full functional calculus.
+For example,
+\[
+f(L)=e^{i\pi L}
+\tag{24.2}
+\]
+can detect a parity distinction invisible to all those moments.
+
+Hence
+\[
+\boxed{
+\text{finite moment information}
+=
+\text{finite polynomial accounting},
+}
+\tag{24.3}
+\]
+while
+\[
+\boxed{
+\text{the full spectral ledger}
+=
+\text{complete functional calculus}.
+}
+\tag{24.4}
+\]
+
+
+% ============================================================
+\section{Block surprisal resolution}
+% ============================================================
+
+Define
+\[
+\boxed{
+\mathcal R_L(P,Q)
+=
+\frac1L
+W_1(\mu_P^{*L},\mu_Q^{*L}).
+}
+\tag{25.1}
+\]
+
+This is the per-symbol mismatch after aggregating \(L\) independent
+surprisals.
+
+\begin{theorem}[Block-resolution trichotomy]
+Let \(P,Q\) be finite distributions.
+
+If
+\[
+H(P)\ne H(Q),
+\]
+then
+\[
+\boxed{
+\mathcal R_L(P,Q)
+\to
+|H(P)-H(Q)|.
+}
+\tag{25.2}
+\]
+
+If
+\[
+H(P)=H(Q)
+\]
+but
+\[
+V_P\ne V_Q,
+\]
+then
+\[
+\boxed{
+\sqrt L\,\mathcal R_L(P,Q)
+\to
+\sqrt{\frac2\pi}
+\left|
+\sqrt{V_P}-\sqrt{V_Q}
+\right|.
+}
+\tag{25.3}
+\]
+
+If
+\[
+H(P)=H(Q)
+\quad\text{and}\quad
+V_P=V_Q,
+\]
+then
+\[
+\boxed{
+\mathcal R_L(P,Q)=O(L^{-1}).
+}
+\tag{25.4}
+\]
+\end{theorem}
+
+\begin{proof}
+For the first case,
+\[
+W_1(\mu_P^{*L},\mu_Q^{*L})
+\ge
+L|H(P)-H(Q)|
+\]
+by the difference of means, while centered fluctuations contribute only
+\(O(\sqrt L)\), giving (25.2).
+
+For equal entropy, center both sums and divide by \(\sqrt L\).
+Finite support implies convergence in \(W_1\) to the corresponding
+Gaussian laws.
+If the limiting variances differ, continuity of \(W_1\) and the monotone
+Gaussian coupling give
+\[
+W_1(N(0,V_P),N(0,V_Q))
+=
+\sqrt{\frac2\pi}
+|\sqrt{V_P}-\sqrt{V_Q}|,
+\]
+which yields (25.3).
+
+If the variances also agree, a quantitative \(W_1\) central limit
+estimate gives normalized error \(O(L^{-1/2})\) for each law.
+After restoring the \(\sqrt L\) scale, their unnormalized
+Wasserstein distance is \(O(1)\), proving (25.4).
+\end{proof}
+
+
+% ============================================================
+\subsection{Crash-test block coefficient}
+% ============================================================
+
+For the crash-test pair,
+\[
+V_P=0.25,
+\qquad
+V_Q=0.208347310239073\ldots.
+\]
+Hence
+\[
+\boxed{
+W_1(\mu_P^{*L},\mu_Q^{*L})
+=
+c_{\mathrm{crash}}\sqrt L+o(\sqrt L),
+}
+\tag{25.5}
+\]
+with
+\[
+c_{\mathrm{crash}}
+=
+\sqrt{\frac2\pi}
+\left(
+\frac12-\sqrt{V_Q}
+\right)
+=
+0.0347472540518\ldots.
+\tag{25.6}
+\]
+
+The small-\(L\) sequence need not be monotone; the statement is
+asymptotic.
+
+
+% ============================================================
+\subsection{Matched varentropy improves the causal residual}
+% ============================================================
+
+\begin{theorem}[Matched-varentropy causal refinement]
+If
+\[
+H(P)=H(Q)=h,
+\qquad
+V_P=V_Q,
+\]
+then
+\[
+\boxed{
+\Ccausal_n
+\le
+nh+O(\sqrt n).
+}
+\tag{25.7}
+\]
+\end{theorem}
+
+\begin{proof}
+The third case of the block-resolution theorem gives
+\[
+W_1(\mu_P^{*L},\mu_Q^{*L})=O(1).
+\]
+The profile theorem therefore supplies block couplings with
+\[
+H(J_L)\le Lh+O(1).
+\]
+The anti-diagonal construction yields
+\[
+E_n
+\le
+O(L)+O(n/L).
+\]
+Choose \(L\asymp\sqrt n\).
+\end{proof}
+
+
+% ============================================================
+\section{An arithmetic barrier}
+% ============================================================
+
+Higher moment matching does not by itself force a resolution exponent
+larger than one in raw \(W_1\).
+
+\begin{lemma}[Lattice-phase lower bound]
+Suppose
+\[
+\supp\mu\subseteq a+h\mathbb Z,
+\qquad
+\supp\nu\subseteq b+h\mathbb Z.
+\]
+Then
+\[
+\boxed{
+W_1(\mu^{*L},\nu^{*L})
+\ge
+\operatorname{dist}
+(L(a-b),h\mathbb Z).
+}
+\tag{26.1}
+\]
+\end{lemma}
+
+\begin{proof}
+The convolution supports lie in
+\[
+La+h\mathbb Z
+\quad\text{and}\quad
+Lb+h\mathbb Z,
+\]
+so every coupled pair is separated by at least the displayed coset
+distance.
+\end{proof}
+
+
+% ============================================================
+\subsection{Dyadic parity ladder}
+% ============================================================
+
+Fix \(R\ge2\).
+For \(j=0,\ldots,R+1\), set
+\[
+p_j=2^{-(R+j)}.
+\]
+
+Define \(P_R\) by including, for even \(j\),
+\[
+2^j\binom{R+1}{j}
+\]
+atoms of probability \(p_j\), and define \(Q_R\) analogously using odd
+\(j\).
+
+Their surprisal laws are
+\[
+\mu_{P_R}
+=
+2^{-R}
+\sum_{\substack{0\le j\le R+1\\j\ \mathrm{even}}}
+\binom{R+1}{j}
+\delta_{R+j},
+\tag{26.2}
+\]
+and
+\[
+\mu_{Q_R}
+=
+2^{-R}
+\sum_{\substack{0\le j\le R+1\\j\ \mathrm{odd}}}
+\binom{R+1}{j}
+\delta_{R+j}.
+\tag{26.3}
+\]
+
+\begin{theorem}[Arbitrarily high finite-moment camouflage]
+For every \(R\ge2\),
+\[
+\boxed{
+\int u^m\,\dd\mu_{P_R}(u)
+=
+\int u^m\,\dd\mu_{Q_R}(u),
+\qquad
+m=0,\ldots,R.
+}
+\tag{26.4}
+\]
+
+Nevertheless,
+\[
+\boxed{
+W_1(\mu_{P_R},\mu_{Q_R})=1.
+}
+\tag{26.5}
+\]
+
+Moreover, for every odd \(L\),
+\[
+\boxed{
+W_1(\mu_{P_R}^{*L},\mu_{Q_R}^{*L})\ge1.
+}
+\tag{26.6}
+\]
+\end{theorem}
+
+\begin{proof}
+Subtracting the two laws gives the signed measure
+\[
+2^{-R}
+\sum_{j=0}^{R+1}
+(-1)^j
+\binom{R+1}{j}
+\delta_{R+j}.
+\]
+Its integral against every polynomial of degree at most \(R\) vanishes
+because this is an \((R+1)\)-st finite difference.
+
+For the Wasserstein upper bound, identify the weights with the Hamming
+weight of a uniformly random \((R+1)\)-bit string conditioned on even or
+odd parity.
+Flipping one fixed bit maps the even class bijectively to the odd class
+and changes Hamming weight by exactly one.
+Thus a coupling with distance one exists.
+
+The two supports lie on opposite integer parity classes, so every
+coupling has distance at least one.
+This proves (26.5).
+
+For odd \(L\), the convolution supports remain on opposite parity
+classes, giving (26.6).
+\end{proof}
+
+Their common entropy and varentropy are
+\[
+\boxed{
+H(P_R)=H(Q_R)=\frac{3R+1}{2},
+}
+\tag{26.7}
+\]
+and
+\[
+\boxed{
+V_{P_R}=V_{Q_R}=\frac{R+1}{4}.
+}
+\tag{26.8}
+\]
+
+Thus arbitrarily many matching moments can coexist with an
+\(O(1)\) lattice-phase obstruction to block Wasserstein distance.
+
+
+% ============================================================
+\section{Finite-moment blindness of the synchronous tax}
+% ============================================================
+
+For every \(R\ge2\), the causal theorem gives
+\[
+\CinfCausal(P_R,Q_R)
+=
+\frac{3R+1}{2}.
+\tag{27.1}
+\]
+
+Since
+\[
+W_1(\mu_{P_R},\mu_{Q_R})=1,
+\]
+the synchronous converse gives
+\[
+\boxed{
+\CinfSyn(P_R,Q_R)
+\ge
+\frac{3R+1}{2}+\frac12.
+}
+\tag{27.2}
+\]
+
+Hence
+\[
+\boxed{
+\CinfSyn(P_R,Q_R)
+-
+\CinfCausal(P_R,Q_R)
+\ge
+\frac12
+}
+\tag{27.3}
+\]
+while the first \(R\) surprisal moments agree.
+
+Therefore no fixed finite truncation of the moment sequence determines
+the presence or absence of a positive synchronous stable-identity
+surcharge.
+
+
+% ============================================================
+\section{Higher-order metrics and the limit of raw Wasserstein}
+% ============================================================
+
+A tempting rule would be
+\[
+\text{first unmatched cumulant of order }r
+\Longrightarrow
+\mathcal R_L
+\asymp
+L^{-(r-1)/2}.
+\tag{28.1}
+\]
+
+The parity ladder disproves this as a universal statement for raw
+\(W_1\).
+Finite moment matching controls the low-frequency Taylor expansion of
+the characteristic function near the origin, while \(W_1\) can also
+detect nonzero-frequency lattice phase.
+
+A classical framework for moment-sensitive comparison is provided by
+Zolotarev ideal metrics.
+For suitable \(s>0\), these metrics satisfy convolution and scaling
+properties of the form
+\[
+\zeta_s(X+Z,Y+Z)\le\zeta_s(X,Y)
+\tag{28.2}
+\]
+for common independent \(Z\), and
+\[
+\zeta_s(cX,cY)
+=
+|c|^s\zeta_s(X,Y).
+\tag{28.3}
+\]
+
+They therefore provide a genuine higher-order smoothing hierarchy once
+the necessary lower moments agree.
+
+The open issue for the present project is operational:
+find a higher-order resolution functional that both enjoys such ideal
+smoothing properties and controls a minimum-entropy coupling or
+counterfactual source cost strongly enough to replace the present
+\(W_1\) interface.
+
+
+% ============================================================
+\section{One-parameter orbits and spectral measures}
+% ============================================================
+
+Let
+\[
+U_t=e^{itA},
+\qquad
+t\in\R,
+\]
+be a strongly continuous one-parameter unitary group on a Hilbert space
+\(\cH\), with self-adjoint generator \(A\).
+For a normalized vector \(\psi\), define
+\[
+\boxed{
+R_{\psi,A}(t)
+=
+\ip{\psi}{e^{itA}\psi}.
+}
+\tag{29.1}
+\]
+
+By the spectral theorem there exists a unique probability measure
+\[
+\nu_{\psi,A}
+\]
+such that
+\[
+\boxed{
+R_{\psi,A}(t)
+=
+\int_\R e^{it\xi}\,\dd\nu_{\psi,A}(\xi).
+}
+\tag{29.2}
+\]
+
+\begin{theorem}[One-orbit reduction]
+For every \(s,t\in\R\),
+\[
+\boxed{
+\ip{U_s\psi}{U_t\psi}
+=
+R_{\psi,A}(t-s).
+}
+\tag{29.3}
+\]
+Thus pairwise comparison along one unitary orbit depends only on the
+relative group displacement.
+\end{theorem}
+
+This is the abstract form of the scale reduction used below.
+
+
+% ============================================================
+\section{The dilation model and the REAL kernel family}
+% ============================================================
+
+For \(K\in L^2(\R^d)\), define
+\[
+(U_tK)(x)
+=
+e^{-dt/2}K(e^{-t}x).
+\tag{30.1}
+\]
+This is a unitary dilation group.
+
+Its infinitesimal generator is, up to the conventional factor \(-i\),
+\[
+\boxed{
+\mathcal D
+=
+x\cdot\nabla+\frac d2.
+}
+\tag{30.2}
+\]
+
+Let
+\[
+K_a(x)=a^{-d}K(x/a).
+\tag{30.3}
+\]
+Then
+\[
+K_a
+=
+a^{-d/2}U_{\ln a}K.
+\tag{30.4}
+\]
+
+Hence
+\[
+\boxed{
+\ip{K_a}{K_b}
+=
+(ab)^{-d/2}
+\|K\|_2^2
+R_K\left(\ln\frac ba\right),
+}
+\tag{30.5}
+\]
+where
+\[
+R_K(t)
+=
+\ip{K/\|K\|_2}{U_tK/\|K\|_2}.
+\]
+
+For \(0<a\le b\), setting
+\[
+r=\frac ab
+\]
+gives the scale-reduction form
+\[
+\boxed{
+\ip{K_a}{K_b}
+=
+b^{-d}H_K(r),
+}
+\tag{30.6}
+\]
+with
+\[
+H_K(r)
+=
+r^{-d/2}\|K\|_2^2R_K(-\ln r).
+\tag{30.7}
+\]
+
+Thus the two absolute scales reduce exactly to one dimensionless ratio.
+
+
+% ============================================================
+\subsection{Compactly supported polynomial kernels}
+% ============================================================
+
+In one dimension consider
+\[
+\rho_k(x)
+=
+\frac{k+1}{2}(1-|x|)^k_+,
+\qquad
+k=0,1,2,\ldots.
+\tag{30.8}
+\]
+
+For
+\[
+\rho_{k,a}(x)
+=
+a^{-1}\rho_k(x/a),
+\]
+define
+\[
+F_k(a,b)
+=
+\int_\R\rho_{k,a}(x)\rho_{k,b}(x)\,\dd x.
+\tag{30.9}
+\]
+
+For \(0<a\le b\),
+\[
+\boxed{
+F_k(a,b)
+=
+\frac1bH_k(a/b),
+}
+\tag{30.10}
+\]
+where
+\[
+H_k(r)
+=
+2C_k^2
+\int_0^1
+(1-u)^k(1-ru)^k\,\dd u,
+\qquad
+C_k=\frac{k+1}{2}.
+\tag{30.11}
+\]
+
+Equivalently,
+\[
+H_k(r)
+=
+2C_k^2
+\sum_{j=0}^{k}
+(-1)^j
+\binom{k}{j}
+B(j+1,k+1)r^j,
+\tag{30.12}
+\]
+and
+\[
+H_k(r)
+=
+\frac{k+1}{2}
+\,{}_2F_1(-k,1;k+2;r),
+\tag{30.13}
+\]
+where the integral representation (30.11) is the primary form
+used below.
+
+For \(m\le k\),
+\[
+\boxed{
+(-1)^mH_k^{(m)}(r)\ge0.
+}
+\tag{30.14}
+\]
+
+The endpoint values are
+\[
+H_k(1)
+=
+\frac{(k+1)^2}{2(2k+1)},
+\tag{30.15}
+\]
+and
+\[
+H_k'(1)
+=
+-\frac{(k+1)^2}{4(2k+1)}.
+\tag{30.16}
+\]
+
+
+
+% ============================================================
+\section{Explicit Mellin spectrum of the polynomial kernels}
+% ============================================================
+
+The dilation group is diagonalized by the Mellin transform on each
+half-line.
+For the even kernel \(\rho_k\), the normalized vector spectral measure
+has density
+
+\[
+\boxed{
+w_k(\xi)
+=
+\frac{2k+1}{2\pi}
+\left|
+B\left(\frac12-i\xi,k+1\right)
+\right|^2.
+}
+\tag{31.1}
+\]
+
+For integer \(k\),
+\[
+\boxed{
+w_k(\xi)
+=
+\frac{2k+1}{2\pi}
+\frac{(k!)^2}
+{\displaystyle
+\prod_{j=0}^{k}
+\left[
+\xi^2+\left(j+\frac12\right)^2
+\right]}.
+}
+\tag{31.2}
+\]
+
+It is normalized:
+\[
+\int_\R w_k(\xi)\,\dd\xi=1,
+\tag{31.3}
+\]
+and
+\[
+\boxed{
+R_k(t)
+=
+\int_\R e^{it\xi}w_k(\xi)\,\dd\xi.
+}
+\tag{31.4}
+\]
+
+\begin{proof}[Derivation]
+On \(x>0\),
+\[
+\rho_k(x)=C_k(1-x)^k\1_{(0,1)}(x).
+\]
+The unitary Mellin transform gives
+\[
+\widehat\rho_k(\xi)
+=
+\frac{C_k}{\sqrt{2\pi}}
+B\left(\frac12-i\xi,k+1\right).
+\]
+Because the full kernel is even, the positive and negative half-line
+contributions are identical.
+Dividing the doubled Mellin energy by
+\[
+\|\rho_k\|_2^2
+=
+\frac{(k+1)^2}{2(2k+1)}
+\]
+gives (31.1).
+The product formula follows from
+\[
+\frac{\Gamma(\frac12-i\xi)}
+{\Gamma(k+\frac32-i\xi)}
+=
+\prod_{j=0}^{k}
+\frac1{j+\frac12-i\xi}.
+\]
+\end{proof}
+
+The tail is
+\[
+\boxed{
+w_k(\xi)\asymp|\xi|^{-2k-2}.
+}
+\tag{31.5}
+\]
+
+Therefore
+\[
+\boxed{
+\int|\xi|^\alpha w_k(\xi)\,\dd\xi<\infty
+\iff
+\alpha<2k+1.
+}
+\tag{31.6}
+\]
+
+The kernel edge regularity is thus recorded directly in the Mellin
+spectral tail.
+
+
+% ============================================================
+\section{Hard and smooth orbit-resolution classes}
+% ============================================================
+
+For \(k=0\),
+\[
+w_0(\xi)
+=
+\frac1{2\pi(\xi^2+1/4)},
+\tag{32.1}
+\]
+the Cauchy law of scale \(1/2\).
+Hence
+\[
+\boxed{
+R_0(t)=e^{-|t|/2}.
+}
+\tag{32.2}
+\]
+
+The correlation profile has a linear cusp at the origin and no finite
+second spectral moment.
+
+For \(k\ge1\), the second spectral moment is finite and equals
+\[
+\boxed{
+\mathcal E_k
+:=
+\int\xi^2w_k(\xi)\,\dd\xi
+=
+\frac{2k+1}{4(2k-1)}.
+}
+\tag{32.3}
+\]
+
+Equivalently,
+\[
+\mathcal E_k
+=
+\frac{
+\|\left(x\partial_x+\frac12\right)\rho_k\|_2^2
+}{
+\|\rho_k\|_2^2
+}.
+\tag{32.4}
+\]
+
+Thus
+\[
+\boxed{
+R_k(t)
+=
+1-\frac{\mathcal E_k}{2}t^2+o(t^2),
+\qquad
+k\ge1.
+}
+\tag{32.5}
+\]
+
+The hard edge and smooth edge therefore form distinct local resolution
+classes:
+\[
+\boxed{
+\begin{array}{ccl}
+k=0
+&:&
+1-R_0(t)\asymp|t|,
+\\[1mm]
+k\ge1
+&:&
+1-R_k(t)\asymp t^2.
+\end{array}
+}
+\tag{32.6}
+\]
+
+
+% ============================================================
+\section{Reciprocal probability scaling}
+% ============================================================
+
+Define the normalized reciprocal-scale overlap
+\[
+\boxed{
+\mathcal A_k(p,q)
+=
+\frac{F_k(1/p,1/q)}{H_k(1)}.
+}
+\tag{33.1}
+\]
+
+Let
+\[
+m=\min(p,q),
+\qquad
+M=\max(p,q).
+\]
+Then
+\[
+\boxed{
+\mathcal A_k(p,q)
+=
+m
+\frac{H_k(m/M)}{H_k(1)}.
+}
+\tag{33.2}
+\]
+
+Equivalently,
+\[
+\boxed{
+\mathcal A_k(p,q)
+=
+\sqrt{pq}\,
+R_k(|\ln(p/q)|).
+}
+\tag{33.3}
+\]
+
+Introduce surprisal coordinates
+\[
+u=-\log_2p,
+\qquad
+v=-\log_2q
+\]
+and define
+\[
+c_k(u,v)
+=
+-\log_2\mathcal A_k(p,q).
+\tag{33.4}
+\]
+
+Then
+\[
+\boxed{
+c_k(u,v)
+=
+\frac{u+v}{2}
+-
+\log_2
+R_k((\ln2)|u-v|).
+}
+\tag{33.5}
+\]
+
+For \(k=0\),
+\[
+\boxed{
+\mathcal A_0(p,q)=\min(p,q),
+}
+\tag{33.6}
+\]
+and therefore
+\[
+\boxed{
+c_0(u,v)=\max(u,v).
+}
+\tag{33.7}
+\]
+
+This is the exact scalar identity underlying the synchronous
+information-spectrum converse.
+
+For \(k\ge1\), using (32.5),
+\[
+\boxed{
+c_k(u,v)
+=
+\frac{u+v}{2}
++
+\frac{\ln2}{2}\mathcal E_k(u-v)^2
++
+o((u-v)^2).
+}
+\tag{33.8}
+\]
+
+Explicitly,
+\[
+\boxed{
+c_k(u,v)
+=
+\frac{u+v}{2}
++
+\frac{\ln2(2k+1)}{8(2k-1)}
+(u-v)^2
++
+o((u-v)^2).
+}
+\tag{33.9}
+\]
+
+Thus the local information-resolution curvature is proportional to the
+dilation-generator energy.
+
+
+% ============================================================
+\section{Hard-to-soft overlap ladder}
+% ============================================================
+
+Since \(H_k\) is decreasing on \((0,1]\),
+\[
+H_k(r)\ge H_k(1).
+\]
+Therefore
+\[
+\mathcal A_k(p,q)\ge\min(p,q).
+\tag{34.1}
+\]
+
+Cauchy--Schwarz gives
+\[
+\mathcal A_k(p,q)\le\sqrt{pq}.
+\tag{34.2}
+\]
+
+Hence
+\[
+\boxed{
+\min(p,q)
+\le
+\mathcal A_k(p,q)
+\le
+\sqrt{pq},
+}
+\tag{34.3}
+\]
+and
+\[
+\boxed{
+\frac{u+v}{2}
+\le
+c_k(u,v)
+\le
+\max(u,v).
+}
+\tag{34.4}
+\]
+
+Therefore the higher-\(k\) overlap costs cannot strengthen the direct
+\(k=0\) synchronous converse.
+They form softer, smoother resolution probes.
+
+The large-\(k\) limit is explicit.
+From (30.11),
+\[
+\boxed{
+\frac{H_k(r)}{H_k(1)}
+\longrightarrow
+\frac{2}{1+r}
+}
+\tag{34.5}
+\]
+for fixed \(0\le r\le1\).
+
+Consequently,
+\[
+\boxed{
+\mathcal A_k(p,q)
+\longrightarrow
+\frac{2pq}{p+q},
+}
+\tag{34.6}
+\]
+the harmonic mean of \(p\) and \(q\).
+
+In surprisal coordinates,
+\[
+\boxed{
+c_\infty(u,v)
+=
+\frac{u+v}{2}
++
+\log_2
+\cosh
+\left(
+\frac{\ln2}{2}(u-v)
+\right).
+}
+\tag{34.7}
+\]
+
+At the orbit level,
+\[
+\boxed{
+R_k(t)\longrightarrow\operatorname{sech}(t/2),
+}
+\tag{34.8}
+\]
+whose spectral density under the present Fourier convention is
+\[
+\boxed{
+w_\infty(\xi)=\operatorname{sech}(\pi\xi).
+}
+\tag{34.9}
+\]
+
+
+% ============================================================
+\section{Soft synchronous transport costs}
+% ============================================================
+
+For every full synchronous atom,
+\[
+\Gamma(f)
+\le
+\prod_t\min\{P(x_t),Q(z_t)\}.
+\]
+Since
+\[
+\min(p,q)\le\mathcal A_k(p,q),
+\]
+we also have the weaker but valid pointwise bound
+\[
+-\log_2\Gamma(f)
+\ge
+\sum_t c_k(
+\imath_P(x_t),
+\imath_Q(z_t)
+).
+\]
+
+Define
+\[
+\boxed{
+\mathcal T_k(P,Q)
+=
+\inf_{\pi\in\Pi(\mu_P,\mu_Q)}
+\E_\pi c_k(U,V).
+}
+\tag{35.1}
+\]
+
+Then
+\[
+\boxed{
+\Csyn_n(P,Q)
+\ge
+n\mathcal T_k(P,Q).
+}
+\tag{35.2}
+\]
+
+For \(k=0\),
+\[
+\mathcal T_0(P,Q)
+=
+\frac12
+\left[
+H(P)+H(Q)+W_1(\mu_P,\mu_Q)
+\right].
+\tag{35.3}
+\]
+
+The \(k\ge1\) family is generally weaker as a lower bound, but smoother
+as a function of local surprisal mismatch.
+It is useful as a bridge to finite-energy orbit probes rather than as an
+attempt to beat the hard \(k=0\) converse.
+
+
+% ============================================================
+\section{Spectral probes of the surprisal ledger}
+% ============================================================
+
+Let \(\eta\) be a probability measure on \(\R\) with finite second
+moment
+\[
+\sigma_\eta^2
+=
+\int t^2\,\dd\eta(t)
+<\infty.
+\tag{36.1}
+\]
+
+Define
+\[
+\boxed{
+D_\eta(P,Q)^2
+=
+\int
+|\Phi_P(t)-\Phi_Q(t)|^2
+\,\dd\eta(t).
+}
+\tag{36.2}
+\]
+
+For a translation-invariant positive-definite kernel whose Bochner
+spectral measure is \(\eta\), this is the standard Fourier form of an
+MMD-type discrepancy.
+The novelty claimed here is not the metric construction itself, but its
+use as an orbit-selected certificate inside the present counterfactual
+source-cost bound.
+
+\begin{theorem}[Spectral probe inequality]
+\[
+\boxed{
+D_\eta(P,Q)
+\le
+\sigma_\eta
+W_1(\mu_P,\mu_Q).
+}
+\tag{36.3}
+\]
+Hence
+\[
+\boxed{
+W_1(\mu_P,\mu_Q)
+\ge
+\frac{D_\eta(P,Q)}{\sigma_\eta}.
+}
+\tag{36.4}
+\]
+\end{theorem}
+
+\begin{proof}
+For any coupling \((U,V)\) of \(\mu_P,\mu_Q\),
+\[
+|\Phi_P(t)-\Phi_Q(t)|
+\le
+\E|e^{itU}-e^{itV}|
+\le
+|t|\E|U-V|.
+\]
+Take the optimal \(W_1\) coupling, square, and integrate.
+\end{proof}
+
+
+% ============================================================
+\section{Orbit--ledger--counterfactual bridge}
+% ============================================================
+
+Combining the spectral probe inequality with the synchronous
+information-spectrum converse yields the main bridge.
+
+\begin{theorem}[Orbit--ledger--counterfactual bridge]
+Let \(P,Q\) be finite action distributions and let \(\eta\) be any
+probability measure with
+\[
+0<\sigma_\eta^2<\infty.
+\]
+Then
+\[
+\boxed{
+\CinfSyn(P,Q)
+\ge
+\frac{H(P)+H(Q)}2
++
+\frac{D_\eta(P,Q)}{2\sigma_\eta}.
+}
+\tag{37.1}
+\]
+
+If \(\eta=\nu_{\psi,A}\) is the spectral measure of a normalized vector
+\(\psi\) under a one-parameter unitary orbit generated by \(A\), then the
+same inequality turns that geometric orbit into a valid spectral auditor
+of the surprisal mismatch.
+\end{theorem}
+
+Thus
+\[
+\boxed{
+\begin{gathered}
+\text{one geometric vector }\psi
+\\
+\Downarrow
+\\
+\text{one-parameter orbit }e^{itA}\psi
+\\
+\Downarrow
+\\
+\text{orbit spectral measure }\eta
+\\
+\Downarrow
+\\
+D_\eta(P,Q)
+\\
+\Downarrow
+\\
+\text{synchronous source-cost certificate}.
+\end{gathered}
+}
+\tag{37.2}
+\]
+
+No identification of the geometric kernel with a counterfactual latent
+seed is required.
+The bridge operates through common spectral geometry.
+
+
+% ============================================================
+\section{REAL kernels as spectral auditors}
+% ============================================================
+
+For \(k\ge1\), let \(\eta=\nu_k\) be the Mellin/dilation spectral measure
+of the normalized polynomial kernel.
+Then
+\[
+\sigma_{\nu_k}^2
+=
+\mathcal E_k
+=
+\frac{2k+1}{4(2k-1)}.
+\]
+
+Therefore
+\[
+\boxed{
+\CinfSyn(P,Q)
+\ge
+\frac{H(P)+H(Q)}2
++
+\frac{
+D_{\nu_k}(P,Q)
+}{
+2\sqrt{\mathcal E_k}
+}.
+}
+\tag{38.1}
+\]
+
+The parameter \(k\) selects a spectral auditor.
+
+For \(k=0\), the second spectral moment diverges, so
+(38.1) is unavailable.
+Exactly in this singular case, however, the stronger direct identity
+\[
+2F_0(1/p,1/q)=\min(p,q)
+\tag{38.2}
+\]
+recovers the hard \(W_1\) converse.
+
+The family therefore exhibits a structural transition:
+\[
+\boxed{
+\begin{array}{ccl}
+\text{hard edge}
+&\Longrightarrow&
+\text{heavy Mellin tail}
+\Longrightarrow
+\text{linear cusp},
+\\[1mm]
+\text{finite dilation energy}
+&\Longrightarrow&
+\text{finite second spectral moment}
+\Longrightarrow
+\text{quadratic local resolution}.
+\end{array}
+}
+\tag{38.3}
+\]
+
+
+% ============================================================
+\section{Fractional-edge universality: the abstract target}
+% ============================================================
+
+The preceding examples motivate a general local classification.
+
+Suppose an orbit correlation satisfies
+\[
+1-\Re R_{\psi,A}(t)
+\sim
+c|t|^\beta
+\qquad
+(t\to0)
+\tag{39.1}
+\]
+for some
+\[
+0<\beta\le2.
+\]
+
+Define the associated normalized reciprocal-scale cost
+\[
+c_{\psi,A}(u,v)
+=
+\frac{u+v}{2}
+-
+\log_2
+\Re R_{\psi,A}
+\bigl(
+(\ln2)|u-v|
+\bigr),
+\tag{39.2}
+\]
+whenever the correlation is positive near the origin.
+
+Then the elementary expansion
+\[
+-\log(1-z)\sim z
+\]
+suggests
+\[
+\boxed{
+c_{\psi,A}(u,v)
+-
+\frac{u+v}{2}
+\sim
+c(\ln2)^{\beta-1}
+|u-v|^\beta.
+}
+\tag{39.3}
+\]
+
+The hard box corresponds to \(\beta=1\);
+finite-energy smooth kernels correspond to \(\beta=2\).
+
+A complete theorem should state the weakest positivity and regularity
+conditions under which such an orbit profile induces a globally valid
+probability-overlap functional and an operational counterfactual
+converse.
+The local asymptotic implication itself is elementary; the nontrivial
+part is the global interface.
+
+
+% ============================================================
+\section{What the unified algebraic picture actually says}
+% ============================================================
+
+The phrase ``one vector plus an algebra'' has a precise but limited
+meaning here.
+
+For a finite classical source,
+\[
+\psi_\Gamma
+\]
+encodes the probability weights and
+\[
+\cA_\Gamma
+\]
+contains all classical observables.
+
+For one observable generator \(A\), the vector state selects a spectral
+measure
+\[
+\nu_{\psi,A}(B)
+=
+\ip{\psi}{E_A(B)\psi}.
+\]
+
+The complete one-parameter ledger is
+\[
+\ip{\psi}{e^{itA}\psi}
+=
+\int e^{it\xi}\,\dd\nu_{\psi,A}(\xi).
+\]
+
+The three principal uses in this paper are
+
+\[
+\boxed{
+\begin{array}{c|c|c}
+\text{setting}
+&
+\text{generator}
+&
+\text{vector spectral measure}
+\\
+\hline
+\text{classical latent source}
+&
+M_f
+&
+\text{law of }f
+\\
+\text{surprisal ledger}
+&
+L_P
+&
+\mu_P
+\\
+\text{scale orbit}
+&
+A_{\mathrm{dil}}
+&
+\nu_K
+\end{array}
+}
+\tag{40.1}
+\]
+
+This does not imply that the physical world is literally one vector.
+Every finite classical probability space already admits such a
+representation.
+
+The substantive result is elsewhere:
+the realization contract determines which observables must be
+identified, and that algebraic identification changes the minimum
+Shannon entropy of the latent source.
+
+
+% ============================================================
+\section{The meaning of the bill after Version 5}
+% ============================================================
+
+For a finite two-action memoryless channel, the causal theorem says
+\[
+\CinfCausal
+=
+\max_aH(P_a).
+\tag{41.1}
+\]
+
+Thus unrestricted history-indexed causal coherence can asymptotically
+push all additional counterfactual structure into a sublinear residual.
+
+Stable synchronous identity can forbid that hiding mechanism.
+For equal-entropy actions,
+\[
+\CinfSyn
+\ge
+h+\frac12W_1(\mu_P,\mu_Q).
+\tag{41.2}
+\]
+
+The distinction can now be read in three equivalent languages:
+
+\[
+\boxed{
+\begin{array}{ccl}
+\text{probabilistic}
+&:&
+\text{same output law versus same latent event},
+\\
+\text{algebraic}
+&:&
+\text{history-dependent versus identified projections},
+\\
+\text{spectral}
+&:&
+\text{mean surprisal versus full ledger mismatch}.
+\end{array}
+}
+\tag{41.3}
+\]
+
+For the crash test,
+\[
+\boxed{
+\text{causal contract pays }1.5,
+}
+\]
+while
+\[
+\boxed{
+\text{synchronous stable identity pays at least }
+1.728465468745531.
+}
+\]
+
+The gap is therefore not a universal ``counterfactual tax''.
+It is a contract-specific price of preserving a stronger identity
+relation among unrealized events.
+
+
+% ============================================================
+\section{What is proved in Version 5}
+% ============================================================
+
+The following statements are established within the stated finite
+models.
+
+\begin{enumerate}[leftmargin=8mm]
+
+\item C3-S policy safety is equivalent to correctness of every complete
+action-string transversal.
+
+\item The synchronous block cost is subadditive and admits a well-defined
+asymptotic rate.
+
+\item The synchronous transversal constraint rank is
+\[
+d_{\mathrm{obs}}^n.
+\]
+
+\item Hidden cross-time counterfactual synergy exists and an explicit
+23-atom crash-test witness gives
+\[
+\Csyn_2
+\le
+3.878295576158564.
+\]
+
+\item The two-action synchronous information-spectrum converse is
+\[
+\Csyn_n
+\ge
+\frac n2
+[
+H(P)+H(Q)+W_1(\mu_P,\mu_Q)
+].
+\]
+
+\item The converse extends to arbitrary finite action families through
+the quantile envelope.
+
+\item C3-C admits the action-tree quotient and the exact Bellman--MEC
+recursion.
+
+\item For equal-entropy actions,
+\[
+\Ccausal_n=nh+E_n
+\]
+with \(E_n\) nonnegative, nondecreasing, and subadditive.
+
+\item For the crash test,
+\[
+E_2>E_1>0.
+\]
+
+\item For every finite two-action channel,
+\[
+\boxed{
+\CinfCausal
+=
+\max\{H(P),H(Q)\}.
+}
+\]
+
+\item The anti-diagonal construction yields
+\[
+\Ccausal_n
+\le
+nh_{\max}+O(n^{2/3}),
+\]
+and equal varentropy improves this to \(O(\sqrt n)\) residual.
+
+\item For the crash test,
+\[
+\boxed{
+\CinfCausal=1.5<\CinfSyn.
+}
+\]
+
+\item Every finite classical latent source admits the one-vector
+commutative-algebra representation
+\[
+(\psi_\Gamma,\cA_\Gamma).
+\]
+
+\item Stable synchronous event identity is exactly an identification of
+event projections across histories.
+
+\item The surprisal law is the vector spectral measure of the diagonal
+surprisal operator.
+
+\item
+\[
+d_{\mathrm{Lip}}(P,Q)=W_1(\mu_P,\mu_Q),
+\]
+so the synchronous converse is a lower bound in the distance between
+two spectral states.
+
+\item Arbitrarily many matching surprisal moments do not remove a
+possible positive synchronous--causal gap; the dyadic parity ladder
+provides an explicit family.
+
+\item The polynomial scale kernels admit the explicit Mellin spectral
+density (31.2), with a hard-edge Cauchy case at \(k=0\) and
+finite-energy smooth cases for \(k\ge1\).
+
+\item The reciprocal-scale \(k=0\) identity reproduces
+\[
+\min(p,q)
+\quad\leftrightarrow\quad
+\max(u,v),
+\]
+while higher \(k\) produce softer overlap costs.
+
+\item Every finite-second-moment orbit spectral measure produces a valid
+spectral-probe lower bound on the synchronous source cost through
+Theorem~37.1.
+
+\end{enumerate}
+
+
+% ============================================================
+\section{What is not proved}
+% ============================================================
+
+The following claims are not established.
+
+\begin{enumerate}[leftmargin=8mm]
+
+\item The 23-atom synchronous witness is not proved globally optimal.
+
+\item The exact value of the crash-test synchronous asymptotic rate is
+unknown.
+
+\item The \(O(n^{2/3})\) or \(O(\sqrt n)\) finite-horizon causal residual
+bounds are not claimed optimal.
+
+\item The causal Shannon-floor theorem is proved here only for two
+actions.
+
+\item The finite-horizon anti-diagonal construction does not by itself
+construct one projectively consistent infinite causal substrate that is
+simultaneously optimal at every horizon.
+
+\item No claim is made that the one-vector representation supplies a
+physical ontology.
+It is a classical representation theorem.
+
+\item The weighted spectral discrepancy \(D_\eta\) is an MMD-type
+construction, not a newly invented probability metric.
+
+\item Mellin diagonalization of dilation and the spectral theorem are
+standard.
+
+\item Higher-\(k\) polynomial kernels do not strengthen the hard
+\(k=0\) synchronous converse by the direct overlap argument.
+
+\item No general theorem yet converts arbitrary fractional orbit-edge
+exponents into sharp counterfactual source-cost exponents.
+
+\item No historical priority claim is made for the algebraic,
+Mellin-transform, MMD, Zolotarev, or operator-theoretic ingredients.
+
+\end{enumerate}
+
+
+% ============================================================
+\section{Open problems after Version 5}
+% ============================================================
+
+\begin{problem}[Exact synchronous rate]
+Determine the exact value of
+\[
+\CinfSyn
+\]
+for the crash-test pair.
+\end{problem}
+
+\begin{problem}[Exact finite causal residual]
+Determine the true order of
+\[
+E_n=\Ccausal_n-nh.
+\]
+Is it bounded, logarithmic, a fractional power, or of another sublinear
+order?
+\end{problem}
+
+\begin{problem}[Multi-action causal Shannon floor]
+For
+\[
+|\cA|>2,
+\]
+does
+\[
+\CinfCausal(P_a:a\in\cA)
+=
+\max_aH(P_a)
+\]
+still hold?
+\end{problem}
+
+\begin{problem}[Projectively consistent infinite substrate]
+Can the finite-horizon causal Shannon-floor construction be replaced by
+one infinite projectively consistent causal response tree with an
+appropriate entropy rate equal to \(h_{\max}\)?
+\end{problem}
+
+\begin{problem}[Sharp orbit auditor]
+Among finite-energy orbit measures \(\eta\), determine those that maximize
+\[
+\frac{D_\eta(P,Q)}{\sigma_\eta}
+\]
+for a prescribed pair \(P,Q\).
+How close can this spectral family come to the full \(W_1\) certificate?
+\end{problem}
+
+\begin{problem}[Fractional edge theorem]
+Classify orbit vectors for which
+\[
+1-\Re R_{\psi,A}(t)
+\asymp|t|^\beta
+\]
+and determine which such profiles induce globally valid overlap
+functionals and counterfactual converses.
+\end{problem}
+
+\begin{problem}[Arithmetic versus analytic smoothing]
+Find a resolution metric that separates low-frequency cumulant mismatch
+from lattice-phase mismatch and admits both an ideal convolution law and
+a minimum-entropy coupling interface.
+\end{problem}
+
+\begin{problem}[Higher-order counterfactual bridge]
+Can Zolotarev-type or Fourier-weighted higher-order distances produce
+stronger finite-horizon causal or synchronous bounds when lower moments
+match?
+\end{problem}
+
+\begin{problem}[Algebraic contract classification]
+Characterize source cost directly from relations imposed among
+history-indexed event projections.
+In particular, interpolate between complete C3-S identification and
+fully history-indexed C3-C by partial equivalence relations on event
+operators.
+\end{problem}
+
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+The original accounting question began with a one-step observation:
+if several mutually exclusive actions must already possess jointly
+defined outputs, the minimum latent entropy can exceed the entropy of
+any one observable action.
+
+That statement survived, but its naive repeated interpretation did not.
+
+Synchronous blocks can hide large amounts of dependency invisible to
+every selectable transversal.
+Nevertheless, the synchronous information-spectrum converse shows that
+stable cross-history event identity can retain a strictly positive
+asymptotic cost when the self-information spectra differ.
+
+General causal trees behave differently.
+By placing correlations beyond the causal anti-diagonal, a two-action
+history-indexed realization asymptotically reaches the ordinary Shannon
+floor.
+
+The resulting crash-test hierarchy is
+
+\[
+\boxed{
+1.5
+=
+\CinfCausal
+<
+1.728465468745531
+\le
+\CinfSyn
+\le
+1.939147788079282
+<
+2.053918585607260
+=
+C_1.
+}
+\tag{46.1}
+\]
+
+Version 5 shows that this separation also has a compact algebraic form.
+
+A classical latent law is one vector
+\[
+\psi
+\]
+together with a commutative algebra of observables.
+
+The difference between C3-C and C3-S is an algebraic difference in which
+event projections are identified across histories.
+
+The self-information of an action is one diagonal operator
+\[
+L_P.
+\]
+Its first spectral moment is Shannon entropy.
+Its second centered moment is varentropy.
+Its full vector spectral measure is the surprisal law.
+Its full one-parameter characteristic function is the spectral ledger.
+
+The causal two-action rate depends on the largest first moment.
+The synchronous converse can depend on the distance between the complete
+spectral ledgers.
+
+The scale-kernel calculation fits the same template.
+One geometric vector under a unitary dilation orbit generates one
+Mellin spectral measure.
+That measure can be used as a spectral auditor of the surprisal ledger
+and therefore as a lower-bound certificate on synchronous source cost.
+
+What remains from the earliest intuition is therefore not an ontological
+claim about a privileged physical vector.
+
+It is a mathematical architecture:
+
+\begin{center}
+\fbox{
+\begin{minipage}{0.84\textwidth}
+\centering
+\textbf{One state vector, an algebra acting on it, and a spectral ledger
+recording what that algebra can resolve.}
+\end{minipage}}
+\end{center}
+
+The bill is determined not only by what can happen, but by which
+unrealized events the realization contract insists must remain
+identically the same.
+
+
+% ============================================================
+\appendix
+% ============================================================
+
+\section{Explicit 23-atom synchronous witness}
+\label{app:witness}
+
+Write each atom as
+\[
+(x_1,z_1,x_2,z_2)\in\{0,1,2\}^4.
+\]
+
+The nonzero probabilities are
+
+\[
+\renewcommand{\arraystretch}{1.32}
+\begin{array}{c|c}
+(x_1,z_1,x_2,z_2) & \widetilde G(x_1,z_1,x_2,z_2)
+\\
+\hline
+(0,0,0,0) & \dfrac{(2q-1)(12q-5)}8 \\
+(0,0,0,2) & -q(2q-1) \\
+(0,0,2,1) & \dfrac q4 \\
+(0,1,0,0) & q^2 \\
+(0,1,0,2) & -\dfrac{(2q-1)(8q-3)}8 \\
+(0,1,1,1) & \dfrac q4 \\
+(0,2,1,0) & -\dfrac{2q-1}{8} \\
+(0,2,2,0) & -\dfrac{(2q-1)(8q-3)}4 \\
+(0,2,2,2) & \dfrac{(2q-1)(16q-7)}8 \\
+(1,0,0,0) & \dfrac q4 \\
+(1,0,1,1) & \dfrac{4q-1}{16} \\
+(1,1,0,2) & -\dfrac{2q-1}{8} \\
+(1,1,2,1) & \dfrac1{16} \\
+(1,2,1,2) & -\dfrac{2q-1}{8} \\
+(2,0,0,0) & -\dfrac{32q^2-40q+11}{16} \\
+(2,0,0,1) & \dfrac{(4q-1)^2}{16} \\
+(2,0,1,0) & \dfrac1{16} \\
+(2,1,0,1) & \dfrac{16q^2-4q-1}{16} \\
+(2,1,0,2) & -\dfrac{12q-5}{16} \\
+(2,1,2,2) & \dfrac{4q-1}{16} \\
+(2,2,0,0) & \dfrac{(2q-1)^2}{2} \\
+(2,2,0,1) & -q(2q-1) \\
+(2,2,2,0) & -\dfrac{2q-1}{8}
+\end{array}
+\tag{A.1}
+\]
+
+At the root \(q\) from (5.2), these values are positive, sum to
+one, and each of the four selected coordinate pairs has exactly the
+required product law.
+
+
+% ============================================================
+\section{One-shot spectral rigidity}
+\label{app:rigidity}
+
+The five one-shot vertex-spectrum types may be represented by
+
+\[
+\lambda_\star
+=
+\left(
+q,\frac14,1-2q,\frac12-q,2q-\frac34
+\right),
+\]
+
+\[
+\lambda_A
+=
+\left(
+\frac14,\frac14,1-2q,q-\frac14,q-\frac14
+\right),
+\]
+
+\[
+\lambda_B
+=
+\left(
+\frac34-q,\frac14,1-2q,q-\frac14,2q-\frac34
+\right),
+\]
+
+\[
+\lambda_C
+=
+\left(
+2q-\frac12,\frac14,1-2q,q-\frac14,\frac12-q
+\right),
+\]
+
+and
+
+\[
+\lambda_D
+=
+\left(
+q,\frac14,q-\frac14,\frac12-q,\frac12-q
+\right).
+\]
+
+On
+\[
+\frac38<q<\frac5{12},
+\]
+the cumulative-sum differences between \(\lambda_\star\) and the other
+types are
+
+\[
+\begin{array}{c|ccccc}
+&
+1&2&3&4&5
+\\
+\hline
+A&
+q-\frac14&
+q-\frac14&
+q-\frac14&
+\frac12-q&
+0
+\\[1mm]
+B&
+2q-\frac34&
+2q-\frac34&
+2q-\frac34&
+0&
+0
+\\[1mm]
+C&
+\frac12-q&
+\frac12-q&
+\frac12-q&
+\frac54-3q&
+0
+\\[1mm]
+D&
+0&
+0&
+\frac54-3q&
+\frac54-3q&
+0 .
+\end{array}
+\tag{B.1}
+\]
+
+All displayed nonzero entries are positive.
+Thus \(\lambda_\star\) strictly majorizes every competing type, and
+strict Schur concavity of Shannon entropy proves one-shot spectrum
+rigidity.
+
+
+% ============================================================
+\section{Reproducibility ledger}
+% ============================================================
+
+The numerical values used in the crash test are
+
+\[
+q
+=
+0.41003242818198557608\ldots,
+\]
+\[
+C_1
+=
+2.0539185856072597\ldots,
+\]
+\[
+H(\widetilde G)
+=
+3.878295576158564\ldots,
+\]
+\[
+\frac12H(\widetilde G)
+=
+1.939147788079282\ldots,
+\]
+\[
+W_1(\mu_P,\mu_Q)
+=
+0.4569309374910615\ldots,
+\]
+and
+\[
+1.5+\frac12W_1
+=
+1.7284654687455308\ldots.
+\]
+
+The Version 4 companion script checks the equal-entropy root, the
+one-shot witness, the 23-atom synchronous law, all four transversal
+identities, the information-spectrum lower bound, one finite
+anti-diagonal causal realization by complete state enumeration, and the
+entropy formula for that source.
+
+Version 5 adds analytic operator and Mellin identities.
+A dedicated symbolic/numerical audit of the explicit spectral formulas
+(31.1)--(34.9) is recommended as the next companion
+reproducibility layer.
+
+
+% ============================================================
+\section{Literature status table}
+% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{
+>{\raggedright\arraybackslash}p{0.40\textwidth}
+>{\raggedright\arraybackslash}p{0.18\textwidth}
+>{\raggedright\arraybackslash}p{0.32\textwidth}
+}
+\toprule
+Topic & Status used here & Representative reference
+\\
+\midrule
+
+Minimum-entropy coupling
+&
+Known
+&
+Kovačević--Stanojević--Šenk
+\\
+
+Information-spectrum MEC converse
+&
+Known
+&
+Shkel--Yadav
+\\
+
+Approximate multi-marginal MEC
+&
+Known
+&
+Li
+\\
+
+Profile MEC bound
+&
+Known
+&
+Compton et al.\ 2023
+\\
+
+PTAS for constant-number MEC
+&
+Known, 2026
+&
+Compton
+\\
+
+Exact common information / synthesis
+&
+Known
+&
+Kumar--Li--El Gamal; Yu--Tan
+\\
+
+Online randomness recycling
+&
+Known, active
+&
+Draper--Saad et al.
+\\
+
+Event-keyed common randomness
+&
+Known neighboring issue
+&
+Buffalo--Pearson--Klein
+\\
+
+Mellin analysis of scale invariance
+&
+Known
+&
+Gupta--Singh--Aggarwal--Joshi
+\\
+
+MMD and spectral distribution embeddings
+&
+Known
+&
+Sriperumbudur et al.; Gretton et al.
+\\
+
+Group-invariant MMD
+&
+Known recent direction
+&
+Giacofci--Meynaoui--Podgorny
+\\
+
+Fourier/Zolotarev higher-order metrics
+&
+Known
+&
+Bobkov--Ledoux and classical literature
+\\
+
+Synchronous all-transversal source rate
+&
+Not located in this formulation
+&
+Compare MEC and structured-independence literature
+\\
+
+Two-action anti-diagonal causal Shannon floor
+&
+Derived here
+&
+No direct precedent located in present search
+\\
+
+Explicit REAL Mellin spectrum and counterfactual auditor bridge
+&
+Derived here
+&
+Uses standard Mellin, spectral-theorem, and MMD ingredients
+\\
+
+C3-S/C3-C algebraic operator-identification formulation
+&
+Derived here
+&
+Compare classical commutative operator representation
+\\
+
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+% ============================================================
+\begin{thebibliography}{99}
+% ============================================================
+
+\bibitem{Kovacevic2015}
+M. Kovačević, I. Stanojević, and V. Šenk,
+\emph{On the Entropy of Couplings},
+Information and Computation 242 (2015), 369--382.
+\url{https://arxiv.org/abs/1303.3235}
+
+\bibitem{ShkelYadav2023}
+Y. Y. Shkel and A. K. Yadav,
+\emph{Information Spectrum Converse for Minimum Entropy Couplings and
+Functional Representations},
+2023 IEEE International Symposium on Information Theory (ISIT), 2023.
+\url{https://arxiv.org/abs/2305.05745}
+
+\bibitem{Li2021}
+C. T. Li,
+\emph{Efficient Approximate Minimum Entropy Coupling of Multiple
+Probability Distributions},
+IEEE Transactions on Information Theory 67(8) (2021), 5259--5279.
+\url{https://arxiv.org/abs/2006.07955}
+
+\bibitem{Compton2023}
+S. Compton, D. Katz, B. Qi, K. Greenewald, and M. Kocaoglu,
+\emph{Minimum-Entropy Coupling Approximation Guarantees Beyond the
+Majorization Barrier},
+Proceedings of AISTATS 2023,
+PMLR 206 (2023), 10445--10469.
+\url{https://proceedings.mlr.press/v206/compton23a.html}
+
+\bibitem{Compton2026PTAS}
+S. Compton,
+\emph{Efficient $\varepsilon$-Approximate Minimum-Entropy Couplings},
+IEEE Transactions on Information Theory, 2026.
+doi:10.1109/TIT.2026.3710290.
+Preprint:
+\url{https://arxiv.org/abs/2509.19598}
+
+\bibitem{KumarLiElGamal}
+G. R. Kumar, C. T. Li, and A. El Gamal,
+\emph{Exact Common Information},
+2014.
+\url{https://arxiv.org/abs/1402.0062}
+
+\bibitem{YuTanExact}
+L. Yu and V. Y. F. Tan,
+\emph{Exact Channel Synthesis},
+2018.
+\url{https://arxiv.org/abs/1810.13246}
+
+\bibitem{DraperSaad2026}
+T. L. Draper and F. A. Saad,
+\emph{Efficient Online Random Sampling via Randomness Recycling},
+Proceedings of the 2026 Annual ACM--SIAM Symposium on Discrete
+Algorithms (SODA), 2473--2511, 2026.
+doi:10.1137/1.9781611978971.89.
+
+\bibitem{DraperHarrisSaad2026}
+T. L. Draper, D. G. Harris, and F. A. Saad,
+\emph{Online Random Sampling with Real Probabilities},
+arXiv:2607.13828, 2026.
+
+\bibitem{DraperSaadSpace2026}
+T. L. Draper and F. A. Saad,
+\emph{Space--Entropy Lower Bounds for Random Sampling},
+arXiv:2607.14503, 2026.
+
+\bibitem{BuffaloPearsonKlein2026}
+V. Buffalo, C. A. B. Pearson, and D. Klein,
+\emph{Realizing Common Random Numbers:
+Event-Keyed Hashing for Causally Valid Stochastic Models},
+arXiv:2603.11084, 2026.
+
+\bibitem{GuptaSinghAggarwalJoshi2025}
+A. Gupta, P. Singh, P. Aggarwal, and S. D. Joshi,
+\emph{Unified Framework for Linear Scale Invariant Signals, Systems,
+and Transforms: A Tutorial},
+Digital Signal Processing 157 (2025), 104880.
+doi:10.1016/j.dsp.2024.104880.
+
+\bibitem{Sriperumbudur2010}
+B. K. Sriperumbudur, A. Gretton, K. Fukumizu, B. Schölkopf,
+and G. R. G. Lanckriet,
+\emph{Hilbert Space Embeddings and Metrics on Probability Measures},
+Journal of Machine Learning Research 11 (2010), 1517--1561.
+
+\bibitem{Gretton2012}
+A. Gretton, K. M. Borgwardt, M. J. Rasch, B. Schölkopf, and A. Smola,
+\emph{A Kernel Two-Sample Test},
+Journal of Machine Learning Research 13 (2012), 723--773.
+
+\bibitem{GiacofciMeynaouiPodgorny2026}
+M. Giacofci, A. Meynaoui, and A. Podgorny,
+\emph{A Kernel Two-Sample Test Invariant under Group Action with
+Applications to Functional Data},
+arXiv:2603.16294, 2026.
+
+\bibitem{BobkovLedoux2026}
+S. G. Bobkov and M. Ledoux,
+\emph{Fourier Analytic Bounds for Zolotarev Distances and Applications
+to Empirical Measures},
+in \emph{Progress in Probability}, Vol. 82,
+Birkhäuser, 2026, pp. 259--312.
+\url{https://doi.org/10.1007/978-3-032-06057-0_9}.
+
+\bibitem{Kuhn1953}
+H. W. Kuhn,
+\emph{Extensive Games and the Problem of Information},
+in H. W. Kuhn and A. W. Tucker (eds.),
+\emph{Contributions to the Theory of Games II},
+Annals of Mathematics Studies 28,
+Princeton University Press, 1953.
+
+\bibitem{MainRandour2024}
+J. C. A. Main and M. Randour,
+\emph{Different Strokes in Randomised Strategies:
+Revisiting Kuhn's Theorem under Finite-Memory Assumptions},
+Information and Computation 301 (2024), 105229.
+\url{https://arxiv.org/abs/2201.10825}
+
+\bibitem{ContLim}
+R. Cont and F. R. Lim,
+\emph{Causal Transport on Path Space},
+arXiv:2412.02948, 2024.
+
+\bibitem{GavinskyPudlak}
+D. Gavinsky and P. Pudlák,
+\emph{On the Joint Entropy of $d$-Wise-Independent Variables},
+arXiv:1503.08154, 2015.
+
+\bibitem{KahleWenzelAy}
+T. Kahle, W. Wenzel, and N. Ay,
+\emph{Hierarchical Models, Marginal Polytopes, and Linear Codes},
+Kybernetika 45(2) (2009), 189--207.
+\url{https://arxiv.org/abs/0805.1301}
+
+\bibitem{RassouliRosasGunduz}
+B. Rassouli, F. E. Rosas, and D. Gündüz,
+\emph{Data Disclosure under Perfect Sample Privacy},
+IEEE Transactions on Information Forensics and Security 15 (2020),
+2012--2025.
+\url{https://arxiv.org/abs/1904.01711}
+
+\bibitem{Wilming2021}
+H. Wilming,
+\emph{Entropy and Reversible Catalysis},
+Physical Review Letters 127 (2021), 260402.
+\url{https://arxiv.org/abs/2012.05573}
+
+\bibitem{Wilming2022}
+H. Wilming,
+\emph{Correlations in Typicality and an Affirmative Solution to the
+Exact Catalytic Entropy Conjecture},
+Quantum 6 (2022), 858.
+\url{https://arxiv.org/abs/2205.08915}
+
+\bibitem{KeaneSmorodinsky}
+M. Keane and M. Smorodinsky,
+\emph{Bernoulli Schemes of the Same Entropy Are Finitarily Isomorphic},
+Annals of Mathematics 109(2) (1979), 397--406.
+
+\bibitem{HarveyPeres}
+N. Harvey and Y. Peres,
+\emph{An Invariant of Finitary Codes with Finite Expected Square Root
+Coding Length},
+Ergodic Theory and Dynamical Systems 31(1) (2011), 77--90.
+\url{https://arxiv.org/abs/math/0309120}
+
+\bibitem{Gabor2024}
+U. Gabor,
+\emph{Moment-Optimal Finitary Isomorphism for i.i.d. Processes of Equal
+Entropy},
+arXiv:2412.15425, 2024.
+
+\end{thebibliography}
+
+\end{document}
