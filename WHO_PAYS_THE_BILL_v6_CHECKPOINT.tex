@@ -1,0 +1,1871 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.45cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{problem}[theorem]{Open Problem}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\Law}{\mathrm{Law}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\W}{W}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cD}{\mathcal D}
+\newcommand{\cE}{\mathcal E}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\cumul}{\kappa}
+\newcommand{\ip}{\imath}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+
+\title{\textbf{Who Pays the Bill?}\\[1mm]
+\large Checkpoint v6: Sharp Second Order, Higher-Order Causal Buffers,\\
+Parity Ladders, and the Zero-Repair Viability Problem}
+\author{}
+\date{21 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This checkpoint records the current mathematical status of the causal
+information-bill programme after the sharp second-order result and the
+subsequent higher-order attack.
+
+The sharp second-order theorem is treated as established: for equal-entropy
+finite sources with unequal varentropy, the exact causal residual bill is
+\[
+E_n
+=
+\sqrt{\frac{2}{\pi}}\,
+|\sigma_P-\sigma_Q|\,\sqrt n
++
+o(\sqrt n).
+\]
+The present note then develops an explicit higher-order test family, the
+dyadic parity ladder.  If the first unmatched information moment is of
+order \(r\), an entirely atomic B-spline buffer construction yields the
+constructive causal upper bound
+\[
+E_n=O(n^{1/r}).
+\]
+For this family the exponent arises from an exact finite-difference
+identity rather than from an Edgeworth heuristic or an artificial block
+startup.
+
+A matching \(n^{1/r}\) lower bound is rigorous for stationary independent
+information reservoirs, but this architecture is too narrow.  Allowing
+history-dependent output-correlated buffers produces a much subtler
+zero-repair viability problem.  Exact finite LPs for the first nontrivial
+third-order case \(r=3\) give
+\[
+\mathcal B_{11}=1.897576589\ldots<2,
+\]
+and several fixed mean-\(2\) root laws remain feasible to depth \(11\).
+The data therefore no longer justify claiming a universal
+\(\Theta(n^{1/3})\) lower law.  The decisive dichotomy is now:
+either there exists an infinite history-indexed zero-repair tree with finite
+root mean, or \(\mathcal B_n\to\infty\).
+
+The final sections isolate the viability kernel, prove a compactness
+criterion reducing bounded finite-horizon costs to existence of an infinite
+tree, rule out finite-state stationary zero-repair implementations, and
+state the precise next target.
+\end{abstract}
+
+\tableofcontents
+
+\section{The causal bill}
+
+Let \(P,Q\) be finite probability distributions.  Their single-symbol
+surprisals are
+\[
+\ip_P(x):=-\log_2 P(x),
+\qquad
+\ip_Q(y):=-\log_2 Q(y).
+\]
+Write
+\[
+H(P)=\E\ip_P(X),
+\qquad
+V(P)=\Var(\ip_P(X)),
+\]
+and analogously for \(Q\).
+
+We work with the history-indexed causal-tree contract C3-C.
+
+\begin{definition}[Exact causal action tree]
+A random action tree of depth \(n\) is exact for \((P,Q)\) if, for every
+deterministic action word \(a_1\cdots a_n\in\{P,Q\}^n\), the labels observed
+along the corresponding path have the product law prescribed by the action
+word.
+\end{definition}
+
+Let
+\[
+C_n^{\mathrm{causal}}(P,Q)
+\]
+be the minimum Shannon entropy of a latent random seed generating such an
+exact depth-\(n\) tree.
+
+In the equal-entropy case
+\[
+H(P)=H(Q)=h,
+\]
+define the residual causal bill
+\[
+\boxed{
+E_n(P,Q):=
+C_n^{\mathrm{causal}}(P,Q)-nh.
+}
+\]
+
+The central question is not whether exact simulation is possible; it is
+how much \emph{additional} latent information is forced by exact causality.
+
+\section{Established structural facts}
+
+The following statements are part of the established framework.
+
+\subsection{Prefix lower bound and subadditivity}
+
+For all \(m,n\),
+\[
+C_{m+n}^{\mathrm{causal}}
+\le
+C_m^{\mathrm{causal}}+C_n^{\mathrm{causal}}.
+\]
+Hence
+\[
+C_\infty^{\mathrm{causal}}
+:=
+\lim_{n\to\infty}\frac{C_n^{\mathrm{causal}}}{n}
+\]
+exists by Fekete's lemma.
+
+In the equal-entropy case,
+\[
+E_n\ge0,
+\]
+and \(E_n\) is subadditive.
+
+\subsection{Projective closure}
+
+There exists a single infinite, generally nonstationary exact causal tree
+whose finite prefixes attain the asymptotic causal rate:
+\[
+\inf_T
+\limsup_{n\to\infty}
+\frac{H(T_{\le n})}{n}
+=
+C_\infty^{\mathrm{causal}}.
+\]
+A block-diagonal construction with increasing near-optimal finite blocks
+gives an infinite projectively consistent substrate.
+
+The stronger stationary or shift-invariant version is a separate problem.
+
+\subsection{Stream-to-tree anti-diagonal lift}
+
+Suppose a joint law of \(W^n,X^n\) satisfies
+\[
+W^n\sim Q^n,
+\qquad
+X^n\sim P^n,
+\]
+and the one-way causality condition
+\[
+\Law(X_{1:k}\mid W_{1:n})
+=
+\Law(X_{1:k}\mid W_{1:k})
+\qquad
+(k\le n).
+\]
+Then the anti-diagonal assignment of \(P\)-requests to the \(X\)-stream and
+\(Q\)-requests to the reversed \(W\)-stream yields an exact causal action
+tree.  Consequently
+\[
+C_n^{\mathrm{causal}}(P,Q)
+\le
+H(X^n,W^n),
+\]
+and in the equal-entropy case
+\[
+\boxed{
+E_n(P,Q)
+\le
+H(X^n\mid W^n).
+}
+\]
+
+Thus exact causal stream couplings are constructive upper certificates for
+the tree problem.
+
+\section{Sharp second-order theorem}
+
+Assume
+\[
+H(P)=H(Q)=h
+\]
+and let
+\[
+\sigma_P^2=V(P),
+\qquad
+\sigma_Q^2=V(Q).
+\]
+
+The sharp second-order theorem is
+\[
+\boxed{
+E_n(P,Q)
+=
+\sqrt{\frac{2}{\pi}}\,
+|\sigma_P-\sigma_Q|\,\sqrt n
++
+o(\sqrt n).
+}
+\]
+
+Two mechanisms meet exactly.
+
+\subsection{Adaptive lower bound}
+
+For a deterministic adaptive policy \(\pi\), the transcript is a deterministic
+function of the shared seed.  Atomwise,
+\[
+-\log_2 \PP(S=s)
+\ge
+I_\pi(Y^\pi(s)).
+\]
+Hence
+\[
+H(S)
+\ge
+\E\max_\pi I_\pi(Y^\pi).
+\]
+
+Threshold policies asymptotically generate an oscillating Brownian motion.
+The optimal split-normal envelope has mean
+\[
+\sqrt{\frac{2}{\pi}}\,
+|\sigma_P-\sigma_Q|,
+\]
+giving
+\[
+\liminf_{n\to\infty}
+\frac{E_n}{\sqrt n}
+\ge
+\sqrt{\frac{2}{\pi}}\,
+|\sigma_P-\sigma_Q|.
+\]
+
+\subsection{Sorted-arithmetic upper bound}
+
+The upper construction sorts length-\(L\) source atoms by surprisal, reuses
+a uniform arithmetic phase, and produces exact monotone coupling of
+successive block information spectra.
+
+After controlling the rare boundary defect and finite-bit exactization,
+the resulting block increment \(Z_L\) satisfies
+\[
+\frac{\E Z_L^2}{L}
+\longrightarrow
+(\sigma_P-\sigma_Q)^2.
+\]
+A triangular-array functional CLT and uniform integrability of the running
+maximum then give
+\[
+\limsup_{n\to\infty}
+\frac{E_n}{\sqrt n}
+\le
+\sqrt{\frac{2}{\pi}}\,
+|\sigma_P-\sigma_Q|.
+\]
+
+\section{The crash pair}
+
+A convenient equal-entropy unequal-varentropy test pair is
+\[
+P=\left(\frac12,\frac14,\frac14\right),
+\]
+and
+\[
+Q=(q,q,1-2q),
+\]
+where \(q\) is the unique root giving
+\[
+H(Q)=\frac32.
+\]
+Numerically,
+\[
+q=0.41003242818198557608\ldots,
+\]
+\[
+1-2q
+=
+0.17993514363602884784\ldots.
+\]
+
+Then
+\[
+H(P)=H(Q)=\frac32,
+\]
+\[
+\sigma_P=\frac12,
+\qquad
+\sigma_Q
+=
+0.456450775263963\ldots,
+\]
+and therefore
+\[
+\boxed{
+E_n
+=
+0.034747254051817864\ldots\sqrt n
++
+o(\sqrt n).
+}
+\]
+
+This pair is the main second-order stress test.
+
+\section{Why the higher-order problem is different}
+
+Suppose now
+\[
+H(P)=H(Q),
+\qquad
+V(P)=V(Q).
+\]
+The sharp second-order coefficient vanishes:
+\[
+\sqrt{\frac{2}{\pi}}|\sigma_P-\sigma_Q|=0.
+\]
+
+A first Edgeworth heuristic suggests that if the first unmatched centered
+information cumulant is order \(r\), then normalized block spectra differ
+at scale
+\[
+L^{-(r-2)/2},
+\]
+so the unnormalized monotone block mismatch is expected at scale
+\[
+L^{(3-r)/2}.
+\]
+A delayed single-scale block construction would then balance
+\[
+L
+\quad\text{against}\quad
+\sqrt n\,L^{(2-r)/2},
+\]
+producing
+\[
+L\asymp n^{1/r}
+\]
+and therefore the candidate residual scale
+\[
+n^{1/r}.
+\]
+
+This heuristic is useful but \emph{not} the basis of the rigorous
+higher-order upper bound below.  In particular, lattice-phase corrections
+can dominate naive Cornish--Fisher constants.
+
+\section{The dyadic parity ladder}
+
+Fix \(R\ge1\), and put
+\[
+r:=R+1.
+\]
+
+Define the surprisal laws
+\[
+\mu_{P_R}
+=
+2^{-R}
+\sum_{\substack{0\le j\le R+1\\ j\ {\rm even}}}
+\binom{R+1}{j}\delta_{R+j},
+\]
+and
+\[
+\mu_{Q_R}
+=
+2^{-R}
+\sum_{\substack{0\le j\le R+1\\ j\ {\rm odd}}}
+\binom{R+1}{j}\delta_{R+j}.
+\]
+
+They are realized by finite atomic probability vectors because a surprisal
+level \(R+j\) corresponds to atom probability \(2^{-(R+j)}\), and the
+multiplicities are integers.
+
+Their generating functions satisfy
+\[
+G_{P_R}(z)-G_{Q_R}(z)
+=
+2^{-R}z^R(1-z)^{R+1}.
+\]
+
+Equivalently, up to translation,
+\[
+\boxed{
+\mu_{P_R}-\mu_{Q_R}
+=
+2^{-(r-1)}\Delta^r.
+}
+\]
+
+\begin{proposition}[Moment matching]
+The first \(r-1\) information moments agree, and the first unmatched moment
+is order \(r\).
+\end{proposition}
+
+\begin{proof}
+The difference of generating functions contains the factor
+\((1-z)^r\), so the first \(r-1\) derivatives agree at \(z=1\), while the
+\(r\)th derivative does not.
+\end{proof}
+
+\subsection{The first nontrivial higher-order case}
+
+For \(R=2\), hence \(r=3\),
+\[
+\boxed{
+\mu_P
+=
+\frac14\delta_2+\frac34\delta_4,
+\qquad
+\mu_Q
+=
+\frac34\delta_3+\frac14\delta_5.
+}
+\]
+
+Their common information mean is
+\[
+h=\frac72,
+\]
+and their common varentropy is
+\[
+V=\frac34.
+\]
+
+The centered third cumulants are
+\[
+\cumul_3(P)=-\frac34,
+\qquad
+\cumul_3(Q)=+\frac34.
+\]
+
+Thus this is an exact
+\[
+H_P=H_Q,\qquad V_P=V_Q,\qquad \cumul_3(P)\ne\cumul_3(Q)
+\]
+crash pair.
+
+\section{Lattice phase is real}
+
+For \(R=2\), the centered block information laws are explicit:
+\[
+A_L
+=
+-\frac{3L}{2}+2K,
+\qquad
+K\sim\mathrm{Bin}(L,3/4),
+\]
+and
+\[
+B_L
+=
+-\frac{L}{2}+2J,
+\qquad
+J\sim\mathrm{Bin}(L,1/4).
+\]
+
+Exact monotone transport shows two distinct subsequential \(W_2\)-limits
+for even and odd \(L\).  Numerically,
+\[
+W_2(A_L,B_L)
+\to
+0.816\ldots
+\]
+along even \(L\), while
+\[
+W_2(A_L,B_L)
+\to
+1.054\ldots
+\]
+along odd \(L\).
+
+Hence a universal third-order constant cannot be read directly from a
+nonlattice Cornish--Fisher formula.  The exponent may survive, but the
+constant is arithmetic.
+
+\section{Atomic B-spline buffer}
+
+Let
+\[
+U_1,\ldots,U_r
+\stackrel{\rm iid}{\sim}
+\mathrm{Unif}\{0,\ldots,m-1\},
+\qquad
+T:=U_1+\cdots+U_r.
+\]
+Write
+\[
+\PP(T=t)=\frac{c_t}{m^r}.
+\]
+
+At macrostate \(t\), create
+\[
+c_t2^t
+\]
+microatoms, each of probability
+\[
+\frac{1}{m^r2^t}.
+\]
+
+Thus every buffer microatom at level \(t\) has surprisal
+\[
+\boxed{
+r\log_2m+t.
+}
+\]
+The macro-coordinate \(t\) is therefore a true information coordinate.
+
+\begin{proposition}[Exact buffer entropy]
+The buffer entropy is
+\[
+\boxed{
+H(B_m)
+=
+r\log_2m+\frac r2(m-1).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The microatom surprisal is \(r\log_2m+T\), and
+\[
+\E T
+=
+r\,\frac{m-1}{2}.
+\]
+\end{proof}
+
+The box generating function is
+\[
+U_m(z)
+=
+\frac{1-z^m}{m(1-z)}.
+\]
+Therefore
+\[
+(G_{P_R}-G_{Q_R})U_m(z)^r
+=
+2^{-(r-1)}m^{-r}
+z^{r-1}(1-z^m)^r.
+\]
+
+\begin{theorem}[Exact atomic residual mass]
+For the extended atomic laws
+\[
+P_R\times B_m
+\qquad\text{and}\qquad
+B_m\times Q_R,
+\]
+the common equal-surprisal atoms can be paired deterministically, and the
+unmatched mass on each side is exactly
+\[
+\boxed{
+\eps_m=m^{-r}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The signed residual coefficients are
+\[
+2^{-(r-1)}m^{-r}
+(-1)^k\binom{r}{k}.
+\]
+The total variation of the signed residual is
+\[
+2m^{-r},
+\]
+so the positive and negative residual masses are each \(m^{-r}\).
+At a fixed surprisal level, all atomic probabilities are identical;
+hence the common part admits an exact atom-by-atom bijection.
+\end{proof}
+
+Conditioned on the residual output,
+\[
+\boxed{
+H_{\rm res}
+=
+(r-1)+\frac r2m.
+}
+\]
+
+\section{Constructive causal upper hierarchy}
+
+Let
+\[
+B_0\sim B_m
+\]
+independently of the \(Q_R\)-stream.
+
+At each time \(t\), use the exact atomic coupling
+\[
+(B_{t-1},W_t)
+\longmapsto
+(X_t,B_t),
+\]
+deterministically on the matched mass and with fresh randomness only on the
+residual event.
+
+The transition sends
+\[
+B_m\times Q_R
+\]
+exactly to
+\[
+P_R\times B_m.
+\]
+Hence
+\[
+(X_1,\ldots,X_n,B_n)
+\sim
+P_R^n\times B_m,
+\]
+and the construction is one-way causal.
+
+By the chain rule,
+\[
+H(X^n\mid W^n)
+\le
+H(B_m)+n\,\eps_m H_{\rm res}.
+\]
+
+\begin{theorem}[Explicit parity-ladder upper bound]
+For every integer \(m\ge1\),
+\[
+\boxed{
+E_n(P_R,Q_R)
+\le
+r\log_2m
++
+\frac r2(m-1)
++
+\frac n{m^r}
+\left(
+r-1+\frac r2m
+\right).
+}
+\]
+Therefore
+\[
+\boxed{
+E_n(P_R,Q_R)=O(n^{1/r}).
+}
+\]
+Moreover,
+\[
+\boxed{
+\limsup_{n\to\infty}
+\frac{E_n(P_R,Q_R)}{n^{1/r}}
+\le
+\frac{r^2}{2}(r-1)^{-(r-1)/r}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The displayed finite-\(n\) bound follows from the exact initial buffer
+entropy and the exact residual transition entropy.  The leading terms are
+\[
+\frac r2m+\frac r2\frac{n}{m^{r-1}}.
+\]
+Choosing
+\[
+m\sim((r-1)n)^{1/r}
+\]
+gives the stated asymptotic constant.
+\end{proof}
+
+For \(r=3\),
+\[
+\boxed{
+\limsup_{n\to\infty}
+\frac{E_n}{n^{1/3}}
+\le
+\frac92\,2^{-2/3}
+=
+2.834822362\ldots.
+}
+\]
+
+This upper bound is independent of the delayed-block startup mechanism.
+
+\section{REAL kernels and the actual smoothing hierarchy}
+
+The REAL family contains compactly supported kernels
+\[
+\rho_k(x)
+=
+\frac{k+1}{2}(1-|x|)^k_+.
+\]
+
+For \(r=2\), the optimal discrete buffer profile is a box, the discrete
+analogue of \(\rho_0\).
+
+For \(r=3\), the exact optimizer of the reduced \(W_1\)-buffer problem is
+the discrete triangular law
+\[
+\pi_M(s)
+=
+\frac{M+1-|s|}{(M+1)^2},
+\qquad |s|\le M,
+\]
+whose continuum profile is exactly
+\[
+\rho_1(x)=(1-|x|)_+.
+\]
+
+Thus
+\[
+\boxed{
+\text{REAL }\rho_1
+=
+\text{the exact third-order information smoother.}
+}
+\]
+
+However, for \(r\ge4\), the family \((1-|x|)^k_+\) is not the correct
+higher-order hierarchy.  The cusp at the origin destroys one order of
+finite-difference smoothing.  The correct natural family is given by
+cardinal B-splines, that is, repeated convolutions of a box.
+
+Hence the REAL connection is exact at the first two levels but does not,
+without modification, provide the full \(r\)-hierarchy.
+
+\section{Stationary independent-buffer lower bound}
+
+Suppose a stationary architecture has an independent information reservoir
+\(B\), with surprisal
+\[
+J_B=-\log_2\PP(B)
+\]
+and
+\[
+H(B)=\E J_B.
+\]
+
+Then
+\[
+|\varphi_B(t)|
+=
+|\E e^{itJ_B}|
+\ge
+1-|t|H(B).
+\]
+
+For the parity ladder,
+\[
+\boxed{
+|\varphi_{P_R}(t)-\varphi_{Q_R}(t)|
+=
+2|\sin(t/2)|^r.
+}
+\]
+
+For the extended input and output information profiles
+\[
+A=B\times Q_R,
+\qquad
+Y=P_R\times B,
+\]
+we have
+\[
+|\varphi_Y(t)-\varphi_A(t)|
+=
+|\varphi_B(t)|
+\,
+|\varphi_{P_R}(t)-\varphi_{Q_R}(t)|.
+\]
+
+Kantorovich--Rubinstein yields
+\[
+W_1(\mu_A,\mu_Y)
+\ge
+\frac{
+|\varphi_Y(t)-\varphi_A(t)|
+}{|t|}.
+\]
+Choosing
+\[
+t\asymp \frac1{H(B)}
+\]
+gives
+\[
+W_1(\mu_A,\mu_Y)
+\gtrsim
+H(B)^{-(r-1)}.
+\]
+
+Using the equal-entropy information-profile converse
+\[
+H(Y\mid A)
+\ge
+\frac12W_1(\mu_A,\mu_Y),
+\]
+we obtain
+\[
+\text{cost}
+\ge
+H(B)
++
+c_r
+\frac n{H(B)^{r-1}}.
+\]
+
+Therefore, within the stationary independent-buffer architecture,
+\[
+\boxed{
+\text{cost}=\Omega(n^{1/r}).
+}
+\]
+
+Combined with the B-spline upper,
+\[
+\boxed{
+\text{stationary independent-buffer class: }
+\Theta(n^{1/r}).
+}
+\]
+
+This is a genuine theorem, but it is not yet a theorem for the full C3-C
+class.
+
+\section{Why the stationary lower is too narrow}
+
+For \(R=2\), allowing the next buffer to correlate with the current output
+produces a formal stationary profile
+\[
+\boxed{
+B_\infty(z)
+=
+\frac{z^2(z+1)}{3-z}.
+}
+\]
+
+Its coefficients are
+\[
+\beta_2=\frac13,
+\qquad
+\beta_j=\frac4{3^{j-1}},
+\quad j\ge3.
+\]
+
+At the one-step information-profile level it achieves zero repair with
+finite mean.
+
+Thus the universal statement
+\[
+\text{``every causal buffer must itself have size }n^{1/3}\text{''}
+\]
+is false.
+
+The problem is that the child buffer law depends on the output branch, and
+therefore the one-step stationary profile cannot simply be iterated while
+preserving the complete iid output process.
+
+\section{The zero-repair history-indexed tree}
+
+For each output history
+\[
+h\in\bits^{\le n},
+\]
+let \(B_h\) be a probability law on \(\Z_{\ge0}\).
+
+For \(R=2\), define the exact zero-repair recursion
+\[
+\boxed{
+\mu_Q*B_h
+=
+\frac14\delta_2*B_{h0}
++
+\frac34\delta_4*B_{h1}.
+}
+\tag{Z}
+\]
+
+\begin{definition}[Finite-horizon zero-repair bill]
+Define
+\[
+\boxed{
+\cB_n
+:=
+\inf
+\left\{
+\E_{B_\varnothing}J:
+\{B_h\}_{|h|\le n}
+\text{satisfies \eqref{Z}}
+\right\}.
+}
+\]
+\end{definition}
+
+This object isolates the profile-level cost of exact history-compatible
+information conservation.
+
+\section{Exact finite LP data}
+
+The recursion \eqref{Z} is linear in the buffer laws, so \(\cB_n\) can be
+computed exactly as a finite LP after imposing a sufficiently large support
+cutoff.
+
+The first values are:
+
+\[
+\begin{array}{c|c|c}
+n & \cB_n & \cB_n/n^{1/3}\\
+\hline
+1 & 0.666666667 & 0.6667\\
+2 & 1.000000000 & 0.7937\\
+3 & 1.185185185 & 0.8218\\
+4 & 1.296296296 & 0.8165\\
+5 & 1.432098765 & 0.8375\\
+6 & 1.506172840 & 0.8289\\
+7 & 1.596707819 & 0.8347\\
+8 & 1.695473251 & 0.8477\\
+9 & 1.772290809 & 0.8520\\
+10& 1.846364883 & 0.8570\\
+11& 1.897576589 & 0.8532
+\end{array}
+\]
+
+The exact-looking rational values include
+\[
+\cB_{10}=\frac{1346}{729},
+\qquad
+\cB_{11}=\frac{4150}{2187}.
+\]
+
+The root optimum is stable when the artificial support cutoff is enlarged,
+so these values are not a simple truncation artifact.
+
+\section{The warning hidden in the same data}
+
+The same data admit a very different interpretation.
+
+The final gaps to \(2\) are
+\[
+\begin{array}{c|c}
+n & 2-\cB_n\\
+\hline
+8&0.304526749\\
+9&0.227709191\\
+10&0.153635117\\
+11&0.102423411
+\end{array}
+\]
+and
+\[
+\frac{2-\cB_{11}}{2-\cB_{10}}
+=
+\frac23.
+\]
+
+Therefore the data do \emph{not} justify claiming that
+\[
+\cB_n\asymp n^{1/3}.
+\]
+
+The two live hypotheses are now:
+
+\[
+\boxed{
+H_1:
+\quad
+\cB_n\to\cB_\infty<\infty,
+}
+\]
+and
+\[
+\boxed{
+H_2:
+\quad
+\cB_n\to\infty.
+}
+\]
+
+The numerical range \(n\le11\) cannot decide between them.
+
+\section{Simple mean-\(2\) roots survive deeply}
+
+Several explicit root laws of mean exactly \(2\) remain feasible for the
+zero-repair LP through depth at least \(11\).
+
+Examples include
+\[
+B_\varnothing(z)
+=
+\left(\frac{1+z}{2}\right)^4,
+\]
+i.e.
+\[
+B_\varnothing\sim \mathrm{Bin}(4,1/2),
+\]
+and
+\[
+B_\varnothing(z)
+=
+\left(\frac{1+z+z^2}{3}\right)^2.
+\]
+
+Thus the hypothesis
+\[
+\cB_\infty\le2
+\]
+is not contradicted by the current finite-depth data.
+
+However, naive greedy continuation of these roots eventually fails.
+Hence finite-depth feasibility is not yet an explicit infinite construction.
+
+\section{Greedy allocation and why it fails}
+
+Given a parent law \(b_j=\PP(B_h=j)\), define the total input information
+profile
+\[
+r_u
+=
+\frac34 b_{u-3}
++
+\frac14 b_{u-5}.
+\]
+
+A child decomposition is determined by choosing a submeasure
+\[
+0\le c_u\le r_u,
+\qquad
+\sum_u c_u=\frac14,
+\]
+for the low-\(P\) branch.
+
+Then
+\[
+b^{(0)}_j
+=
+4c_{j+2},
+\]
+and
+\[
+b^{(1)}_j
+=
+\frac43
+\left(
+r_{j+4}-c_{j+4}
+\right).
+\]
+
+The natural greedy rule chooses the lowest information levels until
+quarter mass is collected.  This works for many levels but eventually
+creates an infeasible child.
+
+For one natural geometric profile, the first failure appears at history
+\[
+01101101,
+\]
+where the child law becomes
+\[
+\frac23\delta_0+\frac13\delta_2.
+\]
+
+Then the next input puts mass
+\[
+\frac34\cdot\frac23
+=
+\frac12
+\]
+at information level \(3\), more than the low-output branch can absorb
+without requiring negative information in the high branch.
+
+Thus
+\[
+\boxed{
+\text{greedy low-level allocation is not an infinite solution.}
+}
+\]
+
+The infinite problem requires anticipative viability, not myopic matching.
+
+\section{No finite-state stationary zero-repair transducer}
+
+Consider an exact hidden-state transducer
+\[
+J_t
+=
+J_{t-1}+I_Q(W_t)-I_P(X_t),
+\]
+with
+\[
+W_t\mid J_{t-1}\sim Q,
+\qquad
+X_t\mid J_{t-1}\sim P.
+\]
+
+Because
+\[
+H(P)=H(Q),
+\]
+we have
+\[
+\E[J_t\mid J_{t-1}]
+=
+J_{t-1}.
+\]
+Hence \(J_t\) is a martingale.
+
+\begin{lemma}[No stationary integrable zero-repair state]
+There is no nontrivial stationary integrable state law for such a
+zero-repair transducer.
+\end{lemma}
+
+\begin{proof}
+Assume
+\[
+J_t\stackrel d=J_{t-1}
+\]
+and
+\[
+\E J_t<\infty.
+\]
+Take the strictly convex linearly growing function
+\[
+\psi(x)=\sqrt{1+x^2}.
+\]
+Conditional Jensen gives
+\[
+\E[\psi(J_t)\mid J_{t-1}]
+\ge
+\psi(J_{t-1}).
+\]
+Stationarity forces equality after expectation, hence equality holds in
+strict Jensen:
+\[
+J_t=J_{t-1}
+\quad\text{a.s.}
+\]
+For the \(R=2\) pair,
+\[
+I_Q-I_P\in\{-1,+1,+3\},
+\]
+so zero increment is impossible.  Contradiction.
+\end{proof}
+
+Exhaustive finite-state LP searches with up to forty state levels also
+find no stationary exact zero-repair transducer.
+
+Thus any \(H_1\) construction must be genuinely history-dependent and
+multiscale.
+
+\section{Finite automata also fail}
+
+A stronger finite-mode ansatz allows a finite family of buffer laws
+\[
+B^{(1)},\ldots,B^{(K)}
+\]
+and deterministic output-conditioned transitions
+\[
+\tau_0,\tau_1:
+\{1,\ldots,K\}\to\{1,\ldots,K\}
+\]
+s
+\[
+\mu_Q*B^{(s)}
+=
+\frac14\delta_2*B^{(\tau_0(s))}
++
+\frac34\delta_4*B^{(\tau_1(s))}.
+\]
+
+Exhaustive searches find no solution for
+\[
+K=1,2,3.
+\]
+
+The moment mechanism suggests a general obstruction.  On a recurrent
+finite component, the buffer mean is harmonic under the output transition
+kernel.  A finite recurrent Markov chain forces bounded harmonic functions
+to be constant.  Repeating the argument at higher moments successively
+pushes the unmatched third information moment into contradiction.
+
+This is not yet written as a complete theorem for every finite \(K\), but it
+strongly supports the conclusion that any finite-state implementation is
+impossible.
+
+\section{Harvey--Peres self-similarity}
+
+For \(R=2\),
+\[
+G_P(z)^2-G_Q(z)^2
+=
+\frac14
+\left(
+G_P(z^2)-G_Q(z^2)
+\right).
+\]
+
+At the two-symbol information-spectrum level,
+\[
+\mu_P^{*2}
+=
+\frac1{16}\delta_4
++
+\frac6{16}\delta_6
++
+\frac9{16}\delta_8,
+\]
+and
+\[
+\mu_Q^{*2}
+=
+\frac9{16}\delta_6
++
+\frac6{16}\delta_8
++
+\frac1{16}\delta_{10}.
+\]
+
+The ordered common mass is \(3/4\), and the unmatched mass is \(1/4\).
+After conditioning and dividing the information coordinate by \(2\), the
+residual profile is again the original parity-ladder pair.
+
+Harvey--Peres ordered matching turns this signed self-similarity into a
+positive residual decomposition.  Therefore:
+
+\[
+\boxed{
+\text{static positivity is not the open problem.}
+}
+\]
+
+The remaining difficulty is unilateral/prefix compatibility of the future
+subtrees attached to equal-total-surprisal words such as \(01\) and \(10\).
+
+\section{Why simple Bellman reductions fail}
+
+Several plausible lower-bound reductions have been tested.
+
+\subsection{Terminal or prefix stochastic dominance}
+
+Requiring only
+\[
+B+I_Q^{(t)}
+\succeq_{\rm st}
+I_P^{(t)}
+\]
+for all prefixes gives a bounded cost near \(0.894\), far below the full
+history-indexed zero-repair LP.
+
+Thus the obstruction is not terminal inventory.
+
+\subsection{Depth-only dual}
+
+A Bellman dual depending only on depth and buffer information level is
+trivial.
+
+\subsection{Count-only history compression}
+
+Forcing the buffer to depend only on depth and the number of high-\(P\)
+outputs changes the primal optimum drastically.  The ordering of the
+history matters.
+
+\subsection{Fixed finite-memory dual}
+
+Dual certificates depending on only the final \(\ell\) output symbols
+saturate for each fixed \(\ell\).
+
+Therefore a sharp lower certificate, if one exists, must use memory across
+growing scales.
+
+\subsection{No canonical smooth cubic dual}
+
+Raw HiGHS dual multipliers are strongly degenerate.  They do not collapse
+to a canonical smooth function of
+\[
+j/n^{1/3}.
+\]
+
+The optimal child allocation itself develops disconnected ``islands'' at
+multiple information scales, which is much more consistent with a
+hierarchical self-similar certificate than with a single cubic barrier.
+
+\section{The viability-kernel formulation}
+
+The history labels can be eliminated conceptually.
+
+\begin{definition}[Finite-depth viability sets]
+Let
+\[
+\cK_0
+=
+\mathcal P(\Z_{\ge0}),
+\]
+the set of all probability laws on nonnegative integers.
+
+Recursively, define
+\[
+B\in\cK_{n+1}
+\]
+iff there exist
+\[
+B_0,B_1\in\cK_n
+\]
+such that
+\[
+\boxed{
+\mu_Q*B
+=
+\frac14\delta_2*B_0
++
+\frac34\delta_4*B_1.
+}
+\]
+\end{definition}
+
+Then
+\[
+\cK_{n+1}\subseteq\cK_n,
+\]
+and
+\[
+\boxed{
+\cB_n
+=
+\inf_{B\in\cK_n}\E_B J.
+}
+\]
+
+Define the infinite viability kernel
+\[
+\boxed{
+\cK_\infty
+:=
+\bigcap_{n\ge0}\cK_n.
+}
+\]
+
+The dichotomy \(H_1/H_2\) becomes:
+
+\[
+\boxed{
+H_1:
+\quad
+\exists B\in\cK_\infty
+\text{with }\E_BJ<\infty,
+}
+\]
+versus
+\[
+\boxed{
+H_2:
+\quad
+\cK_\infty
+\text{contains no finite-mean law.}
+}
+\]
+
+\section{Compactness lemma}
+
+The viability formulation yields a useful existence reduction.
+
+\begin{lemma}[Bounded finite horizons imply an infinite tree]
+Suppose
+\[
+\sup_n \cB_n<\infty.
+\]
+Then there exists an infinite zero-repair history-indexed tree
+\[
+\{B_h\}_{h\in\bits^{<\infty}}
+\]
+s finite root mean satisfying \eqref{Z} at every node.
+\end{lemma}
+
+\begin{proof}
+Choose depth-\(n\) feasible trees with root means uniformly bounded by some
+constant \(C\).
+
+For every fixed history \(h\), let
+\[
+p_h
+=
+\left(\frac14\right)^{N_0(h)}
+\left(\frac34\right)^{N_1(h)}
+>0
+\]
+be its \(P\)-history probability.
+
+The mean-buffer martingale identity implies
+\[
+\sum_{|h|=t}p_h\,\E J_h
+=
+\E J_\varnothing
+\le C.
+\]
+Hence for each fixed history
+\[
+\E J_h
+\le
+\frac C{p_h}.
+\]
+
+Therefore, for each fixed \(h\), the family of laws appearing at node \(h\)
+over all sufficiently deep finite trees is tight by Markov's inequality.
+Since the binary tree is countable, a diagonal subsequence gives weak limits
+for every fixed node.
+
+Convolution by the finite laws \(\mu_P,\mu_Q\) is continuous under weak
+convergence, and the linear identity \eqref{Z} is closed.  Therefore the
+limits satisfy \eqref{Z} at every node.  The root limit has mean at most
+\(C\) by lower semicontinuity.
+\end{proof}
+
+\begin{corollary}
+To prove \(H_1\), it is enough to establish a uniform finite-horizon bound
+\[
+\boxed{
+\cB_n\le C
+\quad
+\text{for all }n.
+}
+\]
+To prove \(H_2\), it is enough to show
+\[
+\boxed{
+\cB_n\to\infty.
+}
+\]
+\end{corollary}
+
+This is currently the cleanest decision problem.
+
+\section{Why the old \(n^{1/3}\) renormalization target is premature}
+
+The self-similar two-block residual suggests a formal scale relation:
+information is dilated by \(2\), residual mass is reduced by \(1/4\), and
+two-symbol blocking contributes another factor \(2\) in causal time.
+
+This points to the candidate scale transformation
+\[
+n\mapsto8n,
+\qquad
+J\mapsto2J.
+\]
+
+If one could prove
+\[
+\cB_{8n}\gtrsim2\cB_n,
+\]
+then \(n^{1/3}\) would follow.
+
+But the current finite data no longer justify assuming such a recursion.
+If \(\cB_n\to2\), any multiplicative lower renormalization is false.
+
+Therefore the correct order of attack is now:
+
+\begin{enumerate}[label=\arabic*.]
+\item decide whether \(\cK_\infty\) contains a finite-mean law;
+\item only if the answer is negative, return to a quantitative
+renormalization lower bound and determine the divergence exponent.
+\end{enumerate}
+
+\section{Prefix-code interpretation}
+
+The \(R=2\) pair has a concrete binary-prefix representation.
+
+For \(P\), take one codeword of length \(2\) and twelve codewords of length
+\(4\):
+\[
+2^{-2}+12\,2^{-4}=1.
+\]
+
+For \(Q\), take six codewords of length \(3\) and eight codewords of length
+\(5\):
+\[
+6\,2^{-3}+8\,2^{-5}=1.
+\]
+
+The length decisions may be coupled through the same first two fair bits:
+\[
+00:
+\qquad
+L_P=2,\quad L_Q=5,
+\]
+and
+\[
+\neq00:
+\qquad
+L_P=4,\quad L_Q=3.
+\]
+
+Thus the third-order parity-ladder problem can be viewed as
+\[
+\boxed{
+\text{causal synchronization of two complete prefix parsers}
+}
+\]
+with identical average code length
+\[
+\E L_P=\E L_Q=3.5,
+\]
+identical variance, but distinct third-order information structure.
+
+This interpretation connects the zero-repair buffer directly to
+finitary-code constructions.
+
+\section{Relation to finitary coding}
+
+Harvey and Peres prove that, for equal-entropy Bernoulli shifts, finite
+square-root coding-length moment forces equality of informational variance.
+This is the coding-theoretic analogue of the sharp second-order causal
+obstruction.
+
+Their ordered measure-preserving matching lemma also converts generating
+function self-similarity into a positive residual matching.  Hence the
+remaining obstruction in the present programme is not static positivity
+but unilateral compatibility across future histories.
+
+Gabor's 2024 work proves moment-optimal finitary isomorphism for
+equal-entropy aperiodic Markov processes, in particular iid sources:
+coding-radius moments are achievable for every
+\[
+\theta<\frac12
+\]
+in full generality, up to polylogarithmic effects.
+
+Gabor's 2025 work extends the Harvey--Peres variance obstruction to
+\(\Z^d\) and proves a Schmidt-type rigidity statement: exponentially
+decaying coding-radius tails at equal entropy force equality of one-site
+information laws up to permutation.  The same work obtains equality of all
+information moments under exponential-tail coding.
+
+These results do not settle the present finite-mean zero-repair viability
+question, but they strongly suggest that any \(H_1\) construction must be
+heavy-tailed and genuinely multiscale rather than finite-state or
+exponential-tail.
+
+\section{Relation to causal optimal transport}
+
+Discrete-time causal optimal transport admits dynamic programming and
+duality formulations.  General adapted-transport dual attainment is also
+known.
+
+Therefore the difficulty of the current lower problem is not the existence
+of a dual formulation.  The difficulty is identifying an explicit
+multiscale dual or viability invariant adapted to the exact parity-ladder
+finite-difference self-similarity.
+
+Recent continuous-time causal-transport work formulates analogous problems
+as state-constrained stochastic control and nonlinear master equations,
+reinforcing the interpretation of the buffer as an information inventory
+state.
+
+\section{Computational audit}
+
+All computational checks used in this attack are deterministic; no Monte
+Carlo evidence is used as proof.
+
+The executable audits include:
+
+\begin{itemize}
+\item exact finite construction of sorted-arithmetic causal couplings;
+\item exhaustive action-path verification for small horizons;
+\item exact monotone block transport;
+\item dyadic finite-bit exactization audits;
+\item exact parity-ladder moment and generating-function identities;
+\item global zero-repair history-tree LPs;
+\item finite-support stability checks;
+\item finite-state and finite-memory crash tests;
+\item exact atomic B-spline residual enumeration;
+\item Fourier stationary-buffer lower certificates.
+\end{itemize}
+
+The role of computation is to expose and falsify finite claims.  The
+asymptotic statements are accepted only when supported by analytic proof.
+
+\section{Current theorem ledger}
+
+\[
+\boxed{
+\begin{array}{p{0.62\textwidth}|c}
+\textbf{Statement} & \textbf{Status}\\
+\hline
+\text{Projective infinite causal substrate at rate }C_\infty^{\rm causal}
+& \checkmark\\[1mm]
+
+\text{Anti-diagonal causal stream-to-tree lift}
+& \checkmark\\[1mm]
+
+E_n=
+\sqrt{2/\pi}\,|\sigma_P-\sigma_Q|\sqrt n+o(\sqrt n)
+& \checkmark\\[1mm]
+
+\text{Parity-ladder first-unmatched-moment construction}
+& \checkmark\\[1mm]
+
+\mu_{P_R}-\mu_{Q_R}=2^{-(r-1)}\Delta^r
+& \checkmark\\[1mm]
+
+\text{Fully atomic B-spline }O(n^{1/r})\text{ causal upper}
+& \checkmark\\[1mm]
+
+\text{Stationary independent-buffer }\Omega(n^{1/r})
+& \checkmark\\[1mm]
+
+\text{REAL }\rho_1\text{ equals the exact third-order smoother}
+& \checkmark\\[1mm]
+
+\text{Higher REAL }\rho_k\text{ form the universal }r\text{-hierarchy}
+& \times\\[1mm]
+
+\text{Static positive residual extraction}
+& \checkmark\\[1mm]
+
+\text{Stationary integrable zero-repair state}
+& \times\\[1mm]
+
+\text{Greedy infinite zero-repair continuation}
+& \times\\[1mm]
+
+\text{Simple finite-mode zero-repair automaton}
+& \times\text{ for }K\le3\\[1mm]
+
+\text{Zero-repair LP data through depth }11
+& \checkmark\\[1mm]
+
+\sup_n\cB_n<\infty
+& \textbf{open}\\[1mm]
+
+\cB_n\to\infty
+& \textbf{open}\\[1mm]
+
+\cB_n=\Theta(n^{1/3})
+& \textbf{not established}\\[1mm]
+
+E_n=\Theta(n^{1/r})\text{ for the full C3-C parity ladder}
+& \textbf{open}
+\end{array}
+}
+\]
+
+\section{The present decision tree}
+
+The research programme is now sharply bifurcated.
+
+\subsection*{Branch \(H_1\): bounded viability}
+
+Prove that
+\[
+\sup_n\cB_n<\infty.
+\]
+By compactness, this produces an infinite history-indexed zero-repair tree
+with finite root mean.
+
+If this happens, the universal higher-order law
+\[
+E_n\asymp n^{1/r}
+\]
+is false.  The B-spline construction remains a valid upper bound, but it is
+not sharp.
+
+The most natural current candidate is
+\[
+\boxed{
+\cB_\infty=2.
+}
+\]
+
+\subsection*{Branch \(H_2\): divergent viability}
+
+Prove
+\[
+\cB_n\to\infty.
+\]
+Only then should one search for a quantitative renormalization or multiscale
+dual certificate proving a definite divergence exponent.
+
+If the exponent is \(1/3\), the third-order hierarchy survives.  It must,
+however, arise from recursive future-compatibility rather than from block
+startup, static transport, or stationary inventory.
+
+\section{Immediate next targets}
+
+The following order is currently the most informative.
+
+\begin{enumerate}[label=\textbf{T\arabic*.}]
+\item
+\textbf{Characterize low-depth viability constraints.}
+Derive analytic inequalities describing
+\[
+\cK_1,\cK_2,\cK_3,\ldots
+\]
+directly in terms of low-information tail masses of \(B\).
+
+\item
+\textbf{Search for a preserved viability family.}
+Find a parameterized convex family \(\mathfrak F\) of finite-mean buffer laws
+such that every
+\[
+B\in\mathfrak F
+\]
+admits children
+\[
+B_0,B_1\in\mathfrak F.
+\]
+Any such invariant family proves \(H_1\).
+
+\item
+\textbf{Prove or disprove the mean-\(2\) barrier.}
+Test whether there exists
+\[
+B\in\cK_\infty
+\]
+with
+\[
+\E J=2.
+\]
+
+\item
+\textbf{If \(H_1\) fails, construct a multiscale dual.}
+The fixed-memory dual experiments show that the sharp certificate cannot be
+finite-memory.  A successful dual must encode the same self-similar
+hierarchy as the Harvey--Peres residual matching.
+
+\item
+\textbf{Only after the zero-repair problem is settled, transfer to the full
+causal entropy bill.}
+A quantitative theorem is then needed to compare positive repair entropy
+with the zero-repair viability functional.
+\end{enumerate}
+
+\section{Bottom line}
+
+The higher-order attack has now produced a rigorous constructive hierarchy
+of upper bounds,
+\[
+\boxed{
+E_n(P_R,Q_R)=O(n^{1/r}),
+}
+\]
+together with a matching theorem in the stationary independent-buffer
+architecture.
+
+What has \emph{not} survived repeated attack is the claim that causality
+alone already forces
+\[
+\Omega(n^{1/r})
+\]
+for the full history-indexed problem.
+
+The decisive mathematical object is no longer an Edgeworth coefficient or
+a block-startup balance.  It is the infinite viability kernel
+\[
+\boxed{
+\cK_\infty
+=
+\bigcap_{n\ge0}\cK_n.
+}
+\]
+
+For the third-order parity ladder, the next binary question is therefore
+simply:
+
+\[
+\boxed{
+\exists B\in\cK_\infty
+\text{with }
+\E J<\infty
+\;?
+}
+\]
+
+If yes, the conjectured universal higher-order power law collapses.
+
+If no, the failure of finite-mean viability is itself the missing
+higher-order causal invariant, and the next task is to determine its
+quantitative rate.
+
+That is the current frontier.
+
+\begin{thebibliography}{99}
+
+\bibitem{HarveyPeres}
+N.~Harvey and Y.~Peres,
+\emph{An invariant of finitary codes with finite expected square root coding length},
+Ergodic Theory Dynam.\ Systems \textbf{31} (2011), 77--90.
+
+\bibitem{DelJunco1}
+A.~del Junco,
+\emph{Finitary codes between one-sided Bernoulli shifts},
+Ergodic Theory Dynam.\ Systems.
+
+\bibitem{DelJunco2}
+A.~del Junco,
+\emph{Bernoulli shifts of the same entropy are finitarily and unilaterally isomorphic},
+Ergodic Theory Dynam.\ Systems.
+
+\bibitem{Gabor2024}
+U.~Gabor,
+\emph{Moment-optimal finitary isomorphism for i.i.d.\ processes of equal entropy},
+arXiv:2412.15425, 2024.
+
+\bibitem{Gabor2025}
+U.~Gabor,
+\emph{Moments of finitary factor maps between Bernoulli processes},
+arXiv:2509.06018, 2025.
+
+\bibitem{BackhoffEtAl2017}
+J.~Backhoff-Veraguas, M.~Beiglb\"ock, Y.~Lin, and A.~Zalashko,
+\emph{Causal transport in discrete time and applications},
+SIAM J.\ Optim.\ \textbf{27} (2017), 2528--2562;
+arXiv:1606.04062.
+
+\bibitem{KrsekPammer}
+D.~Kr\v{s}ek and G.~Pammer,
+\emph{General duality and dual attainment for adapted transport},
+arXiv:2401.11958.
+
+\bibitem{BackhoffEtAl2026}
+J.~Backhoff, E.~Bayraktar, I.~Ekren, and A.~Zitridis,
+\emph{Analytical approach to continuous-time causal optimal transport},
+arXiv:2605.19978, 2026.
+
+\end{thebibliography}
+
+\end{document}
