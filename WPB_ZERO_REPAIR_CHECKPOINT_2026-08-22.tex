@@ -1,0 +1,815 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.45cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{problem}[theorem]{Open Problem}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\PGF}{\operatorname{PGF}}
+\newcommand{\1}{\mathbf 1}
+
+\definecolor{provedgreen}{RGB}{20,105,55}
+\definecolor{frontierred}{RGB}{145,25,25}
+\newcommand{\proved}[1]{\textcolor{provedgreen}{\textbf{PROVED.} #1}}
+\newcommand{\audit}[1]{\textbf{AUDITED COMPUTATION.} #1}
+\newcommand{\frontier}[1]{\textcolor{frontierred}{\textbf{OPEN / ACTIVE FRONTIER.} #1}}
+
+\title{\textbf{Who Pays the Bill?}\\[1mm]
+\large Zero-Repair Checkpoint:\\
+Logarithmic Divergence, Finite Binomial Viability, and Delayed Boundary Repair}
+\author{Jan Mikul\'ik}
+\date{22 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This checkpoint isolates the present status of the exact history-indexed
+zero-repair problem for the first nontrivial dyadic parity pair
+\[
+P=\tfrac14\delta_2+\tfrac34\delta_4,
+\qquad
+Q=\tfrac34\delta_3+\tfrac14\delta_5.
+\]
+The exact recursion is
+\[
+\mu_Q*B_h
+=
+\tfrac14\delta_2*B_{h0}
++
+\tfrac34\delta_4*B_{h1},
+\]
+and \(\cB_n\) denotes the minimum root mean among depth-\(n\) feasible trees.
+The previously established support-independent viability certificate gives
+\(\E J_\varnothing\ge19/9\) for every infinite viable tree, while a direct
+finite-horizon certificate already gives
+\(\cB_{15}\ge39473/19683>2\).
+
+The main quantitative update is a finite-horizon transform/Jensen argument
+which yields
+\[
+\boxed{
+\liminf_{n\to\infty}\frac{\cB_n}{\log n}\ge\frac13
+}
+\]
+for the natural logarithm.  In particular \(\cB_n\to\infty\).
+This settles the old bounded-versus-divergent viability dichotomy, but it does
+\emph{not} determine the divergence exponent beyond the logarithmic lower law.
+
+On the constructive side, small explicit binomially smoothed roots survive far
+beyond their first doubling scales: one family member is analytically viable to
+depth two, a second has an audited full-history tree to depth six, and a third
+has an audited full-history tree to depth eleven.  More importantly, a genuine
+boundary obstruction in the geometric-reservoir attack can be removed exactly.
+The negative second boundary profile can be repaired by transporting a positive
+packet to an arbitrarily delayed tail location \(J\), subject to one explicit
+coefficient inequality.  This produces a rigorous delayed scale-switching
+mechanism and an integer tangent model for the remaining renormalization
+problem.
+
+No claim of \(\cB_n=\Theta(\log n)\) or
+\(\cB_n=\Theta(n^{1/3})\) is made here.
+\end{abstract}
+
+\paragraph{Status convention.}
+Theorems, propositions, lemmas, and corollaries below are analytic statements.
+Items labelled \textbf{AUDITED COMPUTATION} are exact finite LP feasibility
+checks and are not promoted to asymptotic theorems.  Open conjectures are
+explicitly marked.
+
+\tableofcontents
+
+% ============================================================
+\section{Exact zero-repair viability problem}
+% ============================================================
+
+For each history \(h\in\bits^{\le n}\), let \(B_h\) be a probability law on
+\(\Z_{\ge0}\).  Write its probability generating function as
+\[
+B_h(z)=\sum_{j\ge0}b_{h,j}z^j.
+\]
+The exact zero-repair recursion is
+\[
+\boxed{
+\mu_Q*B_h
+=
+\frac14\delta_2*B_{h0}
++
+\frac34\delta_4*B_{h1}.
+}
+\tag{ZR}
+\]
+Equivalently,
+\[
+\boxed{
+B_{h0}(z)+3z^2B_{h1}(z)
+=
+z(3+z^2)B_h(z).
+}
+\tag{PGF}
+\]
+
+\begin{definition}[Finite-depth viability sets]
+Let \(\cK_0=\mathcal P(\Z_{\ge0})\).  Recursively, \(B\in\cK_{n+1}\) if
+there exist \(B_0,B_1\in\cK_n\) satisfying \eqref{PGF}.  Define
+\[
+\boxed{
+\cB_n:=\inf_{B\in\cK_n}\E_BJ.
+}
+\]
+\end{definition}
+
+The sets are nested,
+\[
+\cK_{n+1}\subseteq\cK_n,
+\]
+so \(\cB_n\) is nondecreasing.
+
+% ============================================================
+\section{Exact lower certificates already in force}
+% ============================================================
+
+\subsection{Infinite-support viability barrier}
+
+The closed low-tail envelope and its two-generation dual refinement give the
+exact support-independent theorem
+\[
+\boxed{
+\E_BJ\ge\frac{19}{9}
+}
+\]
+for the root of every infinite viable zero-repair tree.
+The certificate is coefficientwise on the whole support; it is not a
+finite-cutoff LP artifact.
+
+\subsection{Finite-horizon barrier above two}
+
+A finite-depth version of the same tail hierarchy gives exact rational lower
+bounds \(D_n\le\cB_n\).  In particular,
+\[
+\boxed{
+\cB_{15}
+\ge
+\frac{39473}{19683}
+=
+2.005436\ldots
+>2.
+}
+\]
+Hence the old candidate \(\cB_\infty=2\) is already impossible at finite depth.
+
+% ============================================================
+\section{Quantitative divergence: a logarithmic theorem}
+% ============================================================
+
+Let \(m_h:=\E_{B_h}J\).  Differentiating \eqref{PGF} at \(z=1\) gives
+\[
+\boxed{
+ m_h=\frac14m_{h0}+\frac34m_{h1}.
+}
+\tag{M}
+\]
+Thus the buffer mean is harmonic along the \(P\)-history tree.
+
+Fix \(z\in(0,1)\), set
+\[
+a:=-\log z,
+\qquad
+y_h:=z^{m_h},
+\]
+and let \(H_t\) be a random history generated with branch probabilities
+\(1/4,3/4\).  Convexity gives a submartingale
+\[
+\E[y_{H_{t+1}}\mid H_t=h]\ge y_h.
+\]
+For a block of length \(k\), write
+\[
+D_h^{(k)}
+:=
+\E_{P^k}y_{hw}-y_h
+\ge0.
+\]
+Since the geometric mean of \(\sqrt{y_{hw}}\) under \(P^k\) equals
+\(\sqrt{y_h}\),
+\[
+\boxed{
+\E_{P^k}
+\left(\sqrt{y_{hw}}-\sqrt{y_h}\right)^2
+\le D_h^{(k)}.
+}
+\tag{J}
+\]
+
+Define
+\[
+G_P(z)=\frac{z^2+3z^4}{4},
+\qquad
+G_Q(z)=\frac{3z^3+z^5}{4},
+\]
+\[
+\rho(z):=\frac{G_Q(z)}{G_P(z)}<1,
+\qquad
+\widetilde p_z(x):=\frac{p(x)z^x}{G_P(z)},
+\]
+and the exact quadratic likelihood cost
+\[
+\Lambda(z)
+:=
+\sum_x\frac{\widetilde p_z(x)^2}{p(x)}
+=
+\frac{G_P(z^2)}{G_P(z)^2}.
+\]
+Iterating \eqref{PGF} gives the exact tilted transform identity
+\[
+\boxed{
+\E_{\widetilde P^k}B_{hw}(z)
+=
+\rho(z)^kB_h(z).
+}
+\tag{T}
+\]
+Using \(B_{hw}(z)\ge z^{m_{hw}}\), \eqref{J}, and Cauchy--Schwarz gives
+\[
+\rho(z)^kB_h(z)
+\ge
+ y_h-2\Lambda(z)^{k/2}\sqrt{D_h^{(k)}}.
+\tag{B}
+\]
+
+Partition a depth-\(n\) path into disjoint blocks of length \(k\le n/2\).
+The total submartingale increase is at most
+\[
+1-z^{m_\varnothing}
+\le am_\varnothing.
+\]
+Therefore at least one block satisfies
+\[
+\E D_{H_s}^{(k)}
+\le
+\frac{2am_\varnothing k}{n}.
+\]
+Averaging \eqref{B} over the start of that block, using
+\(B_h(z)\le1\) and \(\E y_{H_s}\ge z^{m_\varnothing}\), yields the master inequality
+\[
+\boxed{
+\rho(z)^k
+\ge
+z^{m_\varnothing}
+-
+2\Lambda(z)^{k/2}
+\sqrt{\frac{2am_\varnothing k}{n}}.
+}
+\tag{Master}
+\]
+
+Choose
+\[
+k=
+\left\lceil
+\frac{am_\varnothing+\log2}{-\log\rho(z)}
+\right\rceil.
+\]
+If \(k>n/2\), then \(m_\varnothing=\Omega(n)\) and the claimed logarithmic
+lower bound is immediate.  Otherwise \eqref{Master} implies
+\[
+\log n
+\le
+\Gamma(z)m_\varnothing+O_z(\log(m_\varnothing+1)),
+\]
+where
+\[
+\boxed{
+\Gamma(z)
+=
+2a
++
+\frac{a}{-\log\rho(z)}\log\Lambda(z).
+}
+\]
+For \(z=e^{-a}\uparrow1\), exact cumulant expansion gives
+\[
+-\log\rho(e^{-a})
+=
+\frac14a^3+O(a^4),
+\]
+\[
+\log\Lambda(e^{-a})
+=
+\frac34a^2+O(a^3),
+\]
+and hence
+\[
+\Gamma(e^{-a})=3+O(a).
+\]
+
+\begin{theorem}[Quantitative zero-repair divergence]
+For the \(R=2\) zero-repair hierarchy,
+\[
+\boxed{
+\liminf_{n\to\infty}
+\frac{\cB_n}{\log n}
+\ge
+\frac13.
+}
+\]
+Equivalently,
+\[
+\cB_n
+\ge
+\left(\frac13-o(1)\right)\log n.
+\]
+In particular,
+\[
+\boxed{\cB_n\to\infty.}
+\]
+\end{theorem}
+
+\begin{remark}
+The logarithm is natural.  In base two the coefficient is
+\[
+\frac{\log2}{3}=0.231049\ldots.
+\]
+The proof is finite-horizon and does not require an infinite-tree compactness
+argument.
+\end{remark}
+
+% ============================================================
+\section{The first two viability sets exactly}
+% ============================================================
+
+Write \(B=(b_0,b_1,\ldots)\).
+Multiplying \eqref{PGF} coefficientwise by the common denominator gives
+\[
+3b_{u-3}+b_{u-5}
+=
+\ell_{u-2}+3h_{u-4},
+\tag{R}
+\]
+with negative-index coefficients interpreted as zero.
+
+\begin{proposition}[Exact characterization of \(\cK_1\)]
+\[
+\boxed{
+B\in\cK_1
+\iff
+b_0\le\frac13.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+At \(u=3\), \eqref{R} gives \(\ell_1=3b_0\), so normalization of the low child
+forces \(3b_0\le1\).  Conversely, if \(3b_0\le1\), the forced low mass can be
+completed from the remaining source profile to a low submeasure of total mass
+one, which is exactly the one-step Hall construction.
+\end{proof}
+
+\begin{proposition}[Exact characterization of \(\cK_2\)]
+\[
+\boxed{
+B\in\cK_2
+\iff
+b_0\le\frac13,
+\qquad
+b_0+b_1\le\frac23.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The low child always has \(\ell_0=0\).  From the first two nontrivial equations,
+\[
+\ell_1=3b_0,
+\qquad
+\ell_2+3h_0=3b_1.
+\]
+Both children must lie in \(\cK_1\), hence \(h_0\le1/3\).  Necessity follows
+from
+\[
+3(b_0+b_1)=\ell_1+\ell_2+3h_0\le2.
+\]
+For sufficiency choose
+\[
+\ell_2=\min\{3b_1,1-3b_0\}.
+\]
+Then
+\[
+h_0=b_1-\frac13\ell_2\le\frac13
+\]
+precisely under \(b_0+b_1\le2/3\), and the remaining low mass can again be
+completed from higher source levels.  Thus both children belong to \(\cK_1\).
+\end{proof}
+
+% ============================================================
+\section{Binomial smoothing: finite-depth evidence}
+% ============================================================
+
+Let
+\[
+U(z):=\frac{1+z}{2},
+\qquad
+R_k(z):=\frac{1+2z}{3}\,U(z)^k.
+\]
+Then
+\[
+\E R_k=\frac23+\frac{k}{2}.
+\]
+The exact \(\cK_1,\cK_2\) characterization immediately gives
+\[
+R_1\in\cK_2.
+\]
+Moreover the finite-horizon coupled-tail inequality at depth three gives
+\[
+R_1\notin\cK_3.
+\]
+For \(R_2\), the support-independent depth-seven CDF cap
+\(F(2)\le22/27\) is violated because
+\[
+F_{R_2}(2)=\frac56>\frac{22}{27},
+\]
+so
+\[
+R_2\notin\cK_7.
+\]
+
+The full-history feasibility LP has been rebuilt directly from \eqref{R}, with
+no imported primal solver and no dual constraints.  It gives:
+\[
+\boxed{R_2\in\cK_6}
+\]
+and, in a deeper run with support cutoff \(0\le J\le16\),
+\[
+\boxed{R_3\in\cK_{11}}.
+\]
+These are positive certificates: a finite-support feasible tree is a genuine
+full-history tree.  The depth-twelve status of \(R_3\) is not claimed here.
+
+\audit{The current independent audit confirms \(R_2\in\cK_6\) and
+\(R_3\in\cK_{11}\).  The negative statements above are analytic and do not rely
+on finite-support LP infeasibility.}
+
+The data suggest that binomial smoothing is useful, but they do not yet imply
+any uniform doubling law such as \(R_k\in\cK_{2^k}\) for all \(k\).
+
+% ============================================================
+\section{Shift and bulk-extension lemmas}
+% ============================================================
+
+\begin{lemma}[Shift invariance]
+If \(B\in\cK_n\), then \(z^sB\in\cK_n\) for every integer \(s\ge0\).
+\end{lemma}
+
+\begin{proof}
+Shift every buffer law in a feasible tree by the same deterministic amount
+\(s\).  Equation \eqref{PGF} is multiplied by \(z^s\) at every node.
+\end{proof}
+
+\begin{lemma}[One free bulk level]
+If \(B\in\cK_n\), then
+\[
+\boxed{zB\in\cK_{n+1}.}
+\]
+\end{lemma}
+
+\begin{proof}
+The exact boundary-free split is
+\[
+zB\longmapsto(z^4B,B),
+\]
+because
+\[
+z^4B+3z^2B=z^2(3+z^2)B=z(3+z^2)(zB).
+\]
+Both children lie in \(\cK_n\) by shift invariance.
+\end{proof}
+
+% ============================================================
+\section{Geometric reservoir and delayed boundary repair}
+% ============================================================
+
+Let
+\[
+G_r(z):=\frac{1-r}{1-rz},
+\qquad 0<r<1,
+\]
+and define
+\[
+D_r(z):=(3-2z^2)G_r(z).
+\]
+For \(r^2\ge2/3\), \(D_r\) is a PGF and the previously known exact split is
+\[
+\boxed{
+G_r\longmapsto(zD_r,zG_r).
+}
+\tag{G1}
+\]
+The naive next transform \((3-2z^2)D_r\) has negative coefficients.  The
+following theorem repairs that defect exactly.
+
+\begin{theorem}[Delayed boundary repair]
+Set
+\[
+A_r:=3(1-r)(4-3r^2),
+\qquad
+\alpha_r:=A_r(1+r)=3(1-r^2)(4-3r^2).
+\]
+Fix an integer \(J\ge4\) and define
+\[
+C_{r,J}(z)
+:=
+A_rz^2+rA_rz^3-\alpha_r z^JG_r(z).
+\]
+Let
+\[
+E_{r,J}(z)
+:=
+(3-2z^2)^2G_r(z)+C_{r,J}(z),
+\]
+\[
+H_{r,J}(z)
+:=
+zD_r(z)-\frac{C_{r,J}(z)}{3z}.
+\]
+Then the algebraic identity
+\[
+\boxed{
+z(3+z^2)D_r
+=
+zE_{r,J}+3z^2H_{r,J}
+}
+\tag{DR}
+\]
+holds identically.
+
+If
+\[
+\boxed{
+\alpha_r
+\le
+(3r^2-2)^2r^{J-4},
+}
+\tag{Pos}
+\]
+then \(E_{r,J}\) and \(H_{r,J}\) are probability PGFs.  Hence \eqref{DR}
+is a genuine positive zero-repair split.
+\end{theorem}
+
+\begin{proof}
+The identity is immediate after cancellation of \(C_{r,J}\):
+\[
+\begin{aligned}
+zE_{r,J}+3z^2H_{r,J}
+&=z(3-2z^2)^2G_r+3z^3D_r\\
+&=z(3-2z^2)(3+z^2)G_r.
+\end{aligned}
+\]
+For positivity, the coefficients of \((3-2z^2)^2G_r\) at levels two and
+three are exactly
+\[
+-A_r,
+\qquad
+-rA_r,
+\]
+so the first two terms of \(C_{r,J}\) cancel them.  For every \(n\ge J\), the
+remaining coefficient of \(E_{r,J}\) is
+\[
+(1-r)r^{n-J}
+\left[
+(3r^2-2)^2r^{J-4}-\alpha_r
+\right],
+\]
+which is nonnegative exactly under \eqref{Pos}.  Also
+\(C_{r,J}(1)=0\), hence \(E_{r,J}(1)=1\).
+
+For the high child,
+\[
+H_{r,J}
+=(3z-2z^3)G_r
+-\frac{A_r}{3}z
+-\frac{rA_r}{3}z^2
++\frac{\alpha_r}{3}z^{J-1}G_r.
+\]
+The first two coefficients become
+\[
+(1-r)(3r^2-1),
+\qquad
+r(1-r)(3r^2-1),
+\]
+and all later coefficients are nonnegative for \(r^2\ge2/3\); the delayed
+packet is positive.  Normalization follows from \eqref{DR} at \(z=1\).
+\end{proof}
+
+\subsection{The shortest repair}
+
+For \(J=4\), condition \eqref{Pos} reduces exactly to
+\[
+9r^2-8\ge0.
+\]
+Thus for \(r^2\ge8/9\), one may write
+\[
+E_r(z)
+=
+9(1-r)+9r(1-r)z+(9r^2-8)z^4G_r(z),
+\]
+\[
+H_r(z)
+=
+(1-r)(3r^2-1)z
++r(1-r)(3r^2-1)z^2
++(3r^4-4r^2+2)z^3G_r(z),
+\]
+and obtain
+\[
+z(3+z^2)D_r=zE_r+3z^2H_r.
+\]
+Both children have zero mass at level zero, hence lie in \(\cK_1\).  Therefore
+\[
+\boxed{D_r\in\cK_2.}
+\]
+Using \eqref{G1}, shift invariance, and the one-free-level lemma gives the
+rigorous finite-depth corollary
+\[
+\boxed{G_r\in\cK_4\qquad(r^2\ge8/9).}
+\]
+
+\subsection{How far can one packet be delayed?}
+
+Condition \eqref{Pos} permits a maximal delay satisfying
+\[
+r^{J-4}
+\gtrsim
+\frac{\alpha_r}{(3r^2-2)^2}.
+\]
+For \(r=1-\varepsilon\),
+\[
+\alpha_r=6\varepsilon+O(\varepsilon^2),
+\]
+so
+\[
+\boxed{
+J_{\max}
+\asymp
+\frac{\log(1/\varepsilon)}{\varepsilon}.
+}
+\]
+Since \(\E G_r=r/(1-r)\asymp\varepsilon^{-1}\), one exact local repair can
+move boundary debt to distance
+\[
+J\asymp m\log m
+\]
+when the geometric mean scale is \(m\).
+
+% ============================================================
+\section{Integer tangent model}
+% ============================================================
+
+Divide the geometric profiles by \(1-r\) and let \(r\uparrow1\).  Coefficientwise,
+\[
+\frac{G_r(z)}{1-r}
+\longrightarrow
+\frac1{1-z},
+\]
+whose coefficient sequence is
+\[
+(1,1,1,1,\ldots).
+\]
+After one boundary transform,
+\[
+\frac{D_r(z)}{1-r}
+\longrightarrow
+\frac{3-2z^2}{1-z},
+\]
+with coefficients
+\[
+(3,3,1,1,1,\ldots).
+\]
+After the naive second transform,
+\[
+\frac{(3-2z^2)^2G_r(z)}{1-r}
+\longrightarrow
+\frac{(3-2z^2)^2}{1-z},
+\]
+with coefficients
+\[
+\boxed{
+(9,9,-3,-3,1,1,1,\ldots).
+}
+\]
+Thus the small-\((1-r)\) boundary problem has a discrete tangent description:
+two negative packets of size three must be routed to later positive tail scales.
+The delayed correction above performs exactly such a routing before the tangent
+limit is taken.
+
+% ============================================================
+\section{What is and is not settled}
+% ============================================================
+
+The lower side is now rigorous:
+\[
+\boxed{
+\cB_n
+\ge
+\left(\frac13-o(1)\right)\log n,
+\qquad
+\cB_n\to\infty.
+}
+\]
+This rules out every bounded exact zero-repair hierarchy.
+
+The constructive side remains unresolved.  In particular, neither
+\[
+\cB_n=O(\log n)
+\]
+nor
+\[
+\cB_n=O(n^{1/3})
+\]
+has been proved for the exact zero-repair problem.  The atomic B-spline
+\(O(n^{1/3})\) construction belongs to the broader causal-bill problem with
+positive residual repair and must not be imported as a zero-repair upper bound.
+
+The exact delayed repair theorem shows that the boundary defect can be moved
+between scales rather than paid immediately.  The remaining issue is whether
+these packets can be routed through all histories with an accumulated root mean
+of order \(\log n\), a power law, or another scale.
+
+\begin{problem}[Doubling increment]
+Determine the asymptotic behavior of
+\[
+\boxed{
+\cB_{2n}-\cB_n.
+}
+\]
+A uniform bound would imply \(\cB_n=O(\log n)\); divergence of the increment
+would rule out that route.
+\end{problem}
+
+\begin{problem}[Boundary-debt renormalization]
+Construct a positive multiscale state variable which records the delayed
+packets created by \eqref{DR}, and determine the Perron/renormalization factor
+of its tangent dynamics.  The integer profile
+\[
+(9,9,-3,-3,1,1,\ldots)
+\]
+is the simplest local model of the defect to be transported.
+\end{problem}
+
+% ============================================================
+\section{Current ledger}
+% ============================================================
+
+\small
+\begin{longtable}{p{0.72\textwidth}|p{0.20\textwidth}}
+\textbf{Statement} & \textbf{Status}\\
+\hline
+\endfirsthead
+\textbf{Statement} & \textbf{Status}\\
+\hline
+\endhead
+Exact zero-repair PGF recursion & proved\\
+Monotonicity of \(\cB_n\) & proved\\
+Infinite-tree lower bound \(\E J\ge19/9\) & proved\\
+Finite-depth bound \(\cB_{15}\ge39473/19683>2\) & proved\\
+\(\liminf \cB_n/\log n\ge1/3\) & \textbf{proved}\\
+\(\cB_n\to\infty\) & \textbf{proved}\\
+Exact characterization of \(\cK_1\) and \(\cK_2\) & proved\\
+\(R_1\in\cK_2\), \(R_1\notin\cK_3\) & proved\\
+\(R_2\in\cK_6\) & audited computation\\
+\(R_2\notin\cK_7\) & proved by CDF cap\\
+\(R_3\in\cK_{11}\) & audited computation\\
+Delayed boundary-repair identity \eqref{DR} & proved\\
+Positivity condition \eqref{Pos} & proved\\
+\(D_r\in\cK_2\), \(G_r\in\cK_4\) for \(r^2\ge8/9\) & proved\\
+Uniform logarithmic upper \(\cB_n=O(\log n)\) & \textcolor{frontierred}{open}\\
+Cubic exact-zero-repair law \(\cB_n=\Theta(n^{1/3})\) & \textcolor{frontierred}{open}\\
+Full asymptotic order of \(\cB_n\) & \textcolor{frontierred}{open}
+\end{longtable}
+\normalsize
+
+\section*{Bottom line}
+The old finite-mean viability branch is closed: exact zero repair has a
+quantitative logarithmic divergence.  The present frontier is therefore no
+longer existence versus nonexistence.  It is the growth law.  The strongest new
+constructive information is that a genuine second-order boundary negativity is
+not terminal: it can be repaired exactly by exporting a positive packet to a
+later geometric scale.  The next proof target is the induced multiscale packet
+dynamics, not another one-scale stationary ansatz.
+
+\end{document}
