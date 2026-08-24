@@ -1,0 +1,2705 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.45cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{longtable}
+\usepackage{graphicx}
+
+\hypersetup{
+  pdftitle={Causal Phase Obstructions in Exact Information Simulation},
+  pdfauthor={Jan Mikulik}
+}
+
+\setcounter{MaxMatrixCols}{20}
+\setlength{\parindent}{1.1em}
+\setlength{\parskip}{0.18em}
+\emergencystretch=2em
+\setlist[itemize]{topsep=3pt,itemsep=2pt,parsep=1pt}
+\setlist[enumerate]{topsep=3pt,itemsep=2pt,parsep=1pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Open Problem}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cM}{\mathcal M}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cD}{\mathfrak D}
+\newcommand{\cR}{\mathcal R}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cW}{\mathcal W}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\wt}{\operatorname{wt}}
+\newcommand{\diag}{\operatorname{diag}}
+
+\title{\textbf{Causal Phase Obstructions in Exact Information Simulation}\\[0.35em]
+\large Zero-Repair Trees, Hidden Ordering Information, and Multiscale Renormalization}
+\author{Jan Mikul\'ik}
+\date{23 August 2026\\[0.2em]\small Revised phase-fiber version 3}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study an exact causal information-accounting problem in which two finite
+information-increment laws must be reconciled by a nonnegative,
+history-dependent inventory, with no fresh repair term.  The local constraint is
+a linear convolution identity, but the global feasibility problem is strongly
+order-sensitive.
+
+Our first result is a finite-horizon converse.  For every fixed Laplace tilt we
+derive an explicit logarithmic lower bound for the minimum root inventory
+\(\cB_n\).  If the increment laws have equal mean and variance and their first
+mismatch is an oriented third cumulant, then
+\[
+ \liminf_{n\to\infty}\frac{\cB_n}{\log n}
+ \ge \frac{\Delta\kappa_3}{6\sigma^2}.
+\]
+For the dyadic pair
+\[
+ \mu_P=\tfrac14\delta_2+\tfrac34\delta_4,
+ \qquad
+ \mu_Q=\tfrac34\delta_3+\tfrac14\delta_5,
+\]
+this gives the exact lower-bound coefficient \(1/3\) and rules out every infinite
+finite-mean zero-repair tree.
+
+We then isolate a second obstruction which is invisible to scalar information
+spectra.  At block length \(m\), ordered binary histories form a space
+\(V_m\cong\R^{2^m}\), while scalar total information sees only the \(m+1\)
+Hamming layers.  The lost ordering information is the phase space
+\(W_m=\ker\Pi_m\), of dimension
+\[
+ \dim W_m=2^m-(m+1).
+\]
+Under block doubling it has the exact decomposition
+\[
+W_{2m}=(W_m\otimes W_m)\oplus(W_m\otimes U_m)
+\oplus(U_m\otimes W_m)\oplus K_m,
+\qquad \dim K_m=m^2,
+\]
+where \(K_m\) is a fresh anti-diagonal phase sector created by coarse-graining.
+For two symbols we go further: the entire projected causal scalar-profile
+polytope is the static transport polytope cut by exactly two additional linear
+facets,
+\[
+2r_{00}+3r_{01}+r_{11}\ge\frac3{16},\qquad
+2r_{00}+3r_{01}+2r_{10}+3r_{11}\le\frac98.
+\]
+This intrinsic criterion yields a solver-free proof that the minimum
+information-profile mismatch is \(5/16\), whereas static matching pays only
+\(1/4\); a fully displayed rational primal--dual certificate gives an
+independent exact check.  More generally, at every fixed block length the
+local causal phase fiber is a bounded polytope.  We give an exact
+necessary-and-sufficient Farkas characterization of its nonemptiness; for
+rational source laws the certificate cone is rational polyhedral and hence has
+a finite rational generating family.  The extra \(1/16\) in the two-symbol
+example is added to both scalar residual profiles and therefore disappears from
+their signed difference.  Causality can thus create a real obstruction living
+entirely in the kernel of scalar information projection.
+
+Finally, we pass from viability sets to lower support functionals, derive an
+exact finite-dimensional Bellman--Fenchel recursion, identify the cubic shift
+normal form
+\[
+P^*-Q^*=\tfrac14E^2(I-E)^3,
+\]
+and introduce a Green coordinate in which the cubic defect becomes a positive
+unit source.  The two-block boundary mask is \((1+z)^3/4\), the binary
+quadratic B-spline mask, and one explicit mean-neutral phase channel admits a
+uniform finite-mean envelope across all dyadic scales.  These statements do
+not prove a matching \(O(\log n)\) upper bound.  Fixed-block phase feasibility
+is now completely characterized at the level of finite-dimensional linear
+programming; what remains is the genuinely multiscale problem of finding a
+scale-stable description compatible with future zero-repair viability.  In
+particular, a uniform bound on \(\cB_{2n}-\cB_n\) would close the order of
+growth.
+
+The zero-repair bill is deliberately distinguished from unrestricted causal
+Shannon entropy.  It measures exact causal working inventory, not entropy rate;
+this distinction is the link back to the broader question of which resources
+an exact stochastic realization must carry.
+\end{abstract}
+
+\noindent\textbf{Keywords:} causal information, exact simulation, zero repair,
+causal transport, information spectrum, renormalization, Bellman--Fenchel
+duality, subdivision schemes, third cumulant.
+
+\section{Introduction}
+
+A probability law tells us what may be observed.  It does not, by itself, tell
+us how much hidden state an exact realization must carry when outputs are
+chosen sequentially and future repair is forbidden.  This paper isolates one
+such resource question.
+
+Suppose two actions have prescribed information-increment laws \(\mu_P\) and
+\(\mu_Q\).  At every history we ask for an exact accounting identity: the
+current nonnegative inventory plus the next \(Q\)-increment must have the same
+law as a \(P\)-branch increment plus the next inventory assigned to that branch.
+No signed debt is allowed and no fresh repair term may be injected.  The
+resulting object is an exact zero-repair information tree.
+
+There are two reasons to study this stricter contract separately from ordinary
+entropy-rate simulation.  First, exact online random generation can recycle
+unused randomness and operate arbitrarily close to Shannon entropy in models
+that allow a persistent state and fresh source bits
+\cite{DraperSaad2026,DraperHarrisSaad2026}.  Second, finitary coding theory
+shows that equal entropy alone does not control stronger moments of coding
+radius or information cocycles \cite{Parry1979,Schmidt1984,HarveyPeres2011}.
+Thus rate and working state are different resources.
+
+The present problem also sits near, but not inside for free, modern adapted
+optimal transport.  Causal and bicausal transport admit general duality and
+dual attainment under broad assumptions \cite{KrsekPammer2025}; graph-causal
+transport now provides gluing and dynamic-programming results for couplings
+constrained by directed acyclic graphs \cite{OblojTuchilus2026}.  Our model has
+an additional exact conservation law and a hard state constraint
+\(J\ge0\).  These are not cosmetic: they are the source of the obstruction.
+
+A useful recent methodological parallel comes from synchronization channels.
+Kova\v{c}evi\'c identifies a coefficientwise domination condition for a family
+of sticky channels, converts it into an exact dual capacity bound, and then
+characterizes the laws satisfying that condition through a functional
+composition equation \cite{Kovacevic2026}.  The present setting is different,
+but the same standard is appropriate: the objective is not another successful
+ansatz, but an exact structural criterion exposing the admissible positive
+fiber on which the dynamics acts.
+
+\subsection{Main contributions}
+
+The paper has six main components.
+
+\begin{enumerate}
+\item We give a self-contained finite-horizon logarithmic converse for exact
+zero repair.  The third-cumulant case yields an explicit lower-bound coefficient, equal to
+\(1/3\) for the dyadic parity pair.
+
+\item We represent finite viability sets by their lower support functionals and
+derive an exact Bellman--Fenchel recursion in finite dimensions, together with
+a rigorous weak-duality version on the countable state space.
+
+\item We introduce the ordered-history phase quotient.  Scalar total
+information is a projection \(\Pi_m\) from \(2^m\) ordered histories to
+\(m+1\) Hamming layers; its kernel has dimension \(2^m-(m+1)\).
+
+\item We characterize the first nontrivial projected causal phase polytope in
+closed form.  For two symbols a static scalar joint profile admits a causal
+lift if and only if two explicit linear facet inequalities hold.  This gives a
+solver-free proof of the exact mismatch \(5/16\), compared with the static
+value \(1/4\), while an independent rational primal--dual certificate checks
+the same optimum.  We then characterize the local causal phase fiber at
+arbitrary fixed block length as a polytope and give an exact Farkas dual
+criterion for its nonemptiness.
+
+\item We prove a block-doubling decomposition of the phase kernel.  Besides
+inherited phase directions, each doubling creates a fresh \(m^2\)-dimensional
+anti-diagonal sector.  This rules out any globally one-dimensional phase
+picture and shows why a fixed-block Farkas description is not yet a
+scale-uniform renormalization theorem.
+
+\item We identify the cubic finite-difference normal form, a Green-coordinate
+affine recursion, the associated quadratic B-spline boundary mask, and one
+explicit marginal phase channel that can be transported through all dyadic
+scales at bounded mean cost.  The sharp upper bound remains open; the paper
+ends with a precise renormalization target rather than a claimed QED.
+\end{enumerate}
+
+\subsection{Resource interpretation and scope}
+
+The quantity studied here is not automatically the excess Shannon entropy of
+an unrestricted causal simulator.  It is an auxiliary working-inventory cost
+under a stricter contract.  We will return to this distinction in
+Section~\ref{sec:original}.  In particular, no ontological conclusion is drawn
+from the mathematics: the paper prices a stated realization constraint.
+
+\section{Exact zero-repair information trees}
+\label{sec:model}
+
+Let
+\[
+ \mu_P=\sum_{i=1}^r p_i\delta_{x_i},
+ \qquad p_i>0,
+ \qquad \sum_i p_i=1,
+\]
+and let \(\mu_Q\) be a finite-support probability law on \([0,\infty)\).
+Branch labels are retained even if two values \(x_i\) coincide; equal current
+information does not imply equal future subtrees.
+
+\begin{definition}[Depth-\(n\) exact zero-repair tree]
+A depth-\(n\) zero-repair tree is a family of probability laws
+\[
+ \{B_h\}_{|h|\le n}
+\]
+on \([0,\infty)\), indexed by histories
+\(h\in\{1,\ldots,r\}^{\le n}\), such that each internal node satisfies
+\begin{equation}
+ \boxed{
+ \mu_Q*B_h
+ =
+ \sum_{i=1}^r p_i\,\delta_{x_i}*B_{hi}.
+ }
+ \label{eq:ZR}
+\end{equation}
+\end{definition}
+
+For a buffer law \(B_h\), put \(m_h:=\E_{B_h}J\).
+
+\begin{definition}[Finite-horizon zero-repair bill]
+\begin{equation}
+ \boxed{
+ \cB_n:=\inf\left\{m_\varnothing:
+ \{B_h\}_{|h|\le n}\text{ satisfies \eqref{eq:ZR}}\right\}.
+ }
+ \label{eq:bill}
+\end{equation}
+The value is \(+\infty\) if no feasible tree exists.
+\end{definition}
+
+Throughout the converse we assume equal increment means,
+\begin{equation}
+ \E_{\mu_P}X=\E_{\mu_Q}Y.
+ \label{eq:equalmean}
+\end{equation}
+
+\begin{lemma}[Mean martingale]
+If \(m_h<\infty\), then all child means are finite and
+\begin{equation}
+ \boxed{m_h=\sum_i p_i m_{hi}.}
+ \label{eq:meanmart}
+\end{equation}
+Consequently, along an independently \(P\)-distributed branch history,
+\(m_{H_t}\) is a nonnegative martingale.
+\end{lemma}
+
+\begin{proof}
+Take first moments in \eqref{eq:ZR}.  Finite support and nonnegative child
+means imply finiteness of each child mean.  The common increment mean cancels,
+leaving \eqref{eq:meanmart}.
+\end{proof}
+
+\begin{remark}[Constrained coboundary form]
+After coupling the equal laws in \eqref{eq:ZR}, one may write schematically
+\[
+ J_h+Y=x_I+J_{hI}.
+\]
+Thus \(Y-x_I=J_{hI}-J_h\) resembles a coboundary.  The difficulty is the
+simultaneous imposition of nonnegativity, exact branch weights, convolutional
+input, and future viability at every history.
+\end{remark}
+
+\section{A finite-horizon logarithmic converse}
+\label{sec:lower}
+
+Fix \(a>0\) and define
+\[
+ G_P(a):=\E_{\mu_P}e^{-aX},
+ \qquad
+ G_Q(a):=\E_{\mu_Q}e^{-aY},
+ \qquad
+ \rho(a):=\frac{G_Q(a)}{G_P(a)}.
+\]
+Introduce the tilted branch law
+\[
+ \widetilde p_i^{(a)}:=\frac{p_ie^{-ax_i}}{G_P(a)}
+\]
+and its likelihood-ratio second moment
+\begin{equation}
+ \boxed{
+ \Lambda(a):=
+ \sum_i\frac{(\widetilde p_i^{(a)})^2}{p_i}
+ =\frac{G_P(2a)}{G_P(a)^2}\ge1.
+ }
+ \label{eq:Lambda}
+\end{equation}
+For each node set
+\[
+ \widehat B_h(a):=\E_{B_h}e^{-aJ},
+ \qquad
+ y_h:=e^{-am_h}.
+\]
+By Jensen and \(J\ge0\),
+\begin{equation}
+ 0<y_h\le\widehat B_h(a)\le1.
+ \label{eq:JensenBasic}
+\end{equation}
+
+For a \(k\)-step descendant \(hw\), define
+\[
+ D_h^{(k)}:=\E_{P^k}y_{hw}-y_h.
+\]
+
+\begin{lemma}[Jensen--Hellinger control]
+For every node and every admissible \(k\),
+\[
+ D_h^{(k)}\ge0,
+\]
+and
+\begin{equation}
+ \E_{P^k}\left(\sqrt{y_{hw}}-\sqrt{y_h}\right)^2
+ \le D_h^{(k)},
+ \qquad
+ \E_{P^k}(y_{hw}-y_h)^2\le4D_h^{(k)}.
+ \label{eq:JH}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:meanmart}, \(\E_{P^k}m_{hw}=m_h\).  Convexity of
+\(u\mapsto e^{-au}\) gives \(D_h^{(k)}\ge0\), while
+\[
+ \E e^{-am_{hw}/2}\ge e^{-a\E m_{hw}/2}=\sqrt{y_h}.
+\]
+Expanding the square proves the first estimate.  Since
+\(|u-v|\le2|\sqrt u-\sqrt v|\) on \([0,1]\), the second follows.
+\end{proof}
+
+Taking Laplace transforms in \eqref{eq:ZR} yields the exact tilted identity
+\begin{equation}
+ \boxed{
+ \E_{\widetilde P_a}\widehat B_{hi}(a)
+ =\rho(a)\widehat B_h(a),
+ }
+ \qquad
+ \boxed{
+ \E_{\widetilde P_a^k}\widehat B_{hw}(a)
+ =\rho(a)^k\widehat B_h(a).
+ }
+ \label{eq:tiltedidentity}
+\end{equation}
+Let
+\[
+ L_w:=\frac{\widetilde P_a^k(w)}{P^k(w)}.
+\]
+Then \(\E L_w=1\) and \(\E L_w^2=\Lambda(a)^k\).
+
+\begin{lemma}[One-block measure change]
+For every node \(h\),
+\begin{equation}
+ \boxed{
+ \rho(a)^k\widehat B_h(a)
+ \ge y_h-2\Lambda(a)^{k/2}\sqrt{D_h^{(k)}}.
+ }
+ \label{eq:blocklocal}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since \(\E(L_w-1)=0\),
+\[
+ \E_{\widetilde P_a^k}y_{hw}
+ =y_h+\E_{P^k}[(L_w-1)(y_{hw}-y_h)].
+\]
+Cauchy--Schwarz and \eqref{eq:JH} give the stated lower bound.  Finally use
+\(\widehat B_{hw}(a)\ge y_{hw}\) and \eqref{eq:tiltedidentity}.
+\end{proof}
+
+\begin{proposition}[Master inequality]
+Let a feasible depth-\(n\) tree have root mean \(m\).  For every integer
+\(k\le n/2\),
+\begin{equation}
+ \boxed{
+ \rho(a)^k
+ \ge e^{-am}
+ -2\Lambda(a)^{k/2}\sqrt{\frac{2amk}{n}}.
+ }
+ \label{eq:master}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Put \(q=\lfloor n/k\rfloor\ge n/(2k)\).  The disjoint \(k\)-blocks telescope:
+\[
+ \sum_{j=0}^{q-1}\E D_{H_{jk}}^{(k)}
+ =\E y_{H_{qk}}-y_\varnothing
+ \le1-e^{-am}\le am.
+\]
+Hence one block start satisfies
+\[
+ \E D_{H_{jk}}^{(k)}\le\frac{2amk}{n}.
+\]
+Average \eqref{eq:blocklocal} over that starting history, use
+\(\E m_{H_{jk}}=m\), Jensen, \(\widehat B_h\le1\), and
+\(\E\sqrt D\le\sqrt{\E D}\).
+\end{proof}
+
+\begin{theorem}[Fixed-tilt logarithmic obstruction]
+\label{thm:fixedtilt}
+Assume \eqref{eq:equalmean}.  If \(\rho(a)<1\) for some fixed \(a>0\), set
+\[
+ d(a):=-\log\rho(a)>0,
+ \qquad
+ \Gamma(a):=2a+\frac{a\log\Lambda(a)}{d(a)}.
+\]
+Then
+\begin{equation}
+ \boxed{
+ \liminf_{n\to\infty}\frac{\cB_n}{\log n}
+ \ge\frac1{\Gamma(a)}.
+ }
+ \label{eq:fixedbound}
+\end{equation}
+Here and below \(\log\) denotes the natural logarithm.
+\end{theorem}
+
+\begin{proof}
+For a feasible depth-\(n\) tree of root mean \(m\), choose
+\[
+ k=\left\lceil\frac{am+\log2}{d(a)}\right\rceil.
+\]
+Then \(\rho(a)^k\le\frac12e^{-am}\).  If \(k>n/2\), the definition of
+\(k\) already gives a lower bound on \(m\) linear in \(n\), stronger than
+\eqref{eq:fixedbound}.  Otherwise combine this estimate with
+\eqref{eq:master} and square to obtain
+\[
+ n\le32amk\,\Lambda(a)^k e^{2am}.
+\]
+The ceiling bound on \(k\) therefore yields a finite constant \(C_a\) such that
+\[
+ n\le C_a(m+1)^2e^{\Gamma(a)m}.
+\]
+Taking logarithms,
+\[
+ \log n\le\Gamma(a)m+2\log(m+1)+\log C_a.
+\]
+Apply this inequality to a sequence of feasible trees whose root means are
+within \(1/n\) of \(\cB_n\), and pass to a subsequence realizing the liminf.
+If the ratio is finite, then \(m=O(\log n)\) on that subsequence and
+\(\log(m+1)=o(\log n)\).  Division by \(\log n\) proves
+\eqref{eq:fixedbound}.
+\end{proof}
+
+\begin{theorem}[Third-cumulant logarithmic obstruction]
+\label{thm:third}
+Assume that \(\mu_P\) and \(\mu_Q\) have common mean \(\mu\), common variance
+\(\sigma^2>0\), and
+\[
+ \Delta\kappa_3:=\kappa_3(\mu_Q)-\kappa_3(\mu_P)>0.
+\]
+Then
+\begin{equation}
+ \boxed{
+ \liminf_{n\to\infty}\frac{\cB_n}{\log n}
+ \ge\frac{\Delta\kappa_3}{6\sigma^2}.
+ }
+ \label{eq:third}
+\end{equation}
+In particular \(\cB_n\to\infty\).
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+ K_P(a):=\log\E e^{-aX},
+ \qquad
+ K_Q(a):=\log\E e^{-aY}.
+\]
+Finite support gives, as \(a\downarrow0\),
+\[
+ K_P(a)=-\mu a+\frac{\sigma^2}{2}a^2-\frac{\kappa_3(P)}6a^3+O(a^4),
+\]
+\[
+ K_Q(a)=-\mu a+\frac{\sigma^2}{2}a^2-\frac{\kappa_3(Q)}6a^3+O(a^4).
+\]
+Hence
+\[
+ d(a)=K_P(a)-K_Q(a)=\frac{\Delta\kappa_3}{6}a^3+O(a^4),
+\]
+and
+\[
+ \log\Lambda(a)=K_P(2a)-2K_P(a)=\sigma^2a^2+O(a^3).
+\]
+Therefore
+\[
+ \Gamma(a)\longrightarrow\frac{6\sigma^2}{\Delta\kappa_3}.
+\]
+Apply Theorem~\ref{thm:fixedtilt} for each sufficiently small fixed \(a>0\),
+first take \(n\to\infty\), and only then send \(a\downarrow0\).
+\end{proof}
+
+\section{The dyadic parity pair}
+\label{sec:dyadic}
+
+We now specialize to
+\begin{equation}
+ \boxed{
+ \mu_P=\frac14\delta_2+\frac34\delta_4,
+ \qquad
+ \mu_Q=\frac34\delta_3+\frac14\delta_5.
+ }
+ \label{eq:pair}
+\end{equation}
+Both laws have mean \(7/2\), variance \(3/4\), and centered third cumulants
+\[
+ \kappa_3(P)=-\frac34,
+ \qquad
+ \kappa_3(Q)=+\frac34.
+\]
+Thus \(\Delta\kappa_3=3/2\).
+
+\begin{corollary}[The \(1/3\) lower law]
+\label{cor:one-third}
+For \eqref{eq:pair},
+\begin{equation}
+ \boxed{
+ \liminf_{n\to\infty}\frac{\cB_n}{\log n}\ge\frac13.
+ }
+ \label{eq:onethird}
+\end{equation}
+Equivalently,
+\[
+ \cB_n\ge\left(\frac13-o(1)\right)\log n.
+\]
+For base-two logarithms the coefficient is \((\log2)/3\).
+\end{corollary}
+
+With \(z=e^{-a}\), the increment PGFs are
+\[
+ G_P(z)=\frac14z^2+\frac34z^4,
+ \qquad
+ G_Q(z)=\frac34z^3+\frac14z^5,
+\]
+and
+\begin{equation}
+ \boxed{
+ G_P(z)-G_Q(z)=\frac14z^2(1-z)^3.
+ }
+ \label{eq:cubicPGF}
+\end{equation}
+
+\begin{corollary}[No finite-mean infinite zero-repair tree]
+There is no infinite history-indexed zero-repair tree for \eqref{eq:pair} with
+finite root mean.
+\end{corollary}
+
+\begin{proof}
+Such a tree would restrict to a feasible depth-\(n\) tree for every \(n\),
+forcing \(\cB_n\) to be uniformly bounded by its root mean, contrary to
+\eqref{eq:onethird}.
+\end{proof}
+
+\section{Viability kernels and Bellman--Fenchel duality}
+\label{sec:dual}
+
+For the dyadic pair, write the probability generating function of a buffer law
+as the same symbol.  Multiplying \eqref{eq:ZR} by four gives
+\begin{equation}
+ \boxed{
+ B_{h0}(z)+3z^2B_{h1}(z)=A(z)B_h(z),
+ \qquad A(z):=z(3+z^2).
+ }
+ \label{eq:PGFrec}
+\end{equation}
+Define
+\[
+ \cK_0:=\cP(\Z_{\ge0})
+\]
+and recursively
+\begin{equation}
+ \cK_{n+1}:=
+ \left\{B\in\cP:
+ \exists B_0,B_1\in\cK_n\text{ satisfying \eqref{eq:PGFrec}}\right\}.
+ \label{eq:Kndef}
+\end{equation}
+Then
+\[
+ \cB_n=\inf_{B\in\cK_n}\E_BJ.
+\]
+
+\begin{proposition}[Convexity]
+Every \(\cK_n\) is convex.
+\end{proposition}
+
+\begin{proof}
+The base \(\cK_0\) is convex.  If \(B,B'\in\cK_{n+1}\) have feasible child
+pairs \((B_0,B_1)\) and \((B'_0,B'_1)\), then linearity of
+\eqref{eq:PGFrec} shows that every convex combination of \(B,B'\) has the
+corresponding convex combinations of the children, which lie in \(\cK_n\).
+\end{proof}
+
+For a convex set \(K\) of probability laws and a test function \(j\), define
+its lower support functional by
+\begin{equation}
+ \ell_K(j):=\inf_{B\in K}\langle j,B\rangle.
+ \label{eq:lowerSupport}
+\end{equation}
+Write \(\ell_n:=\ell_{\cK_n}\).  Then
+\[
+ \cB_n=\ell_n(\id),
+ \qquad \id(t)=t.
+\]
+On a finite state space, lower support is a complete coordinate for a closed
+convex viability set.
+
+\begin{proposition}[Lossless finite-dimensional support representation]
+Let \(X\) be finite, \(\Delta_X\) the probability simplex, and
+\(K\subseteq\Delta_X\) nonempty, closed and convex.  Then
+\begin{equation}
+ K=
+ \bigcap_{j\in\R^X}
+ \{b\in\Delta_X:\langle j,b\rangle\ge\ell_K(j)\}.
+ \label{eq:recoverK}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The forward inclusion is immediate.  If \(b\notin K\), finite-dimensional
+separation gives \(j\) such that
+\(\langle j,b\rangle<\inf_{x\in K}\langle j,x\rangle\).
+\end{proof}
+
+We now state the abstract dual recursion.  Let \(X,Y\) be finite sets,
+\(K\subseteq\Delta_X\) nonempty compact convex, and
+\(C,S_1,\ldots,S_r:\R^X\to\R^Y\) linear.  For positive weights \(p_i\)
+with \(\sum_i p_i=1\), define
+\[
+ \Phi(K):=
+ \left\{b\in\Delta_X:\exists b_i\in K,\quad
+ Cb=\sum_i p_iS_ib_i\right\}.
+\]
+
+\begin{theorem}[Bellman--Fenchel duality]
+\label{thm:BF}
+If \(\Phi(K)\neq\varnothing\), then for every \(j\in\R^X\),
+\begin{equation}
+ \boxed{
+ \ell_{\Phi(K)}(j)
+ =
+ \sup_{\lambda\in\R^Y}
+ \left\{
+ \min_{x\in X}(j_x-(C^*\lambda)_x)
+ +\sum_i p_i\ell_K(S_i^*\lambda)
+ \right\}.
+ }
+ \label{eq:BF}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Consider the convex program minimizing \(\langle j,b\rangle\) over
+\((b,b_1,\ldots,b_r)\in\Delta_X\times K^r\) subject to the displayed linear
+equality.  With multiplier \(\lambda\), the Lagrangian is
+\[
+ \langle j-C^*\lambda,b\rangle
+ +\sum_i p_i\langle S_i^*\lambda,b_i\rangle.
+\]
+Minimizing over the product set gives the right-hand side of \eqref{eq:BF}.
+The primal feasible set is compact and convex and the constraints are linear,
+so finite-dimensional strong duality follows from separation
+\cite{Rockafellar1970}.
+\end{proof}
+
+For the dyadic model,
+\[
+ (C_Q^*\lambda)(t)=\frac34\lambda(t+3)+\frac14\lambda(t+5),
+\]
+\[
+ (S_2^*\lambda)(t)=\lambda(t+2),
+ \qquad
+ (S_4^*\lambda)(t)=\lambda(t+4).
+\]
+Thus the formal countable-state Bellman transform is
+\begin{equation}
+\boxed{
+\begin{aligned}
+(\cD\ell)(j)=\sup_{\lambda}\Bigg\{&
+\inf_{t\ge0}\left[j(t)-\frac34\lambda(t+3)-\frac14\lambda(t+5)\right]\\
+&+\frac14\ell(\lambda(\cdot+2))
++\frac34\ell(\lambda(\cdot+4))
+\Bigg\}.
+\end{aligned}}
+\label{eq:Ddyadic}
+\end{equation}
+On a finite exact truncation, \(\ell_{n+1}=\cD\ell_n\).  On the full
+countable state space, the same expression is always a valid lower certificate
+for each admissible \(\lambda\), but equality requires a separate no-gap
+theorem in a suitable weighted function space.
+
+\begin{proposition}[Weak countable-state recursion]
+For every admissible \(\lambda\) for which the pairings are finite,
+\begin{align}
+\ell_{n+1}(j)\ge{}&
+\inf_{t\ge0}\left[j(t)-\frac34\lambda(t+3)-\frac14\lambda(t+5)\right]
+\notag\\
+&+\frac14\ell_n(\lambda(\cdot+2))
++\frac34\ell_n(\lambda(\cdot+4)).
+\label{eq:weakD}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+For any feasible parent and children, add the zero pairing of \(\lambda\) with
+the constraint.  Bound the parent contribution by its pointwise infimum and
+each child contribution by the corresponding lower support, then take the
+infimum over feasible triples.
+\end{proof}
+
+The operator is order preserving and additively homogeneous on every domain
+where the expressions are finite:
+\[
+ \ell_1\le\ell_2\Rightarrow\cD\ell_1\le\cD\ell_2,
+ \qquad
+ \cD(\ell+c)=\cD\ell+c.
+\]
+Consequently, on any invariant class on which the uniform norm is finite,
+\[
+ \|\cD\ell_1-\cD\ell_2\|_\infty
+ \le\|\ell_1-\ell_2\|_\infty.
+\]
+There is also the exact multiplier gauge \(\lambda\sim\lambda+c\), a direct
+consequence of probability normalization.  These are the structural features
+of a topical or Shapley-type operator; they motivate, but do not by themselves
+justify, nonlinear Perron--Frobenius methods
+\cite{LemmensNussbaum2012,Lins2023,AkianGaubertHochart2020}.
+
+\section{Ordered histories and the phase quotient}
+\label{sec:phase}
+
+The scalar information spectrum forgets order.  The causal tree does not.  We
+now make the difference algebraic.
+
+Let
+\[
+ V_m:=\R^{\bits^m}
+\]
+with canonical basis \(e_w\), \(w\in\bits^m\).  For a binary word \(w\), let
+\(\wt(w)\) denote its Hamming weight.  Define the scalarization map
+\begin{equation}
+ \boxed{
+ \Pi_m:V_m\to\R^{m+1},
+ \qquad
+ \Pi_m e_w=e_{\wt(w)}.
+ }
+ \label{eq:Pim}
+\end{equation}
+For a signed measure on ordered histories, \(\Pi_m\) simply sums its masses
+within equal-Hamming-weight layers.  Since the total information of either
+binary source is an affine function of Hamming weight, this is exactly the
+projection from ordered histories to scalar total-information profiles.
+
+\begin{definition}[Ambient phase space]
+\begin{equation}
+ \boxed{W_m:=\ker\Pi_m.}
+ \label{eq:Wm}
+\end{equation}
+Elements of \(W_m\) are signed rearrangements invisible to scalar total
+information.
+\end{definition}
+
+\begin{theorem}[Dimension of hidden ordering information]
+\label{thm:phasedim}
+For every \(m\ge1\),
+\begin{equation}
+ \boxed{\dim W_m=2^m-(m+1).}
+ \label{eq:phasedim}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The map \(\Pi_m\) is surjective: for every \(0\le k\le m\), any word of
+weight \(k\) maps to the \(k\)-th basis vector.  Hence
+\(\operatorname{rank}\Pi_m=m+1\), and rank-nullity gives
+\eqref{eq:phasedim}.
+\end{proof}
+
+Define normalized layer vectors
+\[
+ u_k^{(m)}:=\binom{m}{k}^{-1}\sum_{\wt(w)=k}e_w,
+ \qquad 0\le k\le m,
+\]
+and let
+\[
+ U_m:=\Span\{u_0^{(m)},\ldots,u_m^{(m)}\}.
+\]
+Then \(\Pi_m|_{U_m}\) is an isomorphism and
+\begin{equation}
+ V_m=U_m\oplus W_m.
+ \label{eq:UW}
+\end{equation}
+Thus \(U_m\) is a canonical visible sector and \(W_m\) the invisible phase
+sector.
+
+For \(m=2\),
+\[
+ u_0=e_{00},
+ \qquad
+ u_1=\frac12(e_{01}+e_{10}),
+ \qquad
+ u_2=e_{11},
+\]
+and
+\begin{equation}
+ W_2=\Span\left\{\theta\right\},
+ \qquad
+ \theta:=\frac12(e_{01}-e_{10}).
+ \label{eq:theta2}
+\end{equation}
+This is the first nontrivial ordering phase: the words \(01\) and \(10\) have
+the same scalar information but different causal pasts.
+
+\subsection{Two-block phase coordinates for buffer PGFs}
+
+Iterating \eqref{eq:PGFrec} twice gives
+\begin{equation}
+ \boxed{
+ B_{00}+qB_{01}+qB_{10}+q^2B_{11}=A^2B,
+ \qquad q:=3z^2.
+ }
+ \label{eq:2block}
+\end{equation}
+Put
+\begin{equation}
+ S:=\frac{B_{01}+B_{10}}2,
+ \qquad
+ \Theta:=\frac{B_{01}-B_{10}}2.
+ \label{eq:Stheta}
+\end{equation}
+Then the coarse equation loses \(\Theta\):
+\begin{equation}
+ \boxed{B_{00}+2qS+q^2B_{11}=A^2B.}
+ \label{eq:coarse2}
+\end{equation}
+
+\begin{proposition}[Exact two-block lifting criterion]
+\label{prop:lift}
+Let \(B,B_{00},S,B_{11}\) be probability PGFs satisfying
+\eqref{eq:coarse2}.  They admit a genuine two-step zero-repair lift if and
+only if there exists a signed series \(\Theta\) with \(\Theta(1)=0\) such that
+\[
+ B_{01}=S+\Theta,
+ \qquad
+ B_{10}=S-\Theta
+\]
+are probability PGFs and
+\begin{equation}
+ \boxed{
+ B_0=\frac{B_{00}+q(S+\Theta)}{A},
+ \qquad
+ B_1=\frac{S-\Theta+qB_{11}}{A}
+ }
+ \label{eq:phaseLift}
+\end{equation}
+are probability PGFs.
+\end{proposition}
+
+\begin{proof}
+Necessity follows by taking \(S,\Theta\) from an existing two-step tree and
+solving the first-level recursions for \(B_0,B_1\).  Conversely, if the four
+PGFs in the statement are nonnegative and normalized, the formulas imply
+\[
+ B_{00}+qB_{01}=AB_0,
+ \qquad
+ B_{10}+qB_{11}=AB_1,
+\]
+and adding \(B_0+qB_1=AB\) is equivalent to \eqref{eq:coarse2}.  Hence the
+full two-step tree closes exactly.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:lift} is a change of coordinates, not a solution of the
+positivity problem.  Its value is that it isolates the missing datum: the
+coarse scalar equation determines the visible part, while causal feasibility
+asks whether the corresponding phase fiber contains a point compatible with
+all PGF inequalities.
+\end{remark}
+
+\section{Exact two-symbol causal phase geometry}
+\label{sec:5over16}
+
+The phase quotient is not merely formal.  At the first nontrivial block length
+one can characterize \emph{exactly} which scalar joint profiles admit an
+ordered causal lift.  This gives a closed-form phase-feasibility criterion,
+not merely an LP description.
+
+Let \(X=(X_1,X_2)\sim P^{\otimes2}\) and
+\(W=(W_1,W_2)\sim Q^{\otimes2}\), where
+\[
+ P(0)=\frac14,\quad P(1)=\frac34,
+ \qquad
+ Q(0)=\frac34,\quad Q(1)=\frac14.
+\]
+For a coupling \(\pi\), define its scalar Hamming-layer profile
+\begin{equation}
+ r_{ij}:=\Pp_\pi\{\wt(X)=i,\ \wt(W)=j\},
+ \qquad 0\le i,j\le2.
+ \label{eq:rprofile}
+\end{equation}
+Its row and column marginals are fixed:
+\[
+ p^{(2)}=\frac1{16}(1,6,9),
+ \qquad
+ q^{(2)}=\frac1{16}(9,6,1).
+\]
+Write
+\begin{equation}
+ a:=r_{00},\qquad b:=r_{01},\qquad c:=r_{10},\qquad d:=r_{11},
+ \qquad S:=a+b+c+d.
+ \label{eq:abcd}
+\end{equation}
+Then every static scalar coupling is uniquely of the form
+\begin{equation}
+ \boxed{
+ r(a,b,c,d)=
+ \begin{pmatrix}
+ a & b & \frac1{16}-a-b\\[1mm]
+ c & d & \frac38-c-d\\[1mm]
+ \frac9{16}-a-c & \frac38-b-d & S-\frac38
+ \end{pmatrix}.}
+ \label{eq:rstaticmatrix}
+\end{equation}
+Thus static feasibility is exactly the nonnegativity of the nine entries in
+\eqref{eq:rstaticmatrix}.
+
+A coupling is causal from \(W\) to \(X\) if the conditional law of \(X_1\)
+given \((W_1,W_2)\) depends only on \(W_1\).  Equivalently,
+\begin{equation}
+ \sum_{x_2}\pi((a,x_2),(b,c))
+ =Q(c)\sum_{x_2,w_2}\pi((a,x_2),(b,w_2))
+ \label{eq:causalLPconstraints}
+\end{equation}
+for all \(a,b,c\in\bits\).
+
+\begin{theorem}[Exact two-symbol causal scalar-profile criterion]
+\label{thm:twofacet}
+Let \(r=r(a,b,c,d)\) be a static scalar coupling with the fixed marginals
+above.  Then \(r\) admits a causal lift \(\pi\) if and only if
+\begin{align}
+ \boxed{2a+3b+d\ge\frac3{16}},
+ \label{eq:facet1}\\
+ \boxed{2a+3b+2c+3d\le\frac98}.
+ \label{eq:facet2}
+\end{align}
+Equivalently, the projected causal polytope is obtained from the static
+transport polytope by intersecting it with precisely these two additional
+half-spaces.
+
+More constructively, a causal lift exists if and only if the interval
+\begin{equation}
+ \boxed{L(a,b,c,d)\le t\le U(a,b,c,d)}
+ \label{eq:tinterval}
+\end{equation}
+is nonempty, where
+\begin{align}
+ L&:=\max\left\{
+ 0,\frac{4a}{3},4\left(S-\frac38\right),
+ \frac38-2(b+d)\right\},
+ \label{eq:Ldef}\\
+ U&:=\min\left\{
+ \frac14,4(a+b),\frac38-2b,\frac{4(a+c)}3\right\}.
+ \label{eq:Udef}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+ \alpha_{uv}:=\Pp_\pi(X_1=u,W_1=v).
+\]
+The one-symbol marginals force every such first-step coupling to have the form
+\begin{equation}
+ \alpha(t)=
+ \begin{pmatrix}
+ t&\frac14-t\\[1mm]
+ \frac34-t&t
+ \end{pmatrix},
+ \qquad 0\le t\le\frac14.
+ \label{eq:alphat}
+\end{equation}
+By causality and the product law of \(W\),
+\begin{equation}
+ \Pp_\pi(X_1=u,W_1=v,W_2=w)=Q(w)\alpha_{uv}(t).
+ \label{eq:causalgroupmass}
+\end{equation}
+For \(u,v,w\in\bits\), put
+\[
+ s_{uvw}:=\pi((u,0),(v,w)).
+\]
+The companion mass with \(X_2=1\) is then
+\begin{equation}
+ \pi((u,1),(v,w))=Q(w)\alpha_{uv}(t)-s_{uvw}.
+ \label{eq:companionmass}
+\end{equation}
+Hence a causal coupling is equivalent to choosing the eight numbers
+\(s_{uvw}\) inside their elementary capacity intervals.
+
+The scalar profile determines the following quantities:
+\begin{align}
+ s_{000}&=a,
+ &s_{001}+s_{010}&=b,
+ &s_{011}&=\frac1{16}-a-b,
+ \label{eq:srow0}\\
+ s_{100}&=a+c-\frac34t,
+ &s_{101}+s_{110}&=b+d-\frac3{16}+\frac12t,
+ &s_{111}&=\frac38-S+\frac14t.
+ \label{eq:srow1}
+\end{align}
+Their capacity bounds from \eqref{eq:causalgroupmass} are
+\begin{align*}
+ 0&\le s_{000}\le\frac34t,
+ &0&\le s_{001}\le\frac14t,
+ &0&\le s_{010}\le\frac3{16}-\frac34t,
+ &0&\le s_{011}\le\frac1{16}-\frac14t,\\
+ 0&\le s_{100}\le\frac9{16}-\frac34t,
+ &0&\le s_{101}\le\frac3{16}-\frac14t,
+ &0&\le s_{110}\le\frac34t,
+ &0&\le s_{111}\le\frac14t.
+\end{align*}
+For two nonnegative bins of capacities \(u,v\), a prescribed total \(R\)
+can be split between them if and only if \(0\le R\le u+v\).  Applying this
+observation to the two sums in \eqref{eq:srow0}--\eqref{eq:srow1}, and using
+static feasibility for the bounds independent of \(t\), gives exactly
+\eqref{eq:tinterval}--\eqref{eq:Udef}.
+
+It remains to eliminate \(t\).  Write the four lower bounds in \(L\) as
+\(L_0,L_1,L_2,L_3\) in the displayed order, and similarly
+\(U_0,U_1,U_2,U_3\).  Nonemptiness is equivalent to
+\(L_i\le U_j\) for every \(i,j\).  Under the static inequalities from
+\eqref{eq:rstaticmatrix}, the only new comparisons are
+\begin{equation}
+ L_3\le U_1
+ \quad\Longleftrightarrow\quad
+ 2a+3b+d\ge\frac3{16},
+ \label{eq:compare1}
+\end{equation}
+and
+\begin{equation}
+ L_2\le U_3
+ \quad\Longleftrightarrow\quad
+ 2a+3b+2c+3d\le\frac98.
+ \label{eq:compare2}
+\end{equation}
+For completeness, the remaining potentially nontrivial comparisons follow as
+follows.  From \(a+b\le1/16\) and \eqref{eq:facet1},
+\(b+d\ge1/16\), hence \(L_3\le U_0\).  Also
+\(S\le1/16+3/8=7/16\), which gives \(L_2\le U_0\); the inequality
+\(L_2\le U_1\) is just \(c+d\le3/8\); and
+\(L_2\le U_2\) follows from \(S\le7/16\) and \(b\le1/16\).
+Finally, \(L_3\le U_3\) follows from \(S\ge3/8\), while comparisons involving
+\(L_0,L_1\), together with \(L_3\le U_2\), are immediate from the static
+nonnegativity constraints.  This proves that \eqref{eq:facet1}--\eqref{eq:facet2}
+are necessary and sufficient.
+
+For constructive sufficiency choose any \(t\in[L,U]\).  Set the four
+singleton quantities in \eqref{eq:srow0}--\eqref{eq:srow1}.  Split \(b\)
+between \(s_{001},s_{010}\) within their two capacities, and split
+\(b+d-3/16+t/2\) between \(s_{101},s_{110}\) within theirs.  The interval
+conditions guarantee that both splits exist.  Define every remaining cell by
+\eqref{eq:companionmass}.  All sixteen masses are nonnegative and obey
+\eqref{eq:causalLPconstraints}.  Equation \eqref{eq:causalgroupmass} gives
+\(W\sim Q^{\otimes2}\).  The matrix \(\alpha(t)\) fixes the first-symbol
+marginal of \(X\) to be \(P\); together with the Hamming-weight row
+marginals \(p^{(2)}\), this forces the ordered word probabilities
+\((1,3,3,9)/16\), hence \(X\sim P^{\otimes2}\).  By construction the
+coupling projects to \(r\).  Thus it is the desired causal lift.
+\end{proof}
+
+Both facets are nonredundant.  The static profile with
+\((a,b,c,d)=(0,0,3/8,0)\) violates \eqref{eq:facet1} while satisfying
+\eqref{eq:facet2}; the static profile with
+\((a,b,c,d)=(1/16,0,0,3/8)\) satisfies \eqref{eq:facet1} but violates
+\eqref{eq:facet2}.
+
+\begin{remark}[A first intrinsic phase criterion]
+Theorem~\ref{thm:twofacet} is stronger than saying that a finite LP can be
+solved.  At the first nontrivial block it eliminates the hidden ordering
+variables completely: a static scalar profile has an ordered causal lift if
+and only if two explicit oblique facets are satisfied.  The phase variable
+\(t\) is recoverable from the interval \eqref{eq:tinterval}.  This is the
+finite-block analogue of the kind of intrinsic positivity criterion one would
+want to propagate under renormalization.
+\end{remark}
+
+The two-symbol total-information levels are
+\[
+ I_P(x)=4+2\wt(x),
+ \qquad
+ I_Q(w)=6+2\wt(w).
+\]
+Thus equal information occurs exactly for layer pairs \((i,j)=(1,0)\) and
+\((2,1)\).  The matched mass of a scalar profile \eqref{eq:rstaticmatrix} is
+\begin{equation}
+ M_{\rm match}(r)=r_{10}+r_{21}
+ =c+\frac38-b-d,
+ \label{eq:matchedmass}
+\end{equation}
+so its mismatch is
+\begin{equation}
+ M_{\rm mis}(r)=\frac58+b+d-c.
+ \label{eq:mismatchscalar}
+\end{equation}
+
+\begin{corollary}[Exact two-symbol causal mismatch]
+\label{thm:5over16}
+Among all causal couplings \(\pi\) with the prescribed product marginals,
+\begin{equation}
+ \boxed{
+ \min_\pi \Pp_\pi\{I_P(X)\ne I_Q(W)\}=\frac5{16}.
+ }
+ \label{eq:5over16}
+\end{equation}
+Equivalently, the maximum causally matchable equal-information mass is
+\(11/16\).  Without causality the minimum mismatch is \(1/4\), so the causal
+surcharge is exactly \(1/16\).
+\end{corollary}
+
+\begin{proof}
+For every causally liftable scalar profile, \eqref{eq:facet1} and
+\(a+b\le1/16\) imply
+\[
+ \frac3{16}
+ \le2a+3b+d
+ \le\frac18+b+d,
+\]
+hence
+\begin{equation}
+ b+d\ge\frac1{16}.
+ \label{eq:bdlower}
+\end{equation}
+Static feasibility also gives \(c+d\le3/8\).  Since \(d\ge0\),
+\[
+ c-b-d=(c+d)-(b+2d)
+ \le\frac38-(b+d)
+ \le\frac5{16}.
+\]
+Substitution into \eqref{eq:mismatchscalar} yields
+\[
+ M_{\rm mis}(r)\ge\frac58-\frac5{16}=\frac5{16}.
+\]
+Equality is attained at
+\begin{equation}
+ (a,b,c,d)=\left(0,\frac1{16},\frac38,0\right),
+ \qquad
+ r=\frac1{16}
+ \begin{pmatrix}
+ 0&1&0\\
+ 6&0&0\\
+ 3&5&1
+ \end{pmatrix}.
+ \label{eq:optimalr}
+\end{equation}
+This profile satisfies both \eqref{eq:facet1} and \eqref{eq:facet2}, so
+Theorem~\ref{thm:twofacet} supplies a causal lift.  Therefore the lower bound
+is sharp.
+\end{proof}
+
+\begin{remark}[Which facet prices the surcharge]
+The second causal facet \eqref{eq:facet2} is genuine for the full projected
+profile geometry, but it is inactive at the optimizer of the mismatch
+functional.  The exact \(1/16\) surcharge is already forced by the first
+phase facet \eqref{eq:facet1}.  In this precise sense the local causal price is
+a shadow of one hidden-ordering feasibility constraint.
+\end{remark}
+
+\subsection{Independent rational primal--dual certificate}
+
+The closed-form proof above does not require a solver.  As an independent
+check, the original sixteen-variable causal LP admits exact rational primal and
+dual certificates.
+
+Order rows and columns as \(00,01,10,11\).  The coupling
+\begin{equation}
+ \boxed{
+ \pi=\frac1{16}
+ \begin{pmatrix}
+ 0&1&0&0\\
+ 3&0&0&0\\
+ 3&0&0&0\\
+ 3&2&3&1
+ \end{pmatrix}}
+ \label{eq:primalmatrix}
+\end{equation}
+has the required marginals, satisfies \eqref{eq:causalLPconstraints}, projects
+to \eqref{eq:optimalr}, and has mismatch \(5/16\).
+
+Vectorize \(\pi\) row by row and write all four \(X\)-marginals, four
+\(W\)-marginals, and eight causal equations as \(A\pi=b\), where
+\begin{equation}
+ b=\frac1{16}(1,3,3,9,9,3,3,1,0,0,0,0,0,0,0,0)^T.
+ \label{eq:5over16b}
+\end{equation}
+The dual vector
+\begin{equation}
+ y=
+ \left(
+ 1,0,-\frac14,\frac34;
+ 0,0,0,-2;
+ 0,0,0,0,1,0,-3,0
+ \right)
+ \label{eq:dualvector}
+\end{equation}
+satisfies \(b^Ty=5/16\) and
+\[
+ A^Ty=
+ \begin{pmatrix}
+ 1&1&1&-1\\
+ 0&0&0&-2\\
+ 0&-1&-1&0\\
+ 1&0&0&1
+ \end{pmatrix}
+ \le
+ C:=
+ \begin{pmatrix}
+ 1&1&1&1\\
+ 0&1&1&1\\
+ 0&1&1&1\\
+ 1&0&0&1
+ \end{pmatrix}
+\]
+entrywise.  Hence weak duality independently certifies the same optimum.  The
+complete rational matrix \(A\) and the multiplication are displayed in
+Appendix~\ref{app:5over16matrix}.
+
+The scalar two-symbol laws are
+\begin{equation}
+ \mu_P^{*2}=\frac1{16}\delta_4+\frac6{16}\delta_6+\frac9{16}\delta_8,
+ \label{eq:P2}
+\end{equation}
+\begin{equation}
+ \mu_Q^{*2}=\frac9{16}\delta_6+\frac6{16}\delta_8+\frac1{16}\delta_{10}.
+ \label{eq:Q2}
+\end{equation}
+Static matching pairs \(6/16\) at level \(6\) and \(6/16\) at level \(8\),
+for common mass \(12/16\).  Hence
+\[
+ R_P^{\rm stat}=\frac1{16}\delta_4+\frac3{16}\delta_8,
+ \qquad
+ R_Q^{\rm stat}=\frac3{16}\delta_6+\frac1{16}\delta_{10}.
+\]
+The causal optimizer \eqref{eq:primalmatrix} matches \(6/16\) at level \(6\)
+but only \(5/16\) at level \(8\), so
+\[
+ R_P^{\rm causal}=\frac1{16}\delta_4+\frac4{16}\delta_8,
+\]
+\[
+ R_Q^{\rm causal}=\frac3{16}\delta_6+\frac1{16}\delta_8
+ +\frac1{16}\delta_{10}.
+\]
+Consequently,
+\begin{equation}
+ \boxed{
+ R_P^{\rm causal}=R_P^{\rm stat}+\frac1{16}\delta_8,
+ \qquad
+ R_Q^{\rm causal}=R_Q^{\rm stat}+\frac1{16}\delta_8.}
+ \label{eq:hiddenres}
+\end{equation}
+and therefore
+\begin{equation}
+ \boxed{
+ R_P^{\rm causal}-R_Q^{\rm causal}
+ =R_P^{\rm stat}-R_Q^{\rm stat}.}
+ \label{eq:sameSigned}
+\end{equation}
+
+\begin{corollary}[A causal obstruction invisible to signed scalar spectra]
+The additional causal mismatch \(1/16\) in Corollary~\ref{thm:5over16}
+leaves the signed scalar residual profile unchanged.  Hence the signed
+information-spectrum difference alone cannot detect all causal matching
+obstructions.
+\end{corollary}
+
+The first nontrivial causal phase obstruction is therefore fully visible in
+three equivalent forms: an ordered-history feasibility problem, the two
+intrinsic scalar facets \eqref{eq:facet1}--\eqref{eq:facet2}, and an exact
+primal--dual LP certificate.
+
+\section{Phase creation under block doubling}
+\label{sec:doublingphase}
+
+The one-dimensional phase \(e_{01}-e_{10}\) is special to two symbols.  At
+larger scales the hidden sector grows rapidly, and block doubling creates new
+phase directions even if the input blocks are individually scalarized.
+
+Identify
+\[
+ V_{2m}\cong V_m\otimes V_m
+\]
+by concatenating two length-\(m\) words.  Define
+\[
+ C_m:\R^{m+1}\otimes\R^{m+1}\to\R^{2m+1}
+\]
+on basis vectors by
+\begin{equation}
+ C_m(e_i\otimes e_j)=e_{i+j}.
+ \label{eq:Cm}
+\end{equation}
+Then the scalarization maps satisfy the exact factorization
+\begin{equation}
+ \boxed{
+ \Pi_{2m}=C_m\circ(\Pi_m\otimes\Pi_m).
+ }
+ \label{eq:Pifactor}
+\end{equation}
+
+Let
+\begin{equation}
+ K_m:=\ker\left(C_m|_{\Pi_m(U_m)\otimes\Pi_m(U_m)}\right),
+ \label{eq:Km}
+\end{equation}
+and identify this kernel back inside \(U_m\otimes U_m\) using the isomorphism
+\(\Pi_m|_{U_m}\).
+
+\begin{theorem}[Exact phase decomposition under doubling]
+\label{thm:doublingdecomp}
+For every \(m\ge1\),
+\begin{equation}
+\boxed{
+W_{2m}
+=(W_m\otimes W_m)
+\oplus(W_m\otimes U_m)
+\oplus(U_m\otimes W_m)
+\oplus K_m.
+}
+\label{eq:phaseDecomp}
+\end{equation}
+Moreover,
+\begin{equation}
+ \boxed{\dim K_m=m^2.}
+ \label{eq:Kdim}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+From \eqref{eq:UW},
+\[
+V_m\otimes V_m
+=(U_m\otimes U_m)\oplus(U_m\otimes W_m)
+\oplus(W_m\otimes U_m)\oplus(W_m\otimes W_m).
+\]
+Equation \eqref{eq:Pifactor} annihilates every tensor component containing a
+factor from \(W_m\).  On \(U_m\otimes U_m\), it is identified with \(C_m\).
+Therefore the kernel is exactly the direct sum in \eqref{eq:phaseDecomp}.
+
+The map \(C_m\) is surjective because every basis vector \(e_k\),
+\(0\le k\le2m\), equals \(C_m(e_i\otimes e_j)\) for some
+\(0\le i,j\le m\) with \(i+j=k\).  Hence
+\[
+ \dim K_m=(m+1)^2-(2m+1)=m^2.
+\]
+\end{proof}
+
+The sector \(K_m\) has a simple interpretation.  Even if each half-block has
+already been reduced to its Hamming layer, the total layer \(i+j\) forgets how
+the weight was split between the two halves.  Thus \(K_m\) is a genuinely
+\emph{fresh anti-diagonal phase sector}: it is created by coarse-graining itself,
+not inherited from unresolved phase inside either sub-block.
+
+\subsection{The first doubling: two symbols to four}
+
+For \(m=2\), \(\dim W_2=1\) and \(\dim U_2=3\).  Hence
+\[
+ \dim W_4=1+3+3+4=11,
+\]
+in agreement with \(2^4-5=11\).  Seven dimensions are inherited:
+\[
+ \theta\otimes\theta,
+ \qquad
+ \theta\otimes u_i,
+ \qquad
+ u_i\otimes\theta,
+ \qquad i=0,1,2.
+\]
+A convenient basis of the four-dimensional fresh sector \(K_2\) is
+\begin{align*}
+\kappa_1&=u_0\otimes u_1-u_1\otimes u_0,\\
+\kappa_2&=u_0\otimes u_2-u_2\otimes u_0,\\
+\kappa_3&=u_1\otimes u_2-u_2\otimes u_1,\\
+\kappa_4&=u_0\otimes u_2+u_2\otimes u_0-2u_1\otimes u_1.
+\end{align*}
+Each vector has zero anti-diagonal sum under \(C_2\).
+
+\begin{corollary}[No globally one-dimensional phase model]
+The phase direction \(01-10\) cannot close under block doubling.  Any exact
+scale description retaining all ordering information must allow additional
+phase directions, including a fresh \(m^2\)-dimensional sector at scale
+\(m\to2m\).
+\end{corollary}
+
+This corollary is kinematic: it concerns the ambient phase space.  The local
+fixed-block subset selected by positivity and causality will be characterized
+exactly in Section~\ref{sec:causal-farkas}.  The genuinely open object is
+smaller still: the subset whose descendants remain zero-repair viable across
+successive scales.
+
+\section{The cubic defect as a spectral normal form}
+\label{sec:cubic}
+
+Let \(E\) be the forward shift on test functions,
+\[
+ (Ef)(t):=f(t+1).
+\]
+For the dyadic pair define
+\[
+ P^*:=\frac14E^2+\frac34E^4,
+ \qquad
+ Q^*:=\frac34E^3+\frac14E^5.
+\]
+
+\begin{theorem}[Exact cubic shift factorization]
+\label{thm:cubicfactor}
+\begin{equation}
+ \boxed{
+ P^*-Q^*=\frac14E^2(I-E)^3.
+ }
+ \label{eq:shiftfactor}
+\end{equation}
+Equivalently,
+\begin{equation}
+ \boxed{
+ \mu_P-\mu_Q
+ =\frac14\delta_2*(\delta_0-\delta_1)^{*3}.
+ }
+ \label{eq:measurefactor}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Expand \(\frac14E^2(I-E)^3\).  The coefficients are
+\(\frac14(1,-3,3,-1)\) on shifts \(2,3,4,5\), exactly those of
+\(P^*-Q^*\).
+\end{proof}
+
+Thus every polynomial of degree at most two is annihilated.  On the cubic,
+\begin{equation}
+ (P^*-Q^*)t^3=-\frac32.
+ \label{eq:cubicpoly}
+\end{equation}
+The first transverse polynomial jet is therefore one-dimensional modulo
+quadratics.
+
+More generally, if a finite signed measure \(\nu=\sum_k\nu_k\delta_k\) has
+vanishing raw moments through order \(r-1\), its generating polynomial
+\(V(z)=\sum_k\nu_kz^k\) is divisible by \((1-z)^r\).  This is simply the
+invertible triangular relation between raw moments and falling-factorial
+moments.  On test functions, the associated difference operator factors by
+\((I-E)^r\).
+
+Laplace characters
+\[
+ f_a(t):=e^{-at}
+\]
+are eigenfunctions of the shift, \(Ef_a=e^{-a}f_a\).  Therefore
+\begin{equation}
+ \boxed{
+ (P^*-Q^*)f_a
+ =\frac14e^{-2a}(1-e^{-a})^3f_a.
+ }
+ \label{eq:laplaceSymbol}
+\end{equation}
+The transform used in Section~\ref{sec:lower} is thus a spectral character of
+the exact translation algebra, not an unrelated trick.
+
+\begin{lemma}[Shift invariance of viability]
+If \(B\in\cK_n\), then \(z^sB\in\cK_n\) for every integer \(s\ge0\).
+\end{lemma}
+
+\begin{proof}
+Multiply \eqref{eq:PGFrec} at every node of a feasible tree by \(z^s\).
+\end{proof}
+
+\begin{remark}[Why Laplace modes are multipliers, not bill coordinates]
+If \(a>0\) and \(\cK_n\neq\varnothing\), then
+\[
+ \ell_n(e^{-a\cdot})=0.
+\]
+Indeed, shift any fixed feasible law by \(s\): its pairing with
+\(e^{-a\cdot}\) is multiplied by \(e^{-as}\) and therefore tends to zero as
+\(s\to\infty\); nonnegativity gives the reverse inequality.  Laplace modes
+are therefore useful as dual multipliers and shift eigencharacters, not as
+direct coordinates of \(\cB_n=\ell_n(\id)\).
+\end{remark}
+
+\subsection{Why the third order is critical for this converse}
+
+Suppose more generally that
+\[
+ d(a):=-\log\rho(a)=c_ra^r+O(a^{r+1}),
+ \qquad c_r>0,
+\]
+while \(\log\Lambda(a)=\sigma^2a^2+O(a^3)\).  Then
+\begin{equation}
+ \Gamma(a)=2a+\frac{\sigma^2}{c_r}a^{3-r}(1+o(1)).
+ \label{eq:criticality}
+\end{equation}
+For this proof mechanism, \(r=3\) is critical: \(r=2\) makes the logarithmic
+scale too small, \(r=3\) gives a finite nonzero coefficient, and \(r>3\)
+requires a different scaling or a sharper dual.  This is a statement about the
+present converse mechanism, not a universal exponent theorem.
+
+\section{Green coordinates and boundary renormalization}
+\label{sec:green}
+
+Set
+\[
+ P(z):=1+3z^2,
+ \qquad
+ A(z):=z(3+z^2).
+\]
+Then
+\begin{equation}
+ \boxed{P(z)-A(z)=(1-z)^3.}
+ \label{eq:cubiczero}
+\end{equation}
+The original PGFs are regular at \(z=1\); the analytic difficulty is the
+triple zero.  We resolve it by dividing by the corresponding Green kernel.
+
+\begin{definition}[Cubic Green potential]
+For a buffer PGF \(B\), define
+\begin{equation}
+ \boxed{
+ T_B(z):=\frac{1-B(z)}{(1-z)^3}.
+ }
+ \label{eq:TB}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Exact affine Green conjugacy]
+The one-step zero-repair recursion \eqref{eq:PGFrec} is equivalent to
+\begin{equation}
+ \boxed{
+ T_{B_0}(z)+3z^2T_{B_1}(z)=A(z)T_B(z)+1.
+ }
+ \label{eq:GreenRec}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Using \(P-A=(1-z)^3\),
+\begin{align*}
+(1-B_0)+3z^2(1-B_1)
+&=P-AB\\
+&=A(1-B)+(P-A).
+\end{align*}
+Divide by \((1-z)^3\).
+\end{proof}
+
+Thus the signed cubic source becomes the positive unit source.  Positivity of
+the probability cone, rather than inversion of the cubic difference, is the
+remaining barrier.
+
+Let \(\beta_n:=\Pp_B(J>n)\) and
+\(T_B(z)=\sum_{n\ge0}t_nz^n\).  Direct coefficient extraction gives
+\begin{equation}
+ t_n=\sum_{k=0}^n(n-k+1)\beta_k.
+ \label{eq:tcoeff}
+\end{equation}
+With the backward difference \(\nabla t_n=t_n-t_{n-1}\),
+\begin{equation}
+ \boxed{
+ \nabla t_n=\sum_{k=0}^n\beta_k,
+ \qquad
+ \nabla^2t_n=\beta_n,
+ \qquad
+ \nabla^3t_n=-\Pp(J=n)\ (n\ge1).
+ }
+ \label{eq:curvature}
+\end{equation}
+In particular,
+\begin{equation}
+ \boxed{
+ \E_BJ=\sum_{n\ge0}\beta_n
+ =\lim_{n\to\infty}\nabla t_n.
+ }
+ \label{eq:meanSlope}
+\end{equation}
+The bill is therefore an asymptotic slope in Green coordinates.
+
+Iterating \eqref{eq:GreenRec} for \(m\) generations gives
+\begin{equation}
+ \sum_{w\in\bits^m}3^{\wt(w)}z^{2\wt(w)}T_{B_{hw}}(z)
+ =A(z)^mT_{B_h}(z)+G_m(z),
+ \label{eq:blockGreen}
+\end{equation}
+where
+\begin{equation}
+ \boxed{
+ G_m(z)=\frac{P(z)^m-A(z)^m}{(1-z)^3}
+ =\sum_{j=0}^{m-1}P(z)^{m-1-j}A(z)^j.
+ }
+ \label{eq:Gm}
+\end{equation}
+Hence \(G_m\) is coefficientwise nonnegative.  At \(m=2\),
+\begin{equation}
+ \boxed{G_2(z)=P(z)+A(z)=(1+z)^3.}
+ \label{eq:G2}
+\end{equation}
+The normalized mask \((1+z)^3/4\) is the standard binary quadratic B-spline
+subdivision mask (B-spline order three).  The connection is exact at the
+algebraic level: subdivision theory relates such masks, vanishing moments and
+polynomial reproduction \cite{CharinaConti2013}.
+
+Define the positive boundary dilation
+\begin{equation}
+ \boxed{
+ (\cR F)(z):=\frac14(1+z)^3F(z^2).
+ }
+ \label{eq:Rboundary}
+\end{equation}
+This is not asserted to be the full nonlinear Bellman renormalization.  It is
+the exact scale map in the cubic Green boundary algebra.
+
+\begin{proposition}[Exact third-difference conjugacy]
+Let \(\Delta_3F:=(1-z)^3F\) and \((D_2G)(z):=G(z^2)\).  Then
+\begin{equation}
+ \boxed{
+ \Delta_3\cR=\frac14D_2\Delta_3.
+ }
+ \label{eq:diffconj}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Use \((1-z)^3(1+z)^3=(1-z^2)^3\).
+\end{proof}
+
+\begin{proposition}[Boundary pole spectrum]
+If
+\[
+ F(z)=\frac{c+o(1)}{(1-z)^r}
+ \qquad(z\uparrow1),
+\]
+then
+\begin{equation}
+ \boxed{
+ (\cR F)(z)=2^{1-r}\frac{c+o(1)}{(1-z)^r}.
+ }
+ \label{eq:polespectrum}
+\end{equation}
+\end{proposition}
+
+Thus pole orders \(r=0,1,2\) have multipliers \(2,1,1/2\), respectively.
+The word ``spectrum'' here refers only to the exact boundary scaling law
+\eqref{eq:polespectrum}; no spectrum of the full viability operator has yet
+been proved.
+
+\section{An explicitly controllable marginal phase channel}
+\label{sec:eta}
+
+A two-block causal correction arising in the dyadic model is the signed packet
+\begin{equation}
+ \boxed{
+ \eta(z)=\frac1{16}(z^2+z^4-1-z^6)
+ =-\frac1{16}(1-z^2)(1-z^4).
+ }
+ \label{eq:eta}
+\end{equation}
+It is mass- and mean-neutral:
+\[
+ \eta(1)=0,
+ \qquad
+ \eta'(1)=0,
+\]
+while
+\begin{equation}
+ \eta''(1)=-1.
+ \label{eq:eta2}
+\end{equation}
+Under the signed residual dilation
+\[
+ (\cS\Theta)(z):=\frac14\Theta(z^2),
+\]
+the factorial moments \(M_j=\Theta^{(j)}(1)\) transform as
+\begin{align*}
+M_0&\mapsto\frac14M_0,\\
+M_1&\mapsto\frac12M_1,\\
+M_2&\mapsto M_2+\frac12M_1,\\
+M_3&\mapsto2M_3+3M_2.
+\end{align*}
+Hence \(M_2\) is exactly marginal on the subspace \(M_0=M_1=0\).
+
+Apply the cubic Green transform to \(\eta\):
+\begin{equation}
+ \boxed{
+ \Phi(z):=-\frac{\eta(z)}{(1-z)^3}
+ =\frac{(1+z)^2(1+z^2)}{16(1-z)}.
+ }
+ \label{eq:Phi}
+\end{equation}
+Its coefficients are
+\[
+ [z^n]\Phi=\frac1{16}(1,3,5,7,8,8,8,\ldots),
+\]
+so \(\Phi\) lies in the simple-pole marginal sector of
+\eqref{eq:polespectrum} and carries zero asymptotic mean slope.
+
+\begin{proposition}[Positive cohomological defect]
+\begin{equation}
+ \boxed{
+ \Phi-\cR\Phi
+ =\frac{(1+z)^3(1+z^2)(z^4+2z^2+3)}{64}.
+ }
+ \label{eq:cohomology}
+\end{equation}
+The right-hand side has nonnegative coefficients.  Consequently,
+\begin{equation}
+ 0\le\cR^k\Phi\le\Phi
+ \qquad(k\ge0)
+ \label{eq:Rbound}
+\end{equation}
+coefficientwise.
+\end{proposition}
+
+\begin{proof}
+Direct substitution into \eqref{eq:Rboundary} gives
+\eqref{eq:cohomology}.  Positivity of \(\cR\) then allows iteration.
+\end{proof}
+
+Define
+\[
+ \eta_s(z):=4^{-s}\eta(z^{2^s}),
+ \qquad s\ge0,
+\]
+and
+\begin{equation}
+ \boxed{
+ E_*(z):=\frac23z^2+
+ \sum_{s\ge0}\frac{4^{-s}}{16}
+ \left(1+z^{2^{s+1}}+z^{2^{s+2}}+z^{6\cdot2^s}\right).
+ }
+ \label{eq:envelope}
+\end{equation}
+
+\begin{theorem}[Universal finite-mean envelope for the explicit phase channel]
+\label{thm:envelope}
+The series \(E_*\) is a probability PGF with
+\begin{equation}
+ \boxed{\E_{E_*}J=\frac{17}{6}.}
+ \label{eq:17over6}
+\end{equation}
+For every sequence \((\theta_s)_{s\ge0}\) with \(|\theta_s|\le1\),
+\begin{equation}
+ E_*(z)+\sum_{s\ge0}\theta_s\eta_s(z)
+ \label{eq:perturbedE}
+\end{equation}
+is again a probability PGF with the same mean \(17/6\).
+\end{theorem}
+
+\begin{proof}
+The envelope part has total mass
+\[
+ \sum_{s\ge0}\frac{4\cdot4^{-s}}{16}=\frac13,
+\]
+which together with \(2/3\) from the first atom gives mass one.  The first
+term contributes mean \(4/3\), while scale \(s\) contributes
+\[
+ \frac{4^{-s}}{16}
+ \left(2^{s+1}+2^{s+2}+6\cdot2^s\right)=\frac34\,2^{-s}.
+\]
+Summing yields \(4/3+3/2=17/6\).  Coefficientwise, \(E_*\) dominates the
+sum of absolute masses of every packet that can contribute at that
+coefficient; the triangle inequality gives nonnegativity of
+\eqref{eq:perturbedE}.  Each \(\eta_s\) has zero mass and zero first moment,
+so normalization and mean are unchanged.
+\end{proof}
+
+\begin{remark}[The limit of this theorem]
+Theorem~\ref{thm:envelope} controls one explicit phase channel through
+arbitrarily many scales at \(O(1)\) mean cost.  It does not show that the full
+causal phase fiber decomposes into copies of this channel.  Theorem
+\ref{thm:doublingdecomp} in fact warns that fresh phase dimensions are created
+at every blocking step.
+\end{remark}
+
+\section{A critical self-similar reservoir}
+\label{sec:mahler}
+
+The dilation algebra also contains a canonical Mahler fixed point.  Define
+\begin{equation}
+ (\mathfrak M B)(z):=\frac34z^2+\frac14B(z^2).
+ \label{eq:MahlerMap}
+\end{equation}
+
+\begin{proposition}[Mahler fixed point]
+There is a unique probability PGF satisfying \(B=\mathfrak M B\), namely
+\begin{equation}
+ \boxed{
+ B_*(z)=\sum_{k\ge1}\frac3{4^k}z^{2^k}.
+ }
+ \label{eq:MahlerFixed}
+\end{equation}
+It has
+\begin{equation}
+ \E_{B_*}J=3,
+ \qquad
+ \E_{B_*}J^2=\infty.
+ \label{eq:MahlerMoments}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Iterating \(B(z)=\frac34z^2+\frac14B(z^2)\) determines the coefficients and
+gives \eqref{eq:MahlerFixed}; its masses sum to one.  The first moment is
+\[
+ \sum_{k\ge1}\frac3{4^k}2^k=3,
+\]
+while the second moment is
+\[
+ \sum_{k\ge1}\frac3{4^k}4^k=\infty.
+\]
+\end{proof}
+
+The fixed point is therefore exactly critical between finite first and second
+moments.  This fact should not be overinterpreted: a fixed point of the static
+scale map is not automatically an infinite zero-repair tree, and
+Theorem~\ref{thm:third} forbids any such tree with finite root mean.  The
+Mahler law is best viewed as a canonical boundary object of the scale algebra,
+not as a completed causal construction.
+
+% ============================================================
+\section{Positive fibers over scalar information}
+\label{sec:positive-fiber}
+% ============================================================
+
+The quotient $V_m\to\R^{m+1}$ identifies exactly which linear information is
+lost when one passes from ordered histories to total information.  Positivity
+can also be described exactly before causality is imposed.
+
+For $0\le k\le m$ recall the normalized Hamming-layer vector
+\[
+ u_k^{(m)}
+ :=
+ \frac{1}{\binom{m}{k}}
+ \sum_{|w|=k}e_w,
+\]
+and define the canonical section
+\begin{equation}
+ \sigma_m(r)
+ :=
+ \sum_{k=0}^m r_k u_k^{(m)},
+ \qquad
+ r=(r_0,\ldots,r_m)\in\Delta_m.
+ \label{eq:canonicalsection}
+\end{equation}
+Here $\Delta_m$ denotes the probability simplex on the $m+1$ Hamming
+layers.
+
+\begin{theorem}[Exact positive phase fiber]
+\label{thm:positivefiber}
+For $r\in\Delta_m$, the set of probability laws on ordered histories with
+scalar profile $r$ is
+\begin{equation}
+ \boxed{
+ \Pi_m^{-1}(r)\cap\Delta(\{0,1\}^m)
+ =
+ \sigma_m(r)+\mathsf F_m(r),
+ }
+ \label{eq:positivefiber}
+\end{equation}
+where
+\begin{equation}
+ \boxed{
+ \mathsf F_m(r)
+ =
+ \left\{
+ \theta\in W_m:
+ \theta_w\ge
+ -\frac{r_{|w|}}{\binom{m}{|w|}}
+ \ \text{for every }w
+ \right\}.
+ }
+ \label{eq:Fmr}
+\end{equation}
+Equivalently, the fiber is the direct product, over Hamming layers, of
+scaled simplices of total mass $r_k$.  If every $r_k>0$, its affine dimension
+is
+\[
+ \sum_{k=0}^m\left(\binom{m}{k}-1\right)
+ =2^m-(m+1).
+\]
+\end{theorem}
+
+\begin{proof}
+If $\nu$ is a probability vector with $\Pi_m\nu=r$, then the total mass of
+$\nu$ on the layer $|w|=k$ is $r_k$.  Since $\sigma_m(r)$ places the uniform
+mass $r_k/\binom{m}{k}$ on that layer, the difference
+$\theta=\nu-\sigma_m(r)$ has zero sum on each layer, hence
+$\theta\in\ker\Pi_m=W_m$.  The condition $\nu_w\ge0$ is exactly
+\eqref{eq:Fmr}.  The converse is immediate.  The product-of-simplices
+statement follows layer by layer, and the dimension formula follows by
+summing the dimensions $\binom{m}{k}-1$.
+\end{proof}
+
+Theorem~\ref{thm:positivefiber} is the exact analogue of a coefficientwise
+positivity test at the \emph{ambient} history level.  It is not yet the causal
+criterion we ultimately need.  Prefix compatibility cuts a generally much
+smaller subset out of this product of simplices.  The two-symbol theorem in
+Section~\ref{sec:5over16} proves that this cut is already strict at the
+first nontrivial block length.
+
+% ============================================================
+\section{Exact finite-block causal phase fibers}
+\label{sec:causal-farkas}
+% ============================================================
+
+At a fixed block length the causal restriction can be characterized without an
+ansatz.  Let \(\Omega_m:=\bits^m\) and
+\[
+ \mathcal J_m:=\R^{\Omega_m\times\Omega_m}\cong V_m\otimes V_m.
+\]
+Define the joint scalarization
+\begin{equation}
+ \boxed{\Sigma_m:=\Pi_m\otimes\Pi_m,\qquad
+ \Sigma_m e_{(x,w)}=e_{(\wt(x),\wt(w))}.}
+ \label{eq:Sigmam}
+\end{equation}
+Since \(\Sigma_m\) is surjective,
+\begin{equation}
+ \boxed{\dim\ker\Sigma_m=4^m-(m+1)^2.}
+ \label{eq:jointphase-dim}
+\end{equation}
+Thus even before causality is imposed, scalar joint profiles discard an
+exponentially growing family of ordering directions.
+
+For a scalar joint profile \(r=(r_{ij})_{0\le i,j\le m}\), put
+\begin{equation}
+ \boxed{\tau_m(r):=\sum_{i,j=0}^m r_{ij}\,u_i^{(m)}\otimes u_j^{(m)}.}
+ \label{eq:taum}
+\end{equation}
+Then \(\Sigma_m\tau_m(r)=r\).
+
+Let \(\pi(x,w)\) be a nonnegative coupling of \(P^{\otimes m}\) and
+\(Q^{\otimes m}\).  Besides the two marginal families, causality from \(W\)
+to \(X\) is equivalent to
+\begin{equation}
+ \boxed{
+ \sum_{x'\in\Omega_{m-t}}\pi((a,x'),(b,c))
+ =Q^{\otimes(m-t)}(c)
+ \sum_{x'\in\Omega_{m-t}}\sum_{c'\in\Omega_{m-t}}
+ \pi((a,x'),(b,c'))}
+ \label{eq:generalcausality}
+\end{equation}
+for \(1\le t<m\), \(a,b\in\Omega_t\), and \(c\in\Omega_{m-t}\).  These
+equations say exactly that, conditional on \(W_{1:t}=b\), the law of
+\(X_{1:t}\) is independent of the future \(W_{t+1:m}\).  Write all marginal
+and causal equations as
+\begin{equation}
+ A_m\pi=b_m.
+ \label{eq:Am}
+\end{equation}
+Redundant rows are allowed.
+
+\begin{definition}[Local causal phase fiber]
+For a scalar joint profile \(r\), define
+\begin{equation}
+ \boxed{\mathsf C_m^{\mathrm{loc}}(r)
+ :=\{\theta\in\ker\Sigma_m:
+ \tau_m(r)+\theta\ge0,\;A_m(\tau_m(r)+\theta)=b_m\}.}
+ \label{eq:Cloc}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Exact finite-block causal phase-fiber criterion]
+\label{thm:causal-farkas}
+For every \(m\) and every scalar joint profile \(r\),
+\begin{equation}
+ \boxed{\mathsf C_m^{\mathrm{loc}}(r)=
+ \{\theta\in\ker\Sigma_m:
+ A_m\theta=b_m-A_m\tau_m(r),\;\theta\ge-\tau_m(r)\}.}
+ \label{eq:ClocExact}
+\end{equation}
+Hence the local causal phase fiber is a bounded polytope, possibly empty.
+If \(P,Q,r\) are rational, it is a rational polytope.
+
+Moreover, the fiber is nonempty if and only if
+\begin{equation}
+ \boxed{\langle y,b_m\rangle+\langle z,r\rangle\ge0}
+ \label{eq:FarkasCriterion}
+\end{equation}
+for every pair \((y,z)\) satisfying
+\begin{equation}
+ \boxed{A_m^Ty+\Sigma_m^Tz\ge0}
+ \label{eq:FarkasCone}
+\end{equation}
+componentwise.  For rational \(P,Q\), the cone in
+\eqref{eq:FarkasCone} is rational polyhedral, hence a finite rational
+generating family of rays suffices.
+\end{theorem}
+
+\begin{proof}
+Every coupling with scalar profile \(r\) has the unique form
+\(\pi=\tau_m(r)+\theta\) with \(\theta\in\ker\Sigma_m\).  Substitution gives
+\eqref{eq:ClocExact}; boundedness follows because the translated fiber lies in
+the probability simplex.
+
+For nonemptiness apply Farkas' lemma to
+\[
+ \pi\ge0,\qquad A_m\pi=b_m,\qquad\Sigma_m\pi=r.
+\]
+Such a nonnegative solution exists if and only if every \((y,z)\) with
+\(A_m^Ty+\Sigma_m^Tz\ge0\) satisfies
+\(\langle y,b_m\rangle+\langle z,r\rangle\ge0\).  Rational polyhedrality is
+immediate when the source probabilities are rational.
+\end{proof}
+
+\begin{remark}[The real remaining difficulty]
+Theorem~\ref{thm:causal-farkas} completely settles the \emph{local fixed-block}
+causal fiber.  It does not settle zero repair.  A zero-repair block must land
+in child laws that remain viable for all remaining depths.  Thus the hard
+question is no longer whether a finite inequality description exists at fixed
+\(m\), but whether those certificates admit a scale-stable intrinsic recursion
+with uniform bill control under \(m\mapsto2m\).
+\end{remark}
+
+\begin{corollary}[Finite truncations admit exact certificates]
+Every finite-horizon zero-repair problem with a finite support cutoff is a
+finite linear feasibility problem.  Any projected coarse/phase fiber is
+therefore a rational polytope and admits a finite exact Farkas certificate
+family.  Numerical LP duals can consequently be rationalized into exact
+certificates; what is not automatic is a support-independent, scale-uniform
+formula.
+\end{corollary}
+
+% ============================================================
+\section{Why finite closures cannot be the answer}
+\label{sec:nogo}
+% ============================================================
+
+The phase-space growth above might tempt one to search for a fortunate finite
+collection of exact buffer profiles or for one scalar potential that absorbs
+all of the ordering information.  Both possibilities are ruled out.
+
+\begin{theorem}[No finite exact profile automaton]
+\label{thm:nofiniteautomaton}
+There do not exist finitely many probability PGFs
+$B^{(1)},\ldots,B^{(K)}$ and transition maps
+$\tau_0,\tau_1:\{1,\ldots,K\}\to\{1,\ldots,K\}$ such that
+\begin{equation}
+ z(3+z^2)B^{(s)}(z)
+ =B^{(\tau_0(s))}(z)+3z^2B^{(\tau_1(s))}(z)
+ \label{eq:finiteautomaton}
+\end{equation}
+for every $s$.
+\end{theorem}
+
+\begin{proof}
+Let $G=(B^{(1)},\ldots,B^{(K)})^\top$, and let $L,H$ be the selector
+matrices induced by $\tau_0,\tau_1$.  Then
+\[
+ M(z)G(z)=0,
+ \qquad
+ M(z):=z(3+z^2)I-L-3z^2H.
+\]
+The coefficient of $z^{3K}$ in $\det M(z)$ is $1$: it is obtained uniquely
+by selecting the $z^3$ term from every diagonal entry.  Thus $\det M$ is not
+the zero polynomial.  For all but finitely many $z\in(0,1)$, $M(z)$ is
+invertible and therefore $G(z)=0$, contradicting positivity of probability
+PGFs on $(0,1)$.
+\end{proof}
+
+\begin{theorem}[No positive scalar state-only drift]
+\label{thm:noscalardrift}
+Suppose $\phi:\Z_{\ge0}\to\R$ and constants $c,\lambda_x,\mu_y$ satisfy
+\begin{equation}
+ \phi(j+y-x)-\phi(j)
+ \ge c+\lambda_x+\mu_y
+ \label{eq:scalardrift}
+\end{equation}
+whenever $j+y-x\ge0$, with gauges
+\[
+ \sum_xP(x)\lambda_x=0,
+ \qquad
+ \sum_yQ(y)\mu_y=0.
+\]
+For the dyadic pair, $c\le0$.
+\end{theorem}
+
+\begin{proof}
+For the dyadic pair the difference \(d:=y-x\) takes values \(-1,1,3\).
+The \(+1\) inequalities give a uniform lower bound on
+\(d_j:=\phi(j+1)-\phi(j)\), while the \(-1\) inequality gives a uniform upper
+bound.  Hence \((d_j)\) is bounded.
+
+Set \(a_N=N^{-1}\sum_{j=1}^N d_j\).  Along a subsequence
+\(N_k\to\infty\), \(a_{N_k}\to a\).  For each fixed
+\(r\in\{-1,1,3\}\), boundedness implies
+\begin{equation}
+ \frac1{N_k}\sum_{j=1}^{N_k}[\phi(j+r)-\phi(j)]\longrightarrow ra.
+ \label{eq:cesaro-shift}
+\end{equation}
+For positive \(r\), expand into consecutive first differences; for \(r=-1\),
+shift the index.  The finitely many endpoint terms are negligible because
+\((d_j)\) is bounded.
+
+Average \eqref{eq:scalardrift} over \(j=1,\ldots,N_k\) and over
+\((X,Y)\sim P\otimes Q\).  All moves are admissible for \(j\ge1\), and the
+gauge terms vanish.  Passing to the subsequential limit using
+\eqref{eq:cesaro-shift} gives
+\[
+ a\,\E(Y-X)\ge c.
+\]
+The two increment laws have equal mean, so \(\E(Y-X)=0\), and therefore
+\(c\le0\).
+\end{proof}
+
+These theorems have a useful positive interpretation.  A sharp asymptotic
+object, if it exists, must retain information at growing scales.  The large
+kernel $W_m$ is not an artifact of a poor coordinate system that can be
+compressed into finitely many exact modes without loss.
+
+% ============================================================
+\section{The renormalized positive phase problem}
+\label{sec:renormproblem}
+% ============================================================
+
+We can now state the unresolved problem without appealing to a particular
+buffer ansatz.
+
+The linear quotient $V_m=U_m\oplus W_m$ separates visible total-information
+profiles from ordering information.  Theorem~\ref{thm:positivefiber} describes
+the complete positive fiber before causality, while
+Theorem~\ref{thm:causal-farkas} gives a complete finite-dimensional dual
+criterion for the local causal matching fiber at every fixed block length.
+Thus the unresolved issue is now more specific: \emph{future zero-repair
+viability must be incorporated in a way that is stable under scale}.
+
+The role of Section~\ref{sec:doublingphase} is therefore decisive.  Blocking from $m$
+to $2m$ does not merely transport an old phase vector.  It creates the fresh
+sector $K_m$ of dimension $m^2$.  Thus any exact scale map must account for at
+least three operations:
+\begin{center}
+\fbox{\parbox{0.78\textwidth}{\centering
+transport inherited phase $+$ create inter-block phase\\[1mm]
+$+$ project back into the positive causal fiber.}}
+\end{center}
+The last operation is nonlinear because positivity and future viability are
+inequalities.
+
+\subsection{The central characterization problem}
+
+At fixed \(m\), the local coupling fiber is no longer mysterious:
+Theorem~\ref{thm:causal-farkas} characterizes it exactly, and a finite set of
+rational dual rays exists in principle.  What is missing is the analogue of a
+single structural criterion whose form survives scale doubling and already
+incorporates descendant viability.
+
+\begin{problem}[Scale-stable zero-repair phase characterization]
+\label{prob:phasecharacterization}
+Find coarse/phase coordinates and a family of necessary-and-sufficient
+positivity or dual inequalities such that: (i) one-scale lifts land in child
+states viable for the prescribed remaining horizon; (ii) the form closes under
+\(m\mapsto2m\); and (iii) the induced repair cost is uniformly bounded in the
+dyadic scale.  Equivalently, compress the exponentially expanding fixed-block
+Farkas descriptions into an intrinsic renormalization law on the positive
+zero-repair phase state.
+\end{problem}
+
+For \(m=2\), Proposition~\ref{prop:lift} isolates the unique one-sided phase
+coordinate \(\Theta\).  For general \(m\),
+Theorem~\ref{thm:doublingdecomp} shows why a single \(\Theta\) cannot suffice,
+and Theorem~\ref{thm:causal-farkas} shows that the obstacle is not
+finite-dimensional duality itself but the absence of a scale-uniform
+compression.
+
+\subsection{A conditional scale theorem}
+
+The following simple implication isolates exactly what an upper-bound theorem
+would have to deliver.
+
+\begin{proposition}[Bounded scale repair implies logarithmic growth]
+\label{prop:boundedscale}
+Suppose there is a constant $C<\infty$ such that
+\begin{equation}
+ \boxed{
+ \cB_{2n}\le\cB_n+C
+ }
+ \label{eq:doublingupper}
+\end{equation}
+for every $n\ge1$.  Then
+\begin{equation}
+ \cB_n=O(\log n).
+ \label{eq:logupper}
+\end{equation}
+For the dyadic parity pair, this combines with
+Theorem~\ref{cor:one-third} to give
+\begin{equation}
+ \boxed{\cB_n=\Theta(\log n).}
+ \label{eq:theta-log-conditional}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Iterating \eqref{eq:doublingupper} gives
+$\cB_{2^k}\le\cB_1+kC$.  Monotonicity of the finite-horizon viability bill
+then gives the same order for arbitrary $n$ by choosing
+$2^{k-1}<n\le2^k$.  The lower bound is Theorem~\ref{cor:one-third}.
+\end{proof}
+
+Equation~\eqref{eq:doublingupper} is not proved here.  It is the most concrete
+sharp upper target suggested by the scale algebra.  If the dyadic increment
+converged,
+\[
+ \cB_{2n}-\cB_n\longrightarrow\gamma,
+\]
+then along dyadic horizons one would obtain
+\[
+ \cB_n\sim\frac{\gamma}{\log2}\log n,
+\]
+and the rigorous lower bound would force
+\begin{equation}
+ \gamma\ge\frac{\log2}{3}.
+ \label{eq:gammalower}
+\end{equation}
+No equality is asserted.
+
+\subsection{Why the one-channel Jordan picture is insufficient}
+
+The explicit packet $\eta_s$ is marginal in the second factorial moment, but
+its first-moment carrying cost decays geometrically: an envelope mass of order
+$4^{-s}$ transported to distance $2^s$ costs order $2^{-s}$.  This is exactly
+why Theorem~\ref{thm:envelope} has finite mean.  Consequently, one copy of the
+explicit $\eta$ channel cannot by itself explain logarithmic growth.
+
+A more plausible critical mechanism, if the logarithmic lower bound is sharp,
+is the repeated creation of fresh phase directions under blocking.  The
+ambient fresh sector has dimension $m^2$, while the cubic signed residual is
+suppressed by a third-order scale factor.  The dimensional balance
+\begin{equation}
+ m^2\cdot m^{-3}\cdot m\asymp1
+ \label{eq:dimensionalbalance}
+\end{equation}
+is suggestive: multiplicity, cubic residual mass, and first-moment transport
+distance cancel at order three.  We emphasize that
+\eqref{eq:dimensionalbalance} is a scaling heuristic, not a theorem.  It does
+not show that $\Theta(m^2)$ feasible phase directions are independently
+excited, nor that positivity prevents cancellations.  Its value is that it
+identifies a falsifiable mechanism compatible with both the exact cubic symbol
+and the exact growth of the phase kernel.
+
+% ============================================================
+\section{Relation to neighboring mathematical theories}
+\label{sec:neighbors}
+% ============================================================
+
+\paragraph{Adapted and causal optimal transport.}
+The causal constraint in Section~\ref{sec:5over16} is a standard
+nonanticipativity constraint on a coupling.  General causal and bicausal
+transport duality, including dual attainment under broad measurable-cost
+hypotheses, is available in \cite{KrsekPammer2025}.  Very recent graph-causal
+optimal transport characterizes gluing properties and dynamic programming for
+causality prescribed by directed acyclic graphs \cite{OblojTuchilus2026}.
+These results make adapted transport a natural surrounding language.  They do
+not make the present problem automatic: exact inventory conservation and the
+hard cone constraint $J\ge0$ must still be incorporated, and the full
+countable-state no-gap theorem for our Bellman--Fenchel recursion has not been
+proved.
+
+\paragraph{Convex dynamic programming.}
+The passage from convex viability sets to lower support functionals is a
+finite-dimensional convex duality calculation, not a new general duality
+theorem.  For infinite-dimensional stochastic optimization with information
+constraints, the recent work of Pennanen and Perkki\"o provides a broader
+convex-duality and dynamic-programming framework \cite{PennanenPerkkio2026Dual,PennanenPerkkio2026DP}.
+The unresolved issue here is to choose a weighted function/measure topology in
+which the unbounded mean objective, shift invariance and positivity coexist
+with strong duality.
+
+\paragraph{Nonlinear Perron--Frobenius theory.}
+Order-preserving homogeneous and additively homogeneous maps, quotienting by
+constants, and projective metrics are standard in nonlinear
+Perron--Frobenius theory and in Shapley operators
+\cite{LemmensNussbaum2012,Lins2023,AkianGaubertHochart2020}.  Recent work also
+extends joint spectral-radius ideas to switched nonlinear order-preserving
+systems \cite{DeiddaGuglielmiTudisco2025}.  The relevance here is structural,
+not a theorem transfer: Theorem~\ref{thm:nofiniteautomaton} already rules out
+an exact finite-mode state.  Across all scales the zero-repair phase state is
+necessarily infinite-dimensional and constrained by positivity.
+
+\paragraph{Subdivision and vanishing moments.}
+The identity
+\[
+ \Delta_3\cR=\frac14D_2\Delta_3
+\]
+places the boundary algebra directly next to subdivision schemes.  The mask
+$(1+z)^3/4$ is the binary quadratic B-spline mask; its order-three zero
+condition is the same algebra that annihilates the matched mass, mean and
+variance jets.  Sum rules, polynomial reproduction and invariant difference
+spaces are classical tools in subdivision theory \cite{CharinaConti2013}.
+The novelty of the present difficulty is the additional causal-positive fiber
+sitting over this linear scheme.
+
+\paragraph{Finitary coding and randomness recycling.}
+The zero-repair equation resembles a constrained information coboundary, while
+finitary isomorphism theory shows that stronger moment assumptions on coding
+length preserve increasingly fine information invariants
+\cite{Parry1979,Schmidt1984,HarveyPeres2011}.  In a different online-sampling
+model, modern randomness-recycling algorithms can approach the Shannon limit
+using persistent state; recent real-probability algorithms achieve expected
+entropy $\sum_iH(F_i)+O(\log n)$ with $O(\log n)$ persistent space
+\cite{DraperSaad2026,DraperHarrisSaad2026}.  Neither result implies a
+zero-repair theorem, but both reinforce the need to distinguish entropy rate
+from persistent working state.
+
+\paragraph{Synchronization-channel duality.}
+Kova\v{c}evi\'c's recent exact sticky-channel calculation is a useful nearby
+example of proof architecture rather than a source of a theorem used here:
+a channel is reduced to a simpler operational object, a dual bound is made
+exact by a coefficientwise criterion, and the entire domination class is then
+characterized algebraically \cite{Kovacevic2026}.  Problem
+\ref{prob:phasecharacterization} asks for the analogous structural step for a
+causal-positive phase fiber.
+
+% ============================================================
+\section{Back to ``Who pays the bill?''}
+\label{sec:original}
+% ============================================================
+
+The original resource question was broader than the zero-repair model.  An
+observable stochastic system may be realizable at the ordinary Shannon rate
+while different exact-realization contracts impose different requirements on
+its hidden state.  The mathematics above separates three quantities that
+should not be conflated:
+\begin{equation}
+ \boxed{
+ \text{entropy rate}
+ \quad\neq\quad
+ \text{fresh repair expenditure}
+ \quad\neq\quad
+ \text{exact causal working inventory}.
+ }
+ \label{eq:threebills}
+\end{equation}
+
+The first is a rate: how many new random bits per step are required
+asymptotically.  The second measures information that a simulator is permitted
+to inject after seeing where mismatch occurred.  The third is the present
+quantity: a nonnegative inventory that must make every one-step information
+identity exact without such fresh repair.
+
+For the dyadic parity pair, the present paper proves a sharp qualitative
+statement about the third resource.  Even though mass, mean and variance of
+the two information laws agree, their third-order mismatch cannot be carried
+forever by any finite-mean zero-repair inventory:
+\begin{equation}
+ \cB_n\ge\left(\frac13-o(1)\right)\log n.
+ \label{eq:backbill}
+\end{equation}
+At the same time, the two-symbol causal matching theorem shows why a scalar
+information spectrum alone is insufficient: causality creates an additional
+positive obstruction while leaving the signed scalar residual unchanged.
+Thus part of the bill is carried by ordering information that disappears under
+the usual scalar projection.
+
+This does \emph{not} prove that an unrestricted causal simulator pays an
+additional asymptotic entropy rate.  In the broader causal-tree model, fresh
+randomness, nonlocal blocks and hidden dependence may implement strategies
+forbidden by zero repair.  A companion analysis of that broader contract finds
+that, for two finite actions, the first-order causal rate can reach the
+observable Shannon floor \cite{MikulikCausal}.  There is no contradiction:
+rate and working inventory are different resources.
+
+The missing bridge is therefore mathematically precise.
+
+\begin{problem}[Entropy--inventory comparison]
+\label{prob:entropyinventory}
+Establish the sharpest general comparison, if any, between the finite-horizon
+unrestricted causal entropy residual and the zero-repair viability bill
+$\cB_n$.  In particular, determine which forms of fresh repair or blockwise
+hidden dependence can convert a diverging working-inventory requirement into
+only $o(n)$ additional source entropy.
+\end{problem}
+
+The answer would return the phase-renormalization theory developed here to the
+original accounting problem.  Until such a bridge is proved, the correct
+conclusion is operational rather than ontological: exact realization costs
+depend on what must remain simultaneously valid, on what may be repaired
+later, and on which history information the hidden state is allowed to retain.
+
+% ============================================================
+\section{Theorem ledger and open frontier}
+\label{sec:ledger}
+% ============================================================
+
+For clarity, Table~\ref{tab:ledger} separates the proved statements from the
+renormalization program.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{p{0.72\textwidth}p{0.18\textwidth}}
+\toprule
+Statement & Status\\
+\midrule
+Finite-horizon fixed-tilt logarithmic converse & proved\\
+Third-cumulant lower bound $\liminf\cB_n/\log n\ge\Delta\kappa_3/(6\sigma^2)$ & proved\\
+Dyadic lower coefficient $1/3$ and $\cB_n\to\infty$ & proved\\
+Finite-dimensional Bellman--Fenchel duality & proved\\
+Countable-state Bellman formula as weak dual certificate & proved\\
+Phase quotient $W_m=\ker\Pi_m$, $\dim W_m=2^m-(m+1)$ & proved\\
+Exact positive scalar-profile fiber, Theorem~\ref{thm:positivefiber} & proved\\
+Fixed-block local causal phase fiber: exact polyhedral/Farkas characterization & proved\\
+Two-symbol projected causal profile: exact two-facet characterization & proved\\
+Two-symbol causal mismatch $5/16$ with solver-free proof and exact primal--dual certificate & proved\\
+Causal surcharge invisible to the signed scalar residual & proved\\
+Block-doubling decomposition of $W_{2m}$ and fresh sector $\dim K_m=m^2$ & proved\\
+Cubic shift factorization and Green affine conjugacy & proved\\
+Explicit marginal phase cohomology and mean-$17/6$ envelope & proved$^*$\\
+Mahler scale fixed point with finite first and infinite second moment & proved\\
+Finite exact profile automaton & impossible\\
+Positive scalar state-only Bellman drift & impossible\\
+Scale-stable characterization of the zero-repair causal phase state & open\\
+Strong countable-state Bellman--Fenchel duality in a natural weighted space & open\\
+Uniform doubling bound $\sup_n(\cB_{2n}-\cB_n)<\infty$ & open\\
+Matching $O(\log n)$ upper bound / $\Theta(\log n)$ law & open\\
+Exact asymptotic constant for $\cB_n/\log n$ & open\\
+General comparison with unrestricted causal entropy residual & open\\
+\bottomrule
+\end{tabular}
+\caption{Logical status of the main statements. The symbol $^*$ means: proved for the explicit phase channel stated in Section~\ref{sec:eta}, not for the full zero-repair phase dynamics.}
+\label{tab:ledger}
+\end{table}
+
+The frontier can be summarized in one sentence:
+\begin{center}
+\fbox{\parbox{0.78\textwidth}{\centering
+the cubic linear defect and every fixed-block causal fiber are explicit;\\[1mm]
+the remaining object is their scale-stable zero-repair renormalization.}}
+\end{center}
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+The first nontrivial dyadic zero-repair problem contains two distinct kinds of
+information.  The scalar information profile records how much surprisal has
+accumulated; the phase fiber records in which order that information was
+created.  Static convolution sees only the first.  Causality sees both.
+
+This distinction is already completely visible after two symbols.  The
+projection of the causal coupling polytope is the static scalar transport
+polytope cut by two explicit oblique facets.  One of these facets alone forces
+the static mismatch $1/4$ up to the exact causal value $5/16$.  The additional
+$1/16$ appears identically on both scalar residuals and is therefore invisible
+to their signed difference.  At larger block lengths the hidden space expands
+rapidly: $W_m$ has dimension $2^m-(m+1)$, and every doubling creates a fresh
+$m^2$-dimensional anti-diagonal sector even before positivity is imposed.
+
+Independently, the source mismatch has an exact cubic normal form.  The factor
+$(I-E)^3$ annihilates the matched mass, mean and variance jets; division by the
+corresponding cubic zero produces a Green coordinate with a positive unit
+source and a quadratic B-spline boundary mask.  The same order three is
+critical in the rigorous Laplace converse, which forces
+\[
+ \cB_n\ge\left(\frac13-o(1)\right)\log n
+\]
+for the dyadic pair.
+
+The two structures meet at the unresolved point.  Linear cubic inversion and
+fixed-block causal feasibility are explicit; keeping all descendants inside a
+positive, prefix-compatible \emph{future-viable} phase state is not.  A
+scale-stable characterization of that state would turn the present
+renormalization picture into an actual upper-bound mechanism.  A bounded cost per dyadic scale would close the growth
+order at $\Theta(\log n)$.
+
+The broader information-theoretic lesson is narrower but already rigorous:
+an exact stochastic realization can have different costs depending on whether
+one prices source entropy, fresh repair, or nonnegative causal working
+inventory.  The scalar information spectrum does not contain all of the
+causal bookkeeping.  Ordering information can carry a bill of its own.
+
+% ============================================================
+\appendix
+\section{Complete rational certificate for the two-symbol causal LP}
+\label{app:5over16matrix}
+% ============================================================
+
+This appendix gives an independent full rational LP certificate for Corollary~\ref{thm:5over16}.  The closed-form two-facet proof in Section~\ref{sec:5over16} does not require this appendix, but the certificate makes the original sixteen-variable formulation fully checkable without a solver.
+Vectorize the coupling matrix row by row as
+\[
+ \pi=(\pi_{00,00},\pi_{00,01},\ldots,\pi_{11,11})^T.
+\]
+With the constraint order used in the proof, the equality matrix is
+\begin{equation}
+\resizebox{\textwidth}{!}{$
+A=\begin{pmatrix}
+1&1&1&1&0&0&0&0&0&0&0&0&0&0&0&0\\
+0&0&0&0&1&1&1&1&0&0&0&0&0&0&0&0\\
+0&0&0&0&0&0&0&0&1&1&1&1&0&0&0&0\\
+0&0&0&0&0&0&0&0&0&0&0&0&1&1&1&1\\
+1&0&0&0&1&0&0&0&1&0&0&0&1&0&0&0\\
+0&1&0&0&0&1&0&0&0&1&0&0&0&1&0&0\\
+0&0&1&0&0&0&1&0&0&0&1&0&0&0&1&0\\
+0&0&0&1&0&0&0&1&0&0&0&1&0&0&0&1\\
+\frac14&-\frac34&0&0&\frac14&-\frac34&0&0&0&0&0&0&0&0&0&0\\
+-\frac14&\frac34&0&0&-\frac14&\frac34&0&0&0&0&0&0&0&0&0&0\\
+0&0&\frac14&-\frac34&0&0&\frac14&-\frac34&0&0&0&0&0&0&0&0\\
+0&0&-\frac14&\frac34&0&0&-\frac14&\frac34&0&0&0&0&0&0&0&0\\
+0&0&0&0&0&0&0&0&\frac14&-\frac34&0&0&\frac14&-\frac34&0&0\\
+0&0&0&0&0&0&0&0&-\frac14&\frac34&0&0&-\frac14&\frac34&0&0\\
+0&0&0&0&0&0&0&0&0&0&\frac14&-\frac34&0&0&\frac14&-\frac34\\
+0&0&0&0&0&0&0&0&0&0&-\frac14&\frac34&0&0&-\frac14&\frac34
+\end{pmatrix}.$}
+\label{eq:fullA}
+\end{equation}
+The right-hand side is \eqref{eq:5over16b}.  The first eight rows impose the
+two marginals; the last eight are the causal equations
+\eqref{eq:causalLPconstraints}.  Redundant rows are retained to match the
+lexicographic construction.
+
+For the dual vector \eqref{eq:dualvector}, direct multiplication gives
+\[
+ A^Ty=\begin{pmatrix}
+1&1&1&-1\\0&0&0&-2\\0&-1&-1&0\\1&0&0&1
+\end{pmatrix},
+\qquad
+ C=\begin{pmatrix}
+1&1&1&1\\0&1&1&1\\0&1&1&1\\1&0&0&1
+\end{pmatrix}.
+\]
+Thus \(A^Ty\le C\) componentwise.  Finally,
+\[
+ b^Ty=\frac1{16}\left(1-\frac34+\frac{27}{4}-2\right)=\frac5{16}.
+\]
+Together with the primal matrix \eqref{eq:primalmatrix}, this is an exact
+rational primal--dual certificate of the optimum.
+
+% ============================================================
+\section*{Research-status and reproducibility note}
+% ============================================================
+
+All asymptotic claims in this paper are supported by analytic arguments.
+The exact two-symbol causal value is accompanied by explicit rational primal
+and dual certificates, so it does not depend on floating-point optimization.
+Computer algebra was used to check finite polynomial identities and exact
+coefficients during development, not as a substitute for the stated proofs.
+
+The paper deliberately uses conservative priority language.  The surrounding
+subjects---adapted transport, finitary coding, nonlinear positive operators,
+subdivision theory and synchronization channels---are mature, and an
+equivalent formulation of some structural lemma may exist elsewhere.  Where a
+direct precedent is known, it is cited; no stronger historical novelty claim
+is intended.
+
+During preparation, the author used OpenAI's ChatGPT as a research assistant
+for literature discovery, algebraic checking, adversarial proof review and
+\LaTeX{} preparation.  The mathematical statements are separated explicitly
+into proved results and open problems in Table~\ref{tab:ledger}.
+
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Rockafellar1970}
+R.~T.~Rockafellar,
+\emph{Convex Analysis},
+Princeton University Press, 1970.
+
+\bibitem{Parry1979}
+W.~Parry,
+\emph{Finitary isomorphisms with finite expected code lengths},
+Bull. London Math. Soc. \textbf{11} (1979), 170--176.
+\url{https://doi.org/10.1112/blms/11.2.170}
+
+\bibitem{Schmidt1984}
+K.~Schmidt,
+\emph{Invariants for finitary isomorphisms with finite expected code lengths},
+Invent. Math. \textbf{76} (1984), 33--40.
+
+\bibitem{HarveyPeres2011}
+N.~Harvey and Y.~Peres,
+\emph{An invariant of finitary codes with finite expected square root coding length},
+Ergodic Theory Dynam. Systems \textbf{31} (2011), 77--90.
+\url{https://doi.org/10.1017/S014338570900090X}
+
+\bibitem{LemmensNussbaum2012}
+B.~Lemmens and R.~D.~Nussbaum,
+\emph{Nonlinear Perron--Frobenius Theory},
+Cambridge Tracts in Mathematics, Vol.~189, Cambridge University Press, 2012.
+
+\bibitem{CharinaConti2013}
+M.~Charina and C.~Conti,
+\emph{Polynomial reproduction of multivariate scalar subdivision schemes},
+J. Comput. Appl. Math. \textbf{240} (2013), 51--61.
+\url{https://doi.org/10.1016/j.cam.2012.06.013}
+
+\bibitem{AkianGaubertHochart2020}
+M.~Akian, S.~Gaubert, and A.~Hochart,
+\emph{A game theory approach to the existence and uniqueness of nonlinear
+Perron--Frobenius eigenvectors},
+Discrete Contin. Dyn. Syst. \textbf{40} (2020), 207--231.
+\url{https://doi.org/10.3934/dcds.2020009}
+
+\bibitem{Lins2023}
+B.~Lins,
+\emph{A unified approach to nonlinear Perron--Frobenius theory},
+Linear Algebra Appl. \textbf{675} (2023), 48--89.
+\url{https://doi.org/10.1016/j.laa.2023.06.018}
+
+\bibitem{KrsekPammer2025}
+D.~Kr\v{s}ek and G.~Pammer,
+\emph{General duality and dual attainment for adapted transport},
+Appl. Math. Optim. \textbf{91} (2025), Article 52.
+\url{https://doi.org/10.1007/s00245-025-10240-y}
+
+\bibitem{DeiddaGuglielmiTudisco2025}
+P.~Deidda, N.~Guglielmi, and F.~Tudisco,
+\emph{Nonlinear joint spectral radius},
+arXiv:2507.11314, 2025.
+
+\bibitem{PennanenPerkkio2026Dual}
+T.~Pennanen and A.-P.~Perkki\"o,
+\emph{Duality in convex stochastic optimization},
+Math. Program. \textbf{215} (2026), 145--191.
+\url{https://doi.org/10.1007/s10107-025-02216-1}
+
+\bibitem{PennanenPerkkio2026DP}
+T.~Pennanen and A.-P.~Perkki\"o,
+\emph{Dynamic programming and dimensionality in convex stochastic optimization
+and control},
+Optim. Lett. \textbf{20} (2026), 257--273.
+\url{https://doi.org/10.1007/s11590-025-02230-4}
+
+\bibitem{DraperSaad2026}
+T.~L.~Draper and F.~A.~Saad,
+\emph{Efficient online random sampling via randomness recycling},
+in Proc. 2026 ACM--SIAM Symposium on Discrete Algorithms (SODA),
+2026, pp.~2473--2511.
+\url{https://doi.org/10.1137/1.9781611978971.89}
+
+\bibitem{DraperHarrisSaad2026}
+T.~L.~Draper, D.~G.~Harris, and F.~A.~Saad,
+\emph{Online random sampling with real probabilities},
+arXiv:2607.13828, 2026.
+
+\bibitem{Kovacevic2026}
+M.~Kova\v{c}evi\'c,
+\emph{The capacity of a family of sticky channels},
+arXiv:2607.28281, 2026.
+
+\bibitem{OblojTuchilus2026}
+J.~Ob\l\'oj and V.~Tuchilus,
+\emph{Graph causal optimal transport and Wasserstein distances},
+arXiv:2608.13716, 2026.
+
+\bibitem{MikulikCausal}
+J.~Mikul\'ik,
+\emph{Who Pays the Bill? Counterfactual Identity, the Causal Shannon Floor,
+Spectral Ledgers, and Orbit Resolution},
+research preprint, 2026.
+
+\end{thebibliography}
+
+\end{document}
