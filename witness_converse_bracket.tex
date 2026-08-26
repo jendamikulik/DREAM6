@@ -1,0 +1,170 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=28mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+
+\setlist[enumerate]{leftmargin=*,itemsep=0.35em,topsep=0.4em}
+
+\title{\textbf{The Bracket, Not the Tube}\\[0.4em]
+\large A certification mechanism shared by two independent estimation problems}
+\author{Notes toward a general principle}
+\date{26 August 2026}
+
+\newtheorem*{claim}{Claim}
+
+\newcommand{\Acal}{\mathcal{A}}
+\newcommand{\Kfrak}{\mathfrak{K}}
+\newcommand{\Pcal}{\mathcal{P}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This note isolates a single recurring pattern---the \emph{witness/converse bracket}---that appeared independently in two structurally unrelated problems worked on in the same period: a safe-anchor / renormalization program (WPB) and a causal Shannon-floor resource-accounting program (Bill). The pattern is not new. It is the ordinary shape of weak duality, stated abstractly enough to make an otherwise easy-to-miss cross-instantiation visible. The claim is narrow and checkable: WPB's compressed Farkas margin bracket and Bill's synchronous-rate bracket are the same schema with different data substituted in. The shared schema is a \emph{tool}, not a shared \emph{object}. The two problems do not become the same problem by sharing it.
+\end{abstract}
+
+\section{What this note is, and is not}
+
+Nothing below is a theorem about an invariant tube, a breathing mode, or a fiber coordinate. Those objects belong to WPB and remain in their own ledger. The present text extracts only the pricing device used to speak honestly about an unknown extremal value.
+
+\section{The abstract mechanism}
+
+Let \(\Acal\) be a feasible set, \(f:\Acal\to\mathbb{R}\) an objective, and
+\begin{equation}
+  V^\star \;:=\; \operatorname*{ext}_{\pi\in\Acal} f(\pi)
+\end{equation}
+an unknown extremal quantity (\(\operatorname{ext}\) means \(\inf\) or \(\sup\)), not directly computable because \(\Acal\) or \(f\) is too large or too implicit to optimize exhaustively.
+
+A bracket \([L,U]\ni V^\star\) is built from two logically distinct kinds of certificate. It matters which kind is used on which side.
+
+\paragraph{Species 1 --- converse (relaxation) bounds.}
+A bound is a converse if it is established by an argument valid \emph{simultaneously} for every \(\pi\in\Acal\), without exhibiting any particular one. Typical sources: a coordinatewise relaxation of \(f\) or \(\Acal\), weak LP duality, or an information-theoretic inequality (a transport converse, a counting bound). Because the argument covers the whole feasible set at once, it bounds \(V^\star\) for free.
+
+\paragraph{Species 2 --- constructive witnesses.}
+A bound is a witness if it is established by exhibiting one explicit \(\pi_0\in\Acal\), verifying admissibility directly (normalization, marginals, positivity, exactness of the induced law), and evaluating \(f(\pi_0)\). This gives \(V^\star\le f(\pi_0)\) (or \(\ge\), for a supremum) trivially, but only because that one object was actually checked.
+
+A bracket is then
+\begin{equation}
+  L \;\le\; V^\star \;\le\; U,
+\end{equation}
+where each of \(L,U\) may be built from either species. Both ends can be converses, or one end a converse and the other a witness. The width
+\begin{equation}
+  \Delta \;:=\; U-L \;\ge\; 0
+\end{equation}
+is not a hedge. It is an exact, computable statement of present ignorance, and it is falsifiable: any tightening of either side is a checkable claim, not a change of opinion.
+
+This is weak duality plus feasibility. Its only content here is that stating it at this level of abstraction makes two otherwise unrelated computations visibly the same move.
+
+\section{Two instances from the same period}
+
+\subsection{Instance A --- the compressed Farkas margin (WPB)}
+
+Here \(V^\star=\delta_m(y)\), the reduced safety margin of a target point relative to a renormalization-step reachable region \(F_m(\Pcal_m)\subset\mathbb{R}^3\), defined by
+\begin{equation}
+  \delta_m(y)
+  \;=\;
+  \inf_{\|z\|_1=1}\bigl(h_m(z)-z\cdot y\bigr),
+  \qquad
+  h_m(z)
+  \;=\;
+  \sup_{\pi\in\Pcal_m} z\cdot F_m\pi.
+\end{equation}
+Direct computation of \(h_m(z)\) becomes expensive as the support of the transport polytope grows. The bracket is obtained by replacing the fine-grained per-cell coefficients of the objective with their coordinatewise minimum (respectively maximum) over coarsened index groups:
+\begin{equation}
+  h_m^{\mathrm{lower}}(z)
+  \;\le\;
+  h_m(z)
+  \;\le\;
+  h_m^{\mathrm{upper}}(z),
+\end{equation}
+because the supremum of a pointwise-smaller (respectively larger) function over the \emph{same} feasible set is itself smaller (respectively larger). Both ends are Species~1: no explicit coupling is exhibited on either side; both bounds come from the same relaxation device run in opposite directions. Propagated through the margin formula this gives a certified bracket
+\begin{equation}
+  \delta_{\mathrm{lower}}
+  \;\le\;
+  \delta_{\mathrm{true}}
+  \;\le\;
+  \delta_{\mathrm{upper}}.
+\end{equation}
+On audited states the observed width was of order \(10^{-11}\). That figure is an audit datum, not a property of the schema. The relaxation is structurally approximate and, on those states, numerically decisive.
+
+\subsection{Instance B --- the synchronous rate (Bill)}
+
+Here \(V^\star=C^{\mathrm{syn}}_\infty(P,Q)\), the asymptotic per-symbol entropy required by a synchronous stable-event realization contract for a two-action controlled channel.
+
+The lower bound is Species~1: an information-spectrum / optimal-transport converse. Any synchronous table, evaluated along any admissible history, must dominate a quantile-transport functional of the two actions' surprisal laws; averaging yields a bound of the form
+\begin{equation}
+  C^{\mathrm{syn}}_\infty
+  \;\ge\;
+  \tfrac12\bigl(H(P)+H(Q)+W_1(\mu_P,\mu_Q)\bigr),
+\end{equation}
+valid for every feasible table without exhibiting one.
+
+The upper bound is Species~2: an explicit finite-atom joint law, verified to sum to one, to reproduce the required product marginals under all action pairs, and to have a computable entropy. This is a genuine constructive witness, not a relaxation.
+
+The resulting numerical bracket in the source material mixes both species by construction: converse below, witness above. The gap is posed as an open problem, not smoothed over. The specific numerical endpoints belong to the Bill ledger and are not re-certified here.
+
+\section{The degenerate case: when the bracket closes}
+
+The same period produced one instance where \(L\) and \(U\) were shown to coincide exactly: the causal-tree rate
+\begin{equation}
+  C^{\mathrm{causal}}_\infty(P,Q)
+  \;=\;
+  \max\bigl\{H(P),H(Q)\bigr\}.
+\end{equation}
+The lower bound is immediate Species~1 (any policy that always plays the entropy-maximizing action already forces this rate on the realized trajectory). The upper bound is Species~2 of an asymptotic-family kind: an explicit sequence of finite constructions whose cost converges to the same value as the block length grows.
+
+When a converse and a constructed achieving sequence meet, the bracket does not merely narrow. It stops being a bracket and becomes a theorem. This is the same event, structurally, as a linear program's primal and dual optima coinciding: strong duality is the special case of a bracket of width zero.
+
+Closing a bracket to zero is \emph{not} guaranteed by having a converse and a witness in hand. Both instances in the previous section remain open precisely because no such matching construction has yet been found for them.
+
+\section{What does not transfer}
+
+The shared mechanism must not be mistaken for a shared object. The disanalogy is exact.
+
+Instance~B's bracket certifies one fixed number, attached to one channel, at one asymptotic horizon. There is no second scale at which \(C^{\mathrm{syn}}_\infty\) must be re-established.
+
+Instance~A's bracket certifies one term of a sequence indexed by the renormalization scale \(m\). The open problem is not the value of any single \(\delta_m\)---several individual margins have in fact been bracketed tightly---but whether an admissible lift can be chosen at every \(m\) so that the next scale's bracket is again satisfiable, indefinitely:
+\begin{equation}
+  \Kfrak_m \;\to\; \Kfrak_{2m}
+  \qquad\text{for all }m,
+\end{equation}
+not merely for one \(m\). This is a viability / invariance question superimposed on the bracketing tool. Nothing in the abstract mechanism addresses it.
+
+A bracket can be computed at every scale individually and the sequence of brackets can still fail to propagate. Conversely, propagation would not by itself make individual brackets tighter.
+
+In the vocabulary of the abstract mechanism: both problems use the same method for pricing an unknown extremal quantity. Only one of them additionally requires that quantity to be re-priced, favourably, forever.
+
+\paragraph{Objects that do not enter this note.}
+The WPB shape residual \(\|R_{\mathrm{shape}}\|_F/\|J_{\mathrm{raw}}\|_F\), the fact that \(R_{\mathrm{shape}}\) has codomain in a five-dimensional orthogonal complement but rank at most three, and the later observation that on one MaxEnt section the shape quotient is nearly rank-one and radial, are WPB geometric findings. They are not part of the bracket schema and must not be rewritten as a ``five-dimensional obstruction'' of the present mechanism.
+
+\section{A working checklist}
+
+For an unresolved bracket in either program, or a new one, the following order matches the order in which both instances above were actually built.
+
+\begin{enumerate}
+  \item What are \(\Acal\) and \(f\), precisely? Is the extremal quantity even well-defined as stated?
+  \item Is there a Species-1 converse available cheaply (a relaxation, a duality argument, an information-theoretic inequality) that holds for the whole feasible set at once?
+  \item Is there a Species-2 witness available---one explicit, fully verified feasible object, or an explicit sequence of such objects with a provable limiting cost?
+  \item Report \(L\), \(U\), and \(\Delta=U-L\) together; never \(U\) or \(L\) alone; never a point estimate presented as if it were either.
+  \item Ask separately whether anything about the underlying problem forces this certification to be repeated at a growing family of scales. If so, treat that as a second, independent obligation, not as something the bracket itself discharges.
+\end{enumerate}
+
+\section{On priority}
+
+Nothing in the abstract mechanism is new mathematics. It is weak duality together with the standard achievability / converse pairing used throughout information theory and combinatorial optimization, named here only to make an implicit repetition explicit. The contribution of this note is narrow: an explicit check that two concretely different computations, produced independently, are the same schema with different data, and an equally explicit statement of where that shared schema stops mattering.
+
+\section*{One sentence}
+
+Two problems shared a way of pricing what they did not yet know; they did not, on that account, share what they were trying to price.
+
+\end{document}
