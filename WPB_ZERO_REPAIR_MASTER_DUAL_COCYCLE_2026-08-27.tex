@@ -1,0 +1,1761 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+% ============================================================
+% Notation
+% ============================================================
+
+\newcommand{\Bcal}{\mathcal B}
+\newcommand{\Kcal}{\mathcal K}
+\newcommand{\Xcal}{\mathcal X}
+\newcommand{\Dcal}{\mathcal D}
+\newcommand{\Gcal}{\mathcal G}
+\newcommand{\Ecal}{\mathcal E}
+\newcommand{\Ncal}{\mathcal N}
+\newcommand{\Jcal}{\mathcal J}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Z}{\mathbb Z}
+
+\newcommand{\blk}{\mathrm{blk}}
+\newcommand{\full}{\mathrm{full}}
+\newcommand{\quot}{\mathrm{quot}}
+\newcommand{\st}{\mathrm{st}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\osc}{\operatorname{osc}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\Law}{\operatorname{Law}}
+
+\newcommand{\PROVED}{\textcolor{green!45!black}{\textbf{PROVED}}}
+\newcommand{\NUM}{\textcolor{blue!70!black}{\textbf{NUMERICAL}}}
+\newcommand{\TARGET}{\textcolor{orange!80!black}{\textbf{TARGET}}}
+\newcommand{\OPEN}{\textcolor{red!70!black}{\textbf{OPEN}}}
+\newcommand{\FALSIFIED}{\textcolor{purple!75!black}{\textbf{FALSIFIED WORKING HYPOTHESIS}}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{problem}[theorem]{Problem}
+
+\title{\textbf{Zero-Repair Inventory: Master Proof Ledger II}\\[0.35em]
+\large Dual Prefix Cocycle, Tree-Character Spectrum, and the Near-Identity Falsification Audit}
+\author{}
+\date{27 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For the explicit quartic pair
+\[
+P=\left(\frac18,\frac14,\frac14,\frac14,\frac18\right),
+\qquad
+Q=\left(\frac7{64},\frac5{16},\frac5{32},\frac5{16},\frac7{64}\right),
+\]
+the finite-horizon zero-repair bill satisfies the rigorous lower bound
+\[
+\Bcal_n=\Omega(\log n),
+\]
+while the matching upper bound remains open.
+
+The exact doubling identity
+\[
+\Bcal_{2n}-\Bcal_n
+=
+\Delta_n^{\blk}+\Pi_n
+\]
+splits the upper problem into an endpoint component and a genuinely causal
+prefix-refinement premium.
+The endpoint branch is analytically separate.
+This document records the present state of the prefix attack after three
+successive reductions.
+
+First, on every finite support truncation, the prefix premium is exactly a
+dual value gap and admits an integrated shadow-price representation.
+Second, the local convolution adjoint and the full tree-coupled prefix
+operator have different spectral geometry: unit-circle zeros of \(G_Q\)
+create approximate null vectors for isolated \(Q^*\), but source shifts make
+those same pure characters strongly visible to the tree operator.
+The simple tree-character gap degenerates instead at the identity character,
+which is also the exact additive gauge.
+Third, a direct finite-LP audit of the entire optimal-dual face falsifies the
+simplest near-identity carrier hypotheses:
+neither one fixed Laplace character nor any fixed finite low-order jet space
+is truncation-stable as the sole carrier of \(\Pi_2\).
+
+The surviving prefix frontier is therefore not a fixed-mode spectral bank.
+It is a genuinely scale-growing, gauge-quotiented dual cocycle problem.
+No matching upper bound is claimed here.
+The purpose of this master ledger is to state exactly what is proved, what
+has been numerically falsified, and what remains load-bearing.
+\end{abstract}
+
+\paragraph{Epistemic convention.}
+Every nontrivial statement is classified as \PROVED, \NUM, \TARGET,
+\OPEN, or \FALSIFIED.
+Finite-dimensional LP theorems are not silently promoted to the countable
+state space.
+Numerical cutoff stability is evidence only.
+A failed working hypothesis is recorded as progress rather than repaired by
+renaming the target.
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Executive status}
+% ============================================================
+
+For the quartic pair,
+\[
+\boxed{\Bcal_n=\Omega(\log n)}
+\]
+is rigorous from the earlier quartic zero-repair lower-bound ledger.
+The desired upper bound
+\[
+\boxed{\Bcal_n=O(\log n)}
+\]
+is open, hence
+\[
+\boxed{\Bcal_n=\Theta(\log n)}
+\]
+is not proved.
+
+The exact upper-bound decomposition is
+\[
+\boxed{
+\Bcal_{2n}-\Bcal_n
+=
+\Delta_n^{\blk}+\Pi_n.
+}
+\tag{1}
+\]
+The endpoint term is separate from the prefix problem.
+On dyadic scales,
+\[
+b_k:=\Bcal_{2^k},
+\qquad
+e_k:=\Delta_{2^k}^{\blk},
+\qquad
+p_k:=\Pi_{2^k},
+\]
+so
+\[
+b_{k+1}-b_k=e_k+p_k.
+\]
+Thus it is enough to prove
+\[
+\boxed{
+\sum_{j<K}e_j=O(K),
+\qquad
+\sum_{j<K}p_j=O(K).
+}
+\tag{2}
+\]
+
+\begin{center}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.69\linewidth}c}
+\toprule
+Statement & Status\\
+\midrule
+Exact zero-repair recursion and finite-horizon bill & \PROVED\\
+Monotonicity \(\Kcal_{n+1}\subseteq\Kcal_n\), hence \(\Bcal_n\le\Bcal_{n+1}\) & \PROVED\\
+Mean harmonicity and exact cut/glue identity & \PROVED\\
+Convexity and stochastic upward closure of \(\Kcal_n\) & \PROVED\\
+Block relaxation \(\Bcal^{\blk}_{m|n}\le\Bcal_{m+n}\) & \PROVED\\
+Decomposition \eqref{1} with \(\Pi_n\ge0\) & \PROVED\\
+Endpoint reserve lemma and relative-CDF bound & \PROVED\\
+Quartic endpoint asymptotics including tails & \OPEN\\
+Finite-truncation dual value-gap formula for \(\Pi_{n,M}\) & \PROVED\\
+Homotopy integrated shadow-work identity & \PROVED\\
+Local adjoint ZR recursion and complementary-slackness telescope & \PROVED\\
+Exact character reduction of the tree operator & \PROVED\\
+Boundary root near-nullness for isolated \(Q^*\) & \PROVED\\
+Boundary pure-character visibility for tree-coupled \(\Gcal^*\) & \PROVED\\
+Near-identity quadratic tree-character gap & \PROVED\\
+Second-order isotropy of the logarithmic gap & \PROVED\\
+Single boundary/Laplace character as necessary carrier of \(\Pi_2\) & \FALSIFIED\\
+Fixed finite low-order near-identity jet space as truncation-stable sole bank & \FALSIFIED\\
+Scale-growing gauge-quotiented dual cocycle & \OPEN\\
+Dyadic prefix bound \(\sum_{j<K}\Pi_{2^j}=O(K)\) & \OPEN\\
+Matching upper bound and two-sided logarithmic law & \OPEN\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Exact zero-repair problem}
+% ============================================================
+
+Let
+\[
+\mu_P=\sum_xP(x)\delta_x,
+\qquad
+\mu_Q=\sum_yQ(y)\delta_y.
+\]
+A depth-\(n\) exact zero-repair tree is a family
+\[
+\{B_h\}_{|h|\le n}
+\]
+of probability laws on \(\Z_{\ge0}\), indexed by source histories, satisfying
+at each internal node
+\begin{equation}
+\boxed{
+\mu_Q*B_h
+=
+\sum_xP(x)\,\delta_x*B_{hx}.
+}
+\tag{ZR}
+\end{equation}
+
+The finite-horizon bill is
+\[
+\boxed{
+\Bcal_n
+=
+\inf\left\{
+\E_{B_\varnothing}J:
+\{B_h\}_{|h|\le n}\text{ satisfies \emph{(ZR)}}
+\right\}.
+}
+\tag{3}
+\]
+
+For the quartic pair,
+\[
+G_P(z)-G_Q(z)
+=
+\boxed{\frac{(1-z)^4}{64}},
+\tag{4}
+\]
+and both laws have mean \(2\), variance \(3/2\), and vanishing odd centered
+moments.
+
+\begin{proposition}[Monotonicity]
+\[
+\boxed{
+\Kcal_{n+1}\subseteq\Kcal_n,
+\qquad
+\Bcal_n\le\Bcal_{n+1}.
+}
+\tag{5}
+\]
+\end{proposition}
+
+\begin{proof}
+Truncate any feasible depth-\((n+1)\) tree after depth \(n\).
+\end{proof}
+
+% ============================================================
+\section{Mean harmonicity and exact cut/glue}
+% ============================================================
+
+If
+\[
+m_h:=\E_{B_h}J,
+\]
+then equality of the \(P\)- and \(Q\)-means gives
+\[
+\boxed{
+m_h
+=
+\sum_xP(x)m_{hx}.
+}
+\tag{6}
+\]
+Thus \(m_{H_t}\) is harmonic along the source-history tree.
+
+If a depth-\(2n\) tree is cut after depth \(n\), every leaf law belongs to
+\(\Kcal_n\).
+Conversely, any feasible first block whose depth-\(n\) leaves lie in
+\(\Kcal_n\) can be completed by attaching depth-\(n\) continuations.
+Hence
+\[
+\boxed{
+\Bcal_{2n}
+=
+\inf_{\substack{\text{depth-}n\text{ first block}\\ B_h\in\Kcal_n,\ |h|=n}}
+\E_{P^n}m_H.
+}
+\tag{7}
+\]
+
+This identity is the reason the true inventory account is an
+\(L^1(P^n)\)-average over histories, not a worst-case \(L^\infty\) surcharge.
+
+% ============================================================
+\section{Convexity and stochastic upward closure}
+% ============================================================
+
+Every \(\Kcal_n\) is convex by linearity of \emph{(ZR)}.
+
+Write
+\[
+\widetilde B\succeq_{\st}B
+\]
+for first-order stochastic dominance.
+
+\begin{theorem}[Upward closure]
+If
+\[
+B\in\Kcal_n,
+\qquad
+\widetilde B\succeq_{\st}B,
+\]
+then
+\[
+\boxed{\widetilde B\in\Kcal_n.}
+\tag{8}
+\]
+\end{theorem}
+
+\begin{proof}
+Induct on \(n\).
+Couple \(J\sim B\) and \(\widetilde J\sim\widetilde B\) so that
+\(\widetilde J\ge J\) almost surely.
+Let \(Y\sim Q\) be independent.
+Use the existing feasible kernel from \(Y+J\) to the source symbol \(X\sim P\).
+Then
+\[
+Y+\widetilde J\ge Y+J\ge X.
+\]
+Conditional on \(X=x\), the new residual stochastically dominates the old
+child residual, which is viable to depth \(n-1\).
+The induction hypothesis completes the construction.
+\end{proof}
+
+% ============================================================
+\section{Block relaxation and the exact prefix premium}
+% ============================================================
+
+For \(m,n\ge0\), define \(\Bcal^{\blk}_{m|n}\) as the infimum of the root mean
+over root laws \(B\) and continuation laws \(C_s\in\Kcal_n\) satisfying only
+the block endpoint identity
+\begin{equation}
+\boxed{
+Q^{*m}*B
+=
+\sum_sP^{*m}(s)\,\delta_s*C_s.
+}
+\tag{BLK}
+\end{equation}
+
+Every genuine depth-\((m+n)\) tree yields a block-feasible solution, hence
+\[
+\boxed{
+\Bcal^{\blk}_{m|n}\le\Bcal_{m+n}.
+}
+\tag{9}
+\]
+
+For doubling,
+\[
+\boxed{
+\Delta_n^{\blk}
+=
+\Bcal^{\blk}_{n|n}-\Bcal_n,
+\qquad
+\Pi_n
+=
+\Bcal_{2n}-\Bcal^{\blk}_{n|n}\ge0.
+}
+\tag{10}
+\]
+Then \eqref{1} is an identity.
+
+The interpretation is exact:
+\[
+\boxed{
+\Pi_n
+=
+\text{the price of restoring the internal prefix refinement discarded by
+\emph{(BLK)}}.
+}
+\]
+
+% ============================================================
+\section{Endpoint branch}
+% ============================================================
+
+Define the cheapest independent static reserve
+\[
+s_n
+=
+\inf\left\{
+\E R:
+Q^{*n}*R\succeq_{\st}P^{*n},
+\ R\ge0
+\right\}.
+\]
+Then
+\[
+\boxed{
+\Bcal^{\blk}_{n|n}\le\Bcal_n+s_n.
+}
+\tag{11}
+\]
+
+If the one-step support lies in \([0,D]\), define
+\[
+\eta_n
+=
+\sup_{t:F_{Q^{*n}}(t)>0}
+\frac{
+[F_{Q^{*n}}(t)-F_{P^{*n}}(t)]_+
+}{
+F_{Q^{*n}}(t)
+}.
+\]
+A rare shift
+\[
+R=(Dn+1)Z,
+\qquad
+Z\sim\operatorname{Bernoulli}(\eta_n)
+\]
+gives
+\[
+\boxed{
+s_n\le(Dn+1)\eta_n.
+}
+\tag{12}
+\]
+
+For the quartic pair, central Edgeworth analysis predicts
+\[
+\eta_n\sim\frac{c_{\rm rel}}{n},
+\]
+but the theorem still requires uniform control through central,
+moderate-deviation, and tail regions.
+
+\paragraph{Status.}
+The reserve lemmas are \PROVED.
+The complete endpoint asymptotic theorem is \OPEN.
+This branch is analytically separate from the prefix problem below.
+
+% ============================================================
+\section{Common lifted finite LP and root-redundancy}
+% ============================================================
+
+Fix a support cutoff
+\[
+J\in\{0,\dots,M\}
+\]
+and a first-block length \(n\).
+Use a common lifted depth-\(2n\) variable containing every node law.
+
+The block-relaxed LP contains:
+\begin{enumerate}
+\item normalization at every lifted node;
+\item all continuation ZR equalities at depths \(n,\dots,2n-1\);
+\item the \(n\)-step block identity at the root.
+\end{enumerate}
+
+The full LP additionally restores the omitted prefix ZR equalities at depths
+\[
+1,\dots,n-1.
+\]
+
+For \(n=2\), these are exactly the five depth-one families of ZR equalities.
+The root one-step ZR equality is not an independent sixth family.
+
+\begin{proposition}[Root ZR follows algebraically for \(n=2\)]
+Assume the two-step block identity and all five depth-one ZR identities.
+Since
+\[
+Q(0)=\frac7{64}>0,
+\]
+convolution by \(Q\) is injective on formal power series.
+Therefore the root one-step ZR identity follows.
+\end{proposition}
+
+\begin{proof}
+The depth-one identities and the block identity imply
+\[
+Q*
+\left(
+Q*B_\varnothing
+-
+\sum_xP(x)\delta_x*B_x
+\right)
+=0.
+\]
+Because \(G_Q(0)\neq0\), \(G_Q\) is a unit in the formal power-series ring,
+hence multiplication by \(G_Q\) is injective.
+\end{proof}
+
+\paragraph{Status.}
+\PROVED.
+
+% ============================================================
+\section{Finite-truncation dual value gap}
+% ============================================================
+
+Let
+\[
+\Xcal^{\blk}_{n,M}
+\]
+be the common block-relaxed polytope and
+\[
+G_{n,M}x=0
+\]
+the collection of omitted prefix equalities.
+With root-mean objective \(c\cdot x\),
+\[
+\Bcal^{\blk}_{n|n,M}
+=
+\min_{x\in\Xcal^{\blk}_{n,M}}c\cdot x,
+\]
+and
+\[
+\Bcal_{2n,M}
+=
+\min_{\substack{x\in\Xcal^{\blk}_{n,M}\\G_{n,M}x=0}}c\cdot x.
+\]
+
+Define
+\[
+\Theta_{n,M}(\lambda)
+=
+\inf_{x\in\Xcal^{\blk}_{n,M}}
+\left[
+c\cdot x+\langle\lambda,G_{n,M}x\rangle
+\right].
+\]
+
+\begin{theorem}[Prefix premium as dual value gap]
+\[
+\boxed{
+\Pi_{n,M}
+=
+\sup_\lambda
+\left[
+\Theta_{n,M}(\lambda)-\Theta_{n,M}(0)
+\right].
+}
+\tag{13}
+\]
+\end{theorem}
+
+\begin{proof}
+Ordinary finite-dimensional LP strong duality.
+No Slater hypothesis is needed.
+\end{proof}
+
+\paragraph{Status.}
+\PROVED\ on each finite truncation.
+
+% ============================================================
+\section{Homotopy and integrated shadow work}
+% ============================================================
+
+Let \(x_0\) be block-optimal and define its prefix residual
+\[
+r_0:=G_{n,M}x_0.
+\]
+Consider
+\[
+V(s)
+=
+\min\left\{
+c\cdot x:
+x\in\Xcal^{\blk}_{n,M},
+\quad
+G_{n,M}x=(1-s)r_0
+\right\},
+\qquad
+0\le s\le1.
+\]
+Then
+\[
+V(0)=\Bcal^{\blk}_{n|n,M},
+\qquad
+V(1)=\Bcal_{2n,M}.
+\]
+
+The finite LP value function is convex, piecewise affine, and absolutely
+continuous.
+For almost every \(s\), let \(\lambda_s\) be an optimal equality multiplier
+with Lagrangian sign convention
+\[
+c\cdot x
++
+\langle\lambda_s,Gx-(1-s)r_0\rangle.
+\]
+Since
+\[
+b(s)=(1-s)r_0,
+\qquad
+b'(s)=-r_0,
+\]
+sensitivity gives
+\[
+V'(s)=\langle\lambda_s,r_0\rangle
+\]
+for almost every \(s\).
+Therefore
+\begin{equation}
+\boxed{
+\Pi_{n,M}
+=
+\int_0^1
+\langle\lambda_s,r_0\rangle\,ds.
+}
+\tag{14}
+\end{equation}
+
+\paragraph{Status.}
+\PROVED\ on finite truncations.
+
+Thus the prefix premium is literally integrated shadow-price work, not merely
+an analogy.
+
+% ============================================================
+\section{Local adjoint recursion and complementary-slackness telescope}
+% ============================================================
+
+Let \(\lambda_h\) be the multiplier of the local ZR equality and \(a_h\) the
+normalization multiplier.
+Normalize by source-history probability \(p(h)\):
+\[
+u_h:=\frac{\lambda_h}{p(h)},
+\qquad
+\beta_h:=-\frac{a_h}{p(h)}.
+\]
+
+With
+\[
+(Q^*u)(j)=\sum_yQ(y)u(j+y),
+\qquad
+(S_x^*u)(j)=u(j+x),
+\]
+dual feasibility has the local form
+\[
+\boxed{
+-\beta_h+Q^*u_h-S_x^*u_g\ge0
+}
+\tag{15}
+\]
+for \(h=gx\), up to the global sign convention of equality multipliers.
+
+At an optimal primal--dual pair, complementary slackness turns this into an
+equality on the support of each active node law.
+Defining
+\[
+J_t
+=
+\E_{H_t}
+\left\langle Q^*u_{H_t},B_{H_t}\right\rangle
+\]
+and taking terminal \(u=0\), one obtains an exact telescope of the dual
+objective across levels.
+
+\paragraph{Status.}
+\PROVED\ on finite truncations.
+
+The important structural conclusion is:
+\[
+\boxed{
+\text{local adjoint recursion}
+\Longrightarrow
+\text{exact scale-by-scale telescoping identity}.
+}
+\]
+
+% ============================================================
+\section{Gauge}
+% ============================================================
+
+The Bellman multiplier has an exact additive gauge
+\[
+u\sim u+c.
+\]
+Hence raw multiplier size is not intrinsic.
+
+On a finite coordinate set one may use
+\[
+[u]:=\{u+c:c\in\R\},
+\]
+with for example
+\[
+\boxed{
+\|[u]\|_{\quot,\infty}
+=
+\inf_{c\in\R}\|u-c\|_\infty
+=
+\frac12\osc(u).
+}
+\tag{16}
+\]
+
+Only the constant gauge is exact at this stage.
+Affine or higher polynomial modes may not be removed as ``free'' directions
+without a proof.
+
+% ============================================================
+\section{Exact symbol dictionary}
+% ============================================================
+
+Write
+\[
+q(z):=G_Q(z)=\sum_yQ(y)z^y.
+\]
+If
+\[
+(Eu)_j=u_{j+1},
+\]
+then
+\[
+\boxed{
+Q^*=q(E).
+}
+\tag{17}
+\]
+For the exponential character
+\[
+u^{(\lambda)}_j=\lambda^j,
+\]
+\[
+\boxed{
+Q^*u^{(\lambda)}
+=
+q(\lambda)u^{(\lambda)}.
+}
+\tag{18}
+\]
+
+For the quartic \(Q\), the roots consist of:
+\[
+|\alpha|<1,
+\qquad
+\alpha^{-1}\text{ outside the unit disk},
+\qquad
+\zeta,\bar\zeta\text{ on }|z|=1.
+\]
+
+These regimes have different functional-analytic meanings.
+
+% ============================================================
+\section{Interior and boundary roots}
+% ============================================================
+
+Since \(|\alpha|<1\),
+\[
+(\alpha^j)_{j\ge0}\in\ell^2
+\]
+and
+\[
+Q^*(\alpha^j)=0.
+\]
+Thus the interior root is a genuine \(\ell^2\) null mode.
+
+For the unit-circle root \(\zeta\),
+\[
+q(\zeta)=0,
+\]
+but
+\[
+(\zeta^j)\notin\ell^2.
+\]
+The normalized radial approximants
+\[
+v_r(j)=\sqrt{1-r^2}(r\zeta)^j
+\]
+satisfy
+\[
+\|v_r\|_2=1,
+\qquad
+\|Q^*v_r\|_2
+=
+|q(r\zeta)|
+\longrightarrow0.
+\]
+Hence
+\[
+\boxed{
+\inf_{\|u\|_2=1}\|Q^*u\|_2=0.
+}
+\tag{19}
+\]
+
+This kills any uniform one-step coercivity estimate for isolated \(Q^*\).
+
+% ============================================================
+\section{The full tree-character operator}
+% ============================================================
+
+The actual homogeneous prefix dual relation contains the parent shift.
+On a pure character sector,
+\[
+u_h(j)=a_h\lambda^j,
+\]
+one obtains exactly
+\begin{equation}
+\boxed{
+(\Gcal_\lambda^*a)_{gx}
+=
+q(\lambda)a_{gx}
+-
+\lambda^xa_g.
+}
+\tag{20}
+\end{equation}
+
+Thus the buffer coordinate disappears and the problem becomes a scalar
+incidence operator on the source-history tree.
+
+If the homogeneous edge residual vanishes,
+\[
+q(\lambda)a_{gx}
+=
+\lambda^xa_g,
+\]
+then along a depth-\(k\) history,
+\[
+\boxed{
+a_h
+=
+a_\varnothing
+\frac{\lambda^{S_h}}{q(\lambda)^k}.
+}
+\tag{21}
+\]
+The composition is multiplicative, not additive.
+Therefore a local law such as
+\[
+|q(r_k\zeta)|\asymp k^{-1}
+\]
+cannot be converted into prefix cost by summing \(1/k\).
+
+% ============================================================
+\section{Pure-character tree coercivity}
+% ============================================================
+
+Define
+\[
+\|a\|_{\Ncal_k}^2
+=
+\sum_{t=0}^{k-1}
+\E|a_{H_t}|^2
+\]
+and
+\[
+c_\lambda
+=
+\left(
+\sum_xP(x)|\lambda|^{2x}
+\right)^{1/2}
+=
+\sqrt{G_P(|\lambda|^2)}.
+\]
+The shift part has norm exactly
+\[
+c_\lambda\|a\|_{\Ncal_k},
+\]
+whereas the \(Q^*\) part has norm at most
+\[
+|q(\lambda)|\|a\|_{\Ncal_k}.
+\]
+Hence
+\begin{equation}
+\boxed{
+\|\Gcal_\lambda^*a\|
+\ge
+\left(
+c_\lambda-|q(\lambda)|
+\right)
+\|a\|_{\Ncal_k}.
+}
+\tag{22}
+\end{equation}
+
+At \(\lambda=\zeta\),
+\[
+q(\zeta)=0,
+\qquad
+c_\zeta=\sqrt{G_P(1)}=1,
+\]
+so in fact
+\[
+\boxed{
+\|\Gcal_\zeta^*a\|
+=
+\|a\|_{\Ncal_k}.
+}
+\tag{23}
+\]
+
+Thus the mode annihilated by isolated \(Q^*\) is fully visible to the
+tree-coupled operator.
+
+\paragraph{Status.}
+\PROVED\ on the homogeneous pure-character sector.
+
+% ============================================================
+\section{Identity/gauge degeneration}
+% ============================================================
+
+At
+\[
+\lambda=1
+\]
+we have
+\[
+q(1)=1,
+\qquad
+c_1=1,
+\]
+so the simple character gap in \eqref{22} degenerates exactly.
+This is also the constant gauge direction.
+
+On the real Laplace ray
+\[
+\lambda=e^{-a},
+\qquad
+a\downarrow0,
+\]
+the quartic pair satisfies
+\begin{equation}
+\boxed{
+\sqrt{G_P(e^{-2a})}
+-
+G_Q(e^{-a})
+=
+\frac34a^2
+-\frac32a^3
++\frac{109}{64}a^4
++O(a^5).
+}
+\tag{24}
+\end{equation}
+Meanwhile
+\[
+\boxed{
+G_P(e^{-a})-G_Q(e^{-a})
+=
+\frac{(1-e^{-a})^4}{64}
+=
+\frac1{64}a^4+O(a^5).
+}
+\tag{25}
+\]
+
+Thus the local tree-character gap opens quadratically away from the gauge,
+while the source mismatch is quartic.
+
+% ============================================================
+\section{Isotropic near-identity gap}
+% ============================================================
+
+The quadratic opening is not special to the real axis.
+
+Let
+\[
+\lambda=e^{-a+i\phi},
+\qquad
+w=\log\lambda=-a+i\phi,
+\]
+and define the intrinsic logarithmic ratio
+\[
+\Gamma(\lambda)
+:=
+\log
+\frac{
+\sqrt{G_P(|\lambda|^2)}
+}{
+|G_Q(\lambda)|
+}.
+\]
+
+Since both laws have common mean
+\[
+\mu=2,
+\]
+common variance
+\[
+\sigma^2=\frac32,
+\]
+and zero odd centered cumulants by symmetry, cumulant expansion gives
+\begin{equation}
+\boxed{
+\Gamma(e^{-a+i\phi})
+=
+\frac34(a^2+\phi^2)
+-\frac{41}{64}a^4
+-\frac{21}{32}a^2\phi^2
++\frac7{64}\phi^4
++O(|w|^6).
+}
+\tag{26}
+\end{equation}
+In particular,
+\begin{equation}
+\boxed{
+\Gamma(\lambda)
+=
+\frac34|\log\lambda|^2
++
+O(|\log\lambda|^4).
+}
+\tag{27}
+\end{equation}
+
+\paragraph{Status.}
+\PROVED\ by direct cumulant/Taylor expansion.
+
+The second-order geometry at the identity character is therefore isotropic.
+
+% ============================================================
+\section{The falsification experiment}
+% ============================================================
+
+The spectral map alone is not sufficient.
+The next test must touch the actual optimal-dual face representing
+\(\Pi_2\).
+
+The experiment uses the common lifted \(n=2\) full/block LP.
+For each support cutoff \(M\), compute:
+\[
+\Bcal^{\blk}_{2|2,M},
+\qquad
+\Bcal_{4,M},
+\qquad
+\Pi_{2,M}
+=
+\Bcal_{4,M}-\Bcal^{\blk}_{2|2,M}.
+\]
+
+Then restrict the entire optimal-dual face by imposing zero projection on
+candidate near-identity directions for all five depth-one prefix multiplier
+families simultaneously.
+Reoptimize the dual value.
+The value loss is the only relevant diagnostic; coordinates of one arbitrary
+degenerate dual optimizer are not.
+
+% ============================================================
+\section{Baseline numerical stability}
+% ============================================================
+
+The common-lifted \(n=2\) audit reproduces the stable values
+\[
+\boxed{
+\Bcal^{\blk}_{2|2}
+\approx
+0.265260196240745,
+}
+\tag{28}
+\]
+\[
+\boxed{
+\Bcal_4
+\approx
+0.344825164056711,
+}
+\tag{29}
+\]
+and hence
+\[
+\boxed{
+\Pi_2
+\approx
+0.079564967815966.
+}
+\tag{30}
+\]
+
+These values are stable across the tested support cutoffs.
+
+\paragraph{Status.}
+\NUM.
+
+The numerical agreement is a cross-check of the common-lifted formulation,
+not an asymptotic theorem.
+
+% ============================================================
+\section{Single-character test}
+% ============================================================
+
+Fix a real Laplace character
+\[
+f_a(j)=e^{-aj}
+\]
+and remove its constant component.
+Impose, for every one of the five depth-one prefix multipliers,
+\[
+\langle u_h,f_a^\circ\rangle=0.
+\]
+
+For tested single values including
+\[
+a=\frac12
+\qquad\text{and}\qquad
+a=\frac1{32},
+\]
+the full optimal dual value remains unchanged to numerical precision.
+
+The same phenomenon had already occurred for the fixed boundary-radial mode
+\[
+(r\zeta)^j,
+\qquad
+r=0.99.
+\]
+
+Therefore:
+
+\[
+\boxed{
+\text{no one fixed character is a necessary carrier of the finite }\Pi_2
+\text{ shadow price.}
+}
+\tag{31}
+\]
+
+\paragraph{Status.}
+\NUM.
+
+\paragraph{Working hypothesis.}
+``One distinguished boundary or near-identity character carries the
+prefix premium'' is \FALSIFIED.
+
+% ============================================================
+\section{Near-identity jet limit}
+% ============================================================
+
+Directly taking many very small Laplace parameters becomes badly conditioned:
+the vectors
+\[
+e^{-\epsilon c_r j}
+\]
+become nearly linearly dependent in floating point.
+
+For a fixed finite cutoff, however,
+\[
+e^{-\epsilon c j}
+=
+1
+-\epsilon c\,j
++\frac{\epsilon^2c^2}{2}j^2
+-\cdots.
+\]
+For distinct \(c_r\), the Vandermonde matrix shows that after quotienting the
+constant mode,
+\[
+\operatorname{span}
+\left\{
+e^{-\epsilon c_rj}-\overline{e^{-\epsilon c_rj}}
+\right\}_{r=1}^d
+\]
+converges as \(\epsilon\downarrow0\) to
+\[
+\boxed{
+J_d
+=
+\operatorname{span}
+\left\{
+j-\overline j,\,
+j^2-\overline{j^2},\ldots,
+j^d-\overline{j^d}
+\right\}.
+}
+\tag{32}
+\]
+
+Thus the polynomial jet space is the canonical finite-dimensional
+near-identity limit and is numerically better conditioned than pushing
+\(a\to0\) directly.
+
+% ============================================================
+\section{Jet-removal value-loss table}
+% ============================================================
+
+For every tested cutoff \(M\), impose
+\[
+u_h\perp J_d
+\]
+for all five depth-one prefix multipliers simultaneously, then reoptimize the
+full dual value.
+
+Let
+\[
+L_{M,d}
+=
+\Bcal_{4,M}
+-
+D_{M,d},
+\]
+where \(D_{M,d}\) is the restricted optimal dual value.
+The diagnostic fraction is
+\[
+\frac{L_{M,d}}{\Pi_{2,M}}.
+\]
+
+\begin{center}
+\small
+\begin{tabular}{c|rrrrrrr}
+\toprule
+\(M\) & \(d=1\) & \(d=2\) & \(d=3\) & \(d=4\) & \(d=6\) & \(d=8\) & \(d=10\)\\
+\midrule
+8  & 0\% & 5.07\% & 5.53\% & 71.37\% & 84.07\% & 100\% & 100\%\\
+10 & 0\% & 1.34\% & 4.61\% & 31.09\% & 81.39\% & 100\% & 100\%\\
+12 & 0\% & 3.96\% & 4.33\% & 6.67\% & 67.07\% & 99.09\% & 100\%\\
+16 & 0\% & 0.63\% & 3.31\% & 4.80\% & 67.39\% & 79.91\% & ---\\
+20 & --- & --- & --- & 4.23\% & 40.95\% & 65.31\% & 98.33\%\\
+24 & --- & --- & --- & 3.64\% & --- & 64.21\% & 86.34\%\\
+32 & --- & --- & --- & 1.15\% & --- & 49.18\% & 63.13\%\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Status.}
+\NUM.
+
+The most important feature is not any one percentage.
+It is the cutoff trend.
+
+At \(M=8\),
+\[
+\frac{L_{8,4}}{\Pi_{2,8}}
+\approx71.37\%.
+\]
+At \(M=32\),
+\[
+\frac{L_{32,4}}{\Pi_{2,32}}
+\approx1.15\%.
+\]
+
+Meanwhile the underlying \(\Pi_{2,M}\) remains stable.
+Thus the dramatic low-cutoff quartic-jet signal is not truncation stable.
+
+% ============================================================
+\section{What the experiment falsifies}
+% ============================================================
+
+The following working hypothesis is numerically rejected:
+
+\[
+\boxed{
+\text{``The quartic near-identity jet is the prefix bank.''}
+}
+\tag{33}
+\]
+
+More generally, the data reject the fixed finite-mode version:
+
+\[
+\boxed{
+\text{a fixed low-dimensional near-identity character/jet space is the sole,
+truncation-stable carrier of }\Pi_2.
+}
+\tag{34}
+\]
+
+The evidence is exactly of the type required by the previous truncation
+stability test:
+the candidate signal weakens strongly with increasing \(M\) while the
+quantity it was supposed to explain does not.
+
+\paragraph{Status.}
+The mathematical statement that no fixed finite jet bank can ever work is
+\emph{not} proved.
+What is falsified is the present finite-mode working hypothesis as supported
+by these numerical instances.
+
+% ============================================================
+\section{What survives the experiment}
+% ============================================================
+
+Higher jet dimensions recover increasingly large fractions of the premium.
+For example,
+\[
+M=32:
+\qquad
+d=8\mapsto49.18\%,
+\qquad
+d=10\mapsto63.13\%.
+\]
+At smaller cutoffs, sufficiently large \(d\) can recover nearly all of the
+dual value.
+
+This does \emph{not} prove that the true carrier is a near-identity analytic
+germ.
+It supports only the weaker interpretation:
+
+\[
+\boxed{
+\text{if a character-based dual state is relevant, its effective dimension
+must grow with scale/cutoff.}
+}
+\tag{35}
+\]
+
+That is consistent with a genuinely infinite-dimensional or scale-growing
+dual cocycle, and inconsistent with a fixed finite-mode compression.
+
+\paragraph{Status.}
+Interpretive \TARGET, not theorem.
+
+% ============================================================
+\section{Scale-up attempt}
+% ============================================================
+
+A first direct scale-up to the block \(3|3\) problem was attempted.
+Already at \(n=3\), \(M=8\), the common lifted formulation has approximately
+\[
+175{,}779
+\]
+variables and
+\[
+69{,}927
+\]
+equality rows.
+The solve did not complete within the available run.
+
+Therefore the present experiment establishes cutoff behavior at fixed
+\(n=2\), but not yet scale behavior in \(n\).
+
+\paragraph{Status.}
+\NUM.
+
+This limitation is load-bearing and must not be hidden:
+\[
+\boxed{
+\text{we do not yet have an empirical }n\mapsto2n\text{ cocycle comparison.}
+}
+\tag{36}
+\]
+
+% ============================================================
+\section{Updated dual-cocycle frontier}
+% ============================================================
+
+The previous anonymous witness-bank target can now be sharpened.
+
+A valid surviving dual state must be:
+\begin{enumerate}
+\item gauge invariant;
+\item genuinely prefix sensitive;
+\item stable under support cutoff;
+\item scale growing rather than fixed finite dimensional;
+\item generated by the exact local adjoint recursion, not fitted from optimal
+values;
+\item equipped with an independent window/telescoping law;
+\item quantitatively coercive against the prefix premium in an averaged
+multiscale sense.
+\end{enumerate}
+
+A schematic surviving target is a fresh scale correction
+\[
+[\xi_n]
+=
+[u^{(2n)}]
+-
+\mathscr R_n[u^{(n)}]
+\]
+and a gauge-invariant energy
+\[
+\Ecal_n([\xi_n])
+\]
+satisfying a window law
+\begin{equation}
+\boxed{
+\sum_{j=k}^{k+L-1}
+\Ecal_{2^j}([\xi_{2^j}])
+\le
+CL+\Jcal_k-\Jcal_{k+L}+o(L),
+}
+\tag{37}
+\end{equation}
+together with an averaged no-hiding estimate strong enough to imply
+\begin{equation}
+\boxed{
+\sum_{j<K}\Pi_{2^j}=O(K).
+}
+\tag{38}
+\end{equation}
+
+\paragraph{Status.}
+\OPEN.
+
+No fixed character, fixed finite jet family, or one-step local spectral gap
+is now privileged as the bank.
+
+% ============================================================
+\section{Conditional closure theorem}
+% ============================================================
+
+\begin{theorem}[Conditional upper-bound closure]
+Assume
+\[
+\sum_{j<K}\Delta_{2^j}^{\blk}=O(K)
+\]
+and
+\[
+\sum_{j<K}\Pi_{2^j}=O(K).
+\]
+Then
+\[
+\Bcal_{2^K}=O(K),
+\]
+and by monotonicity
+\[
+\boxed{
+\Bcal_n=O(\log n).
+}
+\]
+Combined with the existing lower bound,
+\[
+\boxed{
+\Bcal_n=\Theta(\log n).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+From the exact dyadic increment identity,
+\[
+\Bcal_{2^{K}}
+=
+\Bcal_1
++
+\sum_{j<K}
+\left(
+\Delta_{2^j}^{\blk}+\Pi_{2^j}
+\right)
+=
+O(K).
+\]
+If \(2^K\le n<2^{K+1}\), monotonicity gives
+\[
+\Bcal_n\le\Bcal_{2^{K+1}}=O(K)=O(\log n).
+\]
+\end{proof}
+
+The theorem is complete.
+Its two hypotheses remain open.
+
+% ============================================================
+\section{What has been genuinely learned}
+% ============================================================
+
+The attack has removed several false simplifications.
+
+\begin{enumerate}
+\item
+The prefix premium is not merely ``some hidden phase cost'':
+on finite truncations it is an exact dual value gap and integrated shadow
+work.
+
+\item
+The spectrum of isolated \(Q^*\) is not the spectrum of the full tree prefix
+operator.
+A boundary mode can be null for \(Q^*\) and fully visible after source shifts.
+
+\item
+The first simple pure-character degeneracy of the full tree operator occurs
+at the identity/gauge character, not at the unit-circle roots.
+
+\item
+The quadratic near-identity gap is isotropic to second order.
+
+\item
+A single near-identity character is not forced by the optimal-dual face.
+
+\item
+A fixed quartic jet can look dominant at a small cutoff and become nearly
+irrelevant as the cutoff grows.
+
+\item
+Therefore the surviving mechanism, if this route is correct, must be
+scale-growing and cannot be certified by a fixed finite character basis.
+\end{enumerate}
+
+These are genuine eliminations of hypotheses, not merely changes of notation.
+
+% ============================================================
+\section{Research protocol from this checkpoint}
+% ============================================================
+
+The next attack should obey the following order.
+
+\begin{enumerate}[label=\textbf{R\arabic*.},leftmargin=2.4em]
+\item
+\textbf{Do not continue local symbol expansion for its own sake.}
+Higher Taylor coefficients are useful only if they enter an actual
+prefix-premium estimate.
+
+\item
+\textbf{Do not resurrect the quartic jet as a bank.}
+Its low-cutoff dominance failed truncation stability.
+
+\item
+\textbf{Construct the cocycle from exact recursion before measuring it.}
+The object must arise from Bellman/adjoint composition, not from a fit to
+\(\Pi_n\).
+
+\item
+\textbf{Use entire optimal-dual faces, not one optimizer.}
+Dual degeneracy makes coordinates of one optimal multiplier non-intrinsic.
+
+\item
+\textbf{Require cutoff stability.}
+Any candidate energy must have constants controlled as \(M\to\infty\).
+
+\item
+\textbf{Require scale evidence.}
+The present \(n=2\) cutoff audit is not enough.
+A compressed or symmetry-reduced route to \(n=3\) or another true scale
+comparison is now more valuable than another fixed-\(n\) basis scan.
+
+\item
+\textbf{Falsify before proving.}
+If a candidate cocycle can be removed from the optimal-dual face without
+loss of value, discard it.
+
+\item
+\textbf{Never replace the target.}
+The actual load-bearing statement remains
+\[
+\sum_{j<K}\Pi_{2^j}=O(K).
+\]
+\end{enumerate}
+
+% ============================================================
+\section{Proof dependency graph}
+% ============================================================
+
+\[
+\boxed{
+\begin{array}{c}
+\text{quartic endpoint asymptotics}
+\\
+\Downarrow
+\\
+\displaystyle
+\sum_{j<K}\Delta_{2^j}^{\blk}=O(K)
+\\[3mm]
++
+\\[-1mm]
+\text{exact prefix duality}
+\\
+\Downarrow
+\\
+\text{local adjoint recursion + telescope}
+\\
+\Downarrow
+\\
+\text{scale-growing gauge-quotiented cocycle}
+\\
+\Downarrow\quad\OPEN
+\\
+\displaystyle
+\sum_{j<K}\Pi_{2^j}=O(K)
+\\[3mm]
+\Downarrow
+\\
+\Bcal_{2^K}=O(K)
+\\
+\Downarrow
+\\
+\Bcal_n=O(\log n)
+\\
++
+\\[-1mm]
+\Bcal_n=\Omega(\log n)
+\\
+\Downarrow
+\\
+\boxed{\Bcal_n=\Theta(\log n).}
+\end{array}
+}
+\]
+
+The present document closes none of the red arrows.
+It makes the remaining prefix arrow substantially sharper.
+
+% ============================================================
+\section{Final ledger}
+% ============================================================
+
+\begin{longtable}{p{0.72\textwidth}p{0.18\textwidth}}
+\toprule
+Statement & Status\\
+\midrule
+\endfirsthead
+\toprule
+Statement & Status\\
+\midrule
+\endhead
+
+Quartic pair has common mean \(2\), variance \(3/2\), and
+\(G_P-G_Q=(1-z)^4/64\)
+& \PROVED\\
+
+Finite-horizon quartic lower bound \(\Bcal_n=\Omega(\log n)\)
+& \PROVED\ in companion ledger\\
+
+Monotonicity of \(\Bcal_n\)
+& \PROVED\\
+
+Exact cut/glue identity
+& \PROVED\\
+
+Convexity and stochastic upward closure
+& \PROVED\\
+
+Block relaxation and exact decomposition
+\(\Bcal_{2n}-\Bcal_n=\Delta_n^{\blk}+\Pi_n\)
+& \PROVED\\
+
+Independent endpoint reserve inequality
+& \PROVED\\
+
+Uniform quartic endpoint tail stitching
+& \OPEN\\
+
+Common lifted \(n=2\) root ZR redundancy from \(Q(0)>0\)
+& \PROVED\\
+
+Finite-LP dual value-gap identity for \(\Pi_{n,M}\)
+& \PROVED\\
+
+Finite-LP homotopy shadow-work identity
+& \PROVED\\
+
+Local adjoint recursion and complementary-slackness telescope
+& \PROVED\\
+
+Exact constant gauge
+& \PROVED\\
+
+Character dictionary \(Q^*=q(E)\)
+& \PROVED\\
+
+Interior root gives genuine \(\ell^2\) null mode
+& \PROVED\\
+
+Unit-circle root gives radial approximate null sequence for isolated \(Q^*\)
+& \PROVED\\
+
+Pure-character full tree operator
+\((\Gcal_\lambda^*a)_{gx}=q(\lambda)a_{gx}-\lambda^xa_g\)
+& \PROVED\\
+
+Boundary character is fully visible to pure tree operator
+& \PROVED\\
+
+Near-identity simple character gap is quadratic
+& \PROVED\\
+
+Second-order near-identity gap is isotropic
+& \PROVED\\
+
+Stable common-lifted value
+\(\Pi_2\approx0.079564967815966\)
+& \NUM\\
+
+One fixed boundary or Laplace character is a necessary carrier of \(\Pi_2\)
+& \FALSIFIED\\
+
+Quartic jet is a truncation-stable prefix bank
+& \FALSIFIED\\
+
+Any fixed finite low-order jet family is established as impossible
+& \OPEN\;(\text{not proved})\\
+
+Scale-growing analytic/dual germ as the correct carrier
+& \TARGET\\
+
+Canonical scale-to-scale dual selection
+& \OPEN\\
+
+Independent cocycle/window law
+& \OPEN\\
+
+Quantitative multiscale no-hiding/coercivity
+& \OPEN\\
+
+True scale comparison in \(n\) beyond the present \(n=2\) cutoff audit
+& \OPEN\\
+
+Dyadic prefix bound
+\(\sum_{j<K}\Pi_{2^j}=O(K)\)
+& \OPEN\\
+
+Matching upper bound
+\(\Bcal_n=O(\log n)\)
+& \OPEN\\
+
+Two-sided law
+\(\Bcal_n=\Theta(\log n)\)
+& \OPEN\\
+
+\bottomrule
+\end{longtable}
+
+% ============================================================
+\section{Bottom line}
+% ============================================================
+
+The prefix attack has reached a useful negative-positive checkpoint.
+
+The negative part is now concrete:
+\[
+\boxed{
+\text{fixed character}
+\;\not\Rightarrow\;
+\text{prefix bank},
+}
+\]
+and
+\[
+\boxed{
+\text{fixed quartic jet}
+\;\not\Rightarrow\;
+\text{truncation-stable prefix bank}.
+}
+\]
+
+The positive part is structural:
+\[
+\boxed{
+\Pi_n
+=
+\text{dual value gap}
+=
+\text{integrated shadow work},
+}
+\]
+with an exact local adjoint recursion and an exact tree-character reduction.
+
+The surviving frontier is therefore:
+
+\[
+\boxed{
+\text{construct or rule out a genuinely scale-growing,
+gauge-quotiented dual cocycle whose window energy controls }
+\sum_{j<K}\Pi_{2^j}.
+}
+\]
+
+Until that statement is proved, or a different direct upper construction is
+found, the quartic zero-repair law
+\[
+\Bcal_n=\Theta(\log n)
+\]
+remains open.
+
+\end{document}
