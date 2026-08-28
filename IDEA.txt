@@ -1,0 +1,827 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{observation}{Observation}
+\newtheorem{problem}{Problem}
+\newtheorem{remark}{Remark}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\DeltaM}{\Delta_M}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\cone}{\operatorname{cone}}
+\newcommand{\epi}{\operatorname{epi}}
+
+\title{\textbf{Generated Complexity, Certificate Complexity,\\
+and Discovery Complexity}\\[0.4em]
+\large Closing the Effective-Face Rank-Collapse Diagnostic}
+\author{}
+\date{August 28, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A previous numerical audit of the quartic DLE Bellman solver found a
+striking discrepancy between the entropy-weighted effective active-face
+count and the linear rank of the corresponding near-active cut normals.
+At the certified roots, the former grows into the thousands, whereas the
+latter rapidly saturates the ambient affine dimension.
+
+We close the first layer of this observation analytically.
+
+First, the soft effective-face count is not an invariant of the
+underlying polyhedral function: duplicating an active affine piece leaves
+the function, its epigraph, its zero set, and its subdifferential
+unchanged, while making the effective-face count arbitrarily large.
+
+Second, for every fixed finite-dimensional root-master LP, an optimality
+certificate exists whose active inequality-normal support has cardinality
+at most the affine dimension of the simplex.  For the present support
+cutoff \(M=8\), this gives a certificate involving at most eight active
+inequality normals, including Bellman cuts and active simplex-boundary
+constraints.
+
+The resulting distinction is therefore not merely between ``many cuts''
+and ``few directions.''  Three different complexity notions must be
+separated:
+\[
+\text{generated complexity},\qquad
+\text{certificate complexity},\qquad
+\text{certificate-discovery complexity}.
+\]
+The first can be very large while the second is dimensionally bounded.
+The remaining question is how difficult it is for an exact Bellman
+separation procedure to discover the sparse certificate.
+\end{abstract}
+
+
+% ============================================================
+\section{Polyhedral Bellman setting}
+% ============================================================
+
+Fix the finite probability simplex
+\[
+\Delta_M
+=
+\left\{
+a\in\R^{M+1}:
+a_j\ge0,\quad
+\mathbf 1^\top a=1
+\right\}.
+\]
+
+At Bellman depth \(r\), let the polyhedral defect be represented as
+\[
+d_r(a)
+=
+\max_{\alpha\in\Acal_r}
+\left\{
+g_{r,\alpha}^{\top}a-h_{r,\alpha}
+\right\}.
+\tag{1}
+\]
+
+Write
+\[
+c_\alpha(a)
+=
+g_{r,\alpha}^{\top}a-h_{r,\alpha},
+\qquad
+\widehat d_r(a)
+=
+\max_\alpha c_\alpha(a),
+\]
+and define the facet gap
+\[
+\Delta_\alpha(a)
+=
+\widehat d_r(a)-c_\alpha(a)
+\ge0.
+\tag{2}
+\]
+
+For a scale \(\tau>0\), the previously proposed soft effective-face
+diagnostic is
+\[
+w_\alpha(a)
+=
+\exp\left(
+-\frac{\Delta_\alpha(a)}{\tau}
+\right),
+\]
+\[
+p_\alpha(a)
+=
+\frac{w_\alpha(a)}
+{\sum_\beta w_\beta(a)},
+\]
+and
+\[
+\boxed{
+N_{\mathrm{eff}}(a)
+=
+\frac{1}{\sum_\alpha p_\alpha(a)^2}.
+}
+\tag{3}
+\]
+
+The intended interpretation was that
+\[
+N_{\mathrm{eff}}\ll|\Acal_r|
+\]
+indicates a locally head-dominated polyhedral geometry.
+
+
+% ============================================================
+\section{\texorpdfstring{$N_{\mathrm{eff}}$}{Neff} is not a geometric invariant}
+% ============================================================
+
+The numerical rank audit suggested that \(N_{\mathrm{eff}}\) responds
+strongly to multiplicity of near-active cuts.  This can be proved
+directly.
+
+\begin{theorem}[Duplication instability of \(N_{\mathrm{eff}}\)]
+Let
+\[
+f(a)
+=
+\max_{\alpha\in\Acal}
+\{\ell_\alpha(a)\}
+\]
+be a polyhedral convex function, where
+\[
+\ell_\alpha(a)
+=
+g_\alpha^\top a-h_\alpha.
+\]
+
+Fix a point \(a_\star\) and suppose that one affine piece
+\(\ell_\star\) is active there:
+\[
+\ell_\star(a_\star)=f(a_\star).
+\]
+
+For \(K\ge1\), construct a new representation by adjoining \(K\)
+additional exact copies of \(\ell_\star\).
+
+Then:
+
+\[
+f_K=f,
+\]
+\[
+\epi f_K=\epi f,
+\]
+\[
+\{a:f_K(a)=0\}
+=
+\{a:f(a)=0\},
+\]
+and
+\[
+\partial f_K(a)=\partial f(a)
+\qquad
+\text{for every }a.
+\]
+
+Nevertheless,
+\[
+N_{\mathrm{eff}}^{(K)}(a_\star)
+\longrightarrow\infty
+\qquad
+\text{as }K\to\infty.
+\]
+\end{theorem}
+
+\begin{proof}
+Adding exact copies of an affine function already present in a maximum
+does not alter the maximum itself.  Hence all geometric objects
+determined by the function remain unchanged.
+
+At \(a_\star\), every duplicate of the active piece has zero facet gap,
+hence weight
+\[
+w=1.
+\]
+
+Let the total weight and squared-weight sum of all original,
+nonduplicated pieces be
+\[
+W=\sum_\alpha w_\alpha,
+\qquad
+S=\sum_\alpha w_\alpha^2.
+\]
+
+After adjoining \(K\) copies,
+\[
+N_{\mathrm{eff}}^{(K)}
+=
+\frac{(W+K)^2}{S+K}.
+\]
+
+Therefore
+\[
+N_{\mathrm{eff}}^{(K)}
+\sim K
+\qquad
+(K\to\infty).
+\]
+
+Thus \(N_{\mathrm{eff}}\) can be made arbitrarily large without changing
+the represented polyhedral function.
+\end{proof}
+
+\begin{remark}
+This establishes a stronger statement than the empirical rank
+observation alone:
+\[
+\boxed{
+N_{\mathrm{eff}}
+\text{ is representation-dependent.}
+}
+\]
+
+It cannot by itself be interpreted as an intrinsic measure of
+polyhedral complexity.
+\end{remark}
+
+
+% ============================================================
+\section{What the rank-collapse experiment actually established}
+% ============================================================
+
+For the quartic DLE experiment with support cutoff
+\[
+M=8,
+\]
+the certified-root measurements included
+
+\[
+\begin{array}{c|c|c}
+r & |\Acal_r| & N_{\mathrm{eff}}(a_r^\star)
+\\
+\hline
+2 & 1295 & 1115.9
+\\
+3 & 2611 & 2073.5
+\end{array}
+\tag{4}
+\]
+
+for \(\tau=10^{-2}\).
+
+At the same points, define
+\[
+S_\varepsilon(a_r^\star)
+=
+\left\{
+\alpha:
+\Delta_\alpha(a_r^\star)<\varepsilon
+\right\}.
+\]
+
+The observed rank table was
+
+\[
+\begin{array}{c|c|c|c}
+r & \varepsilon & |S_\varepsilon| &
+\rank G(S_\varepsilon)
+\\
+\hline
+2 & 10^{-9} & 1    & 1\\
+2 & 10^{-4} & 51   & 8\\
+2 & 10^{-3} & 206  & 8\\
+2 & 10^{-2} & 1063 & 8\\
+\midrule
+3 & 10^{-9} & 7    & 5\\
+3 & 10^{-4} & 98   & 8\\
+3 & 10^{-3} & 351  & 8\\
+3 & 10^{-2} & 1779 & 8
+\end{array}
+\tag{5}
+\]
+
+where the rank is understood modulo the all-ones gauge.
+
+Since
+\[
+\Delta_8
+\subset
+\{a\in\R^9:\mathbf 1^\top a=1\}
+\]
+has affine dimension \(8\), the terminal rank \(8\) is the ambient
+ceiling.
+
+Thus the empirical statement should be formulated as
+
+\[
+\boxed{
+\text{near-active multiplicity grows enormously after the normal space
+has already saturated.}
+}
+\tag{6}
+\]
+
+This does \emph{not} imply that all subsequent inequalities are
+polyhedrally redundant.
+
+It does imply that the soft effective-face count and directional rank
+measure fundamentally different objects.
+
+
+% ============================================================
+\section{Sparse optimality certificates}
+% ============================================================
+
+The root master at level \(r\) has the form
+\[
+\begin{aligned}
+\min_{a\in\R^{M+1}}\quad&
+c^\top a
+\\
+\text{s.t.}\quad&
+g_i^\top a\le h_i,
+\qquad i\in I,
+\\
+&
+a_j\ge0,
+\qquad j=0,\ldots,M,
+\\
+&
+\mathbf 1^\top a=1.
+\end{aligned}
+\tag{7}
+\]
+
+Its feasible set lies in an affine space of dimension \(M\).
+
+The relevant fact is not that the whole feasible polytope has a small
+facet description.  In general it need not.
+
+The relevant fact is that a \emph{single optimum} admits a sparse dual
+certificate.
+
+\begin{theorem}[Dimension-bounded optimality certificate]
+Let \(a^\star\) solve the root-master LP \((7)\).
+
+Then there exists an optimality certificate at \(a^\star\) involving
+at most
+\[
+\boxed{M}
+\]
+active inequality normals in total, where these normals may come from
+
+\[
+g_i^\top a\le h_i
+\]
+or from active simplex-boundary constraints
+\[
+-a_j\le0.
+\]
+
+The equality
+\[
+\mathbf 1^\top a=1
+\]
+is not counted among these \(M\) inequalities.
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+T
+=
+\{v\in\R^{M+1}:\mathbf 1^\top v=0\}
+\]
+be the tangent space of the affine hull of the simplex.  Then
+\[
+\dim T=M.
+\]
+
+The KKT conditions imply that the negative projected objective direction
+belongs to the cone generated by the projected normals of active
+inequality constraints:
+\[
+-\Pi_T c
+\in
+\cone
+\left\{
+\Pi_T n_i:
+i\text{ active at }a^\star
+\right\},
+\tag{8}
+\]
+where the \(n_i\) include both Bellman-cut normals and active simplex
+boundary normals.
+
+By the conic Carath\'eodory theorem in the \(M\)-dimensional vector
+space \(T\), every vector in this cone can be represented as a
+nonnegative combination of at most \(M\) generators.
+
+Hence there exists another KKT representation of the same projected
+objective direction using at most \(M\) active inequality normals.
+Together with the simplex equality, these normals certify optimality of
+\(a^\star\).
+\end{proof}
+
+For the present computation,
+\[
+M=8.
+\]
+
+Therefore
+
+\[
+\boxed{
+\text{every fixed root optimum admits an optimality certificate
+using at most eight active inequality normals.}
+}
+\tag{9}
+\]
+
+This bound concerns \emph{certificate size}, not the number of facets
+needed to describe the entire root viability polytope.
+
+
+% ============================================================
+\section{Three distinct complexity notions}
+% ============================================================
+
+The previous observations suggest separating three quantities.
+
+\paragraph{Generated complexity.}
+Let
+\[
+\boxed{
+C_{\mathrm{gen}}(r)
+=
+|\Acal_r|
+}
+\tag{10}
+\]
+denote the number of cuts generated and stored by the Bellman solver.
+
+\paragraph{Certificate complexity.}
+For a root optimum \(a_r^\star\), let
+\[
+\boxed{
+C_{\mathrm{cert}}(r)
+}
+\tag{11}
+\]
+denote the minimum number of active inequality normals required in an
+optimality certificate.
+
+The preceding theorem gives
+\[
+\boxed{
+C_{\mathrm{cert}}(r)\le M.
+}
+\tag{12}
+\]
+
+Thus at fixed support cutoff,
+\[
+C_{\mathrm{cert}}(r)
+\]
+is dimensionally bounded even if
+\[
+C_{\mathrm{gen}}(r)
+\]
+grows without apparent bound.
+
+\paragraph{Discovery complexity.}
+Let
+\[
+\boxed{
+C_{\mathrm{disc}}(r)
+}
+\tag{13}
+\]
+denote the amount of exact separation work required before an algorithm
+has generated enough information to expose an optimality certificate.
+
+Unlike \(C_{\mathrm{cert}}\), this quantity is not controlled by
+Carath\'eodory's theorem.
+
+The observed computational phenomenon can therefore be summarized as
+
+\[
+\boxed{
+\text{large generated model}
+\quad\longrightarrow\quad
+\text{small final certificate}
+\quad\text{but possibly expensive discovery}.
+}
+\tag{14}
+\]
+
+
+% ============================================================
+\section{Why rank alone cannot prune the pool}
+% ============================================================
+
+A necessary distinction is worth making explicit.
+
+Suppose a family of inequalities in a two-dimensional affine space has
+normal rank two.  It may nevertheless describe a polygon with
+arbitrarily many essential facets.
+
+Hence
+\[
+\boxed{
+\text{linear dependence of normals}
+\not\Longrightarrow
+\text{polyhedral redundancy of inequalities}.
+}
+\tag{15}
+\]
+
+The rank-collapse observation therefore does not justify deleting every
+cut whose normal lies in the span of previously retained normals.
+
+The correct computational object is instead an optimality certificate:
+one asks which cuts are required to certify the particular solution
+currently relevant to the Bellman recursion.
+
+This is a weaker requirement than globally reproducing the entire
+polyhedral function, but it is exactly the requirement faced by the
+root-master optimization.
+
+
+% ============================================================
+\section{Dual-support audit}
+% ============================================================
+
+The preceding theorem gives an existence result.  The natural empirical
+test is to inspect the actual HiGHS dual solution.
+
+For the full root master, let
+\[
+\lambda_i\ge0
+\]
+be the multiplier of Bellman cut \(i\).
+
+Define
+\[
+I_{\mathrm{dual}}
+=
+\{i:\lambda_i>\varepsilon_{\mathrm{dual}}\}.
+\]
+
+Then solve the root master again using only the cuts in
+\(I_{\mathrm{dual}}\), together with the simplex constraints.
+
+If
+\[
+v(I_{\mathrm{dual}})
+=
+v(I)
+\]
+to numerical tolerance, the selected cuts constitute an explicit sparse
+certificate for the current finite cut pool.
+
+The crucial empirical ratios are therefore
+
+\[
+\boxed{
+|\Acal_r|
+\quad\longrightarrow\quad
+|I_{\mathrm{dual}}|
+}
+\tag{16}
+\]
+
+and, after optional exact or greedy certificate reduction,
+
+\[
+\boxed{
+|\Acal_r|
+\quad\longrightarrow\quad
+C_{\mathrm{cert}}^{\mathrm{observed}}(r).
+}
+\tag{17}
+\]
+
+If, for example,
+\[
+2611
+\quad\longrightarrow\quad
+5,
+\]
+then the computational bottleneck is clearly not the dimensional size
+of the final certificate.
+
+It is the process by which that certificate is discovered.
+
+
+% ============================================================
+\section{The Bellman-dual version}
+% ============================================================
+
+The root master is only the outermost optimization.
+
+A stronger test concerns the Fenchel-dual Bellman step itself.
+
+Suppose
+\[
+d_r(b)
+=
+\max_{i\in\Acal_r}
+\{g_i^\top b-h_i\}.
+\]
+
+In the dual Bellman formulation, the conjugate contribution associated
+with child \(x\) is represented using convex multipliers
+\[
+\alpha_i^{(x)}\ge0,
+\qquad
+\sum_i\alpha_i^{(x)}=1.
+\]
+
+Define the dual support
+\[
+S_x
+=
+\left\{
+i:
+\alpha_i^{(x)}>0
+\right\}.
+\]
+
+The relevant statistic is
+
+\[
+\boxed{
+s_r
+=
+\max_x |S_x|.
+}
+\tag{18}
+\]
+
+If
+\[
+s_r\ll|\Acal_r|
+\]
+systematically along the recursion, then sparse-certificate behavior is
+not merely an outer-master artifact.
+
+It is present inside the Bellman operator itself.
+
+This would indicate a recursively sparse dual geometry despite a rapidly
+growing explicit cut representation.
+
+
+% ============================================================
+\section{Reformulated open problem}
+% ============================================================
+
+The original basis-count question should therefore be replaced by a
+discovery question.
+
+\begin{problem}[Certificate-discovery complexity]
+Fix \(M\) and the quartic Bellman recursion.
+
+Although every finite-dimensional root master admits an optimality
+certificate supported on at most \(M\) active inequality normals, how
+many distinct Bellman cuts must an exact lazy-separation algorithm
+generate before such a certificate is exposed?
+
+Determine the growth of
+\[
+C_{\mathrm{disc}}(r)
+\]
+with Bellman depth \(r\).
+
+Is it
+\[
+O(1),
+\qquad
+O(\log r),
+\qquad
+r^\alpha,
+\]
+or comparable to the total generated cut count
+\[
+|\Acal_r|?
+\]
+\end{problem}
+
+A recursive version asks the same question for the support of the
+Fenchel-dual multipliers at every Bellman level.
+
+
+% ============================================================
+\section{Possible implication for the DLE computation}
+% ============================================================
+
+The distinction
+\[
+C_{\mathrm{gen}}
+\neq
+C_{\mathrm{cert}}
+\neq
+C_{\mathrm{disc}}
+\]
+suggests a new direction for the head--tail solver.
+
+The current implementation primarily compresses the \emph{stored}
+constraint set.
+
+A more aggressive architecture would instead attempt to preserve a
+small \emph{certificate model}, for example through
+
+\begin{itemize}
+\item dual-support retention,
+\item aggregate supporting planes,
+\item bundle-style memory,
+\item certificate-aware cut promotion,
+\item or a small active basis followed by exact separation against the
+complete archive.
+\end{itemize}
+
+The archive can remain exact.
+
+Only the model explicitly presented to the LP need be small.
+
+This preserves the logical contract
+
+\[
+\boxed{
+\text{no omitted cut is assumed satisfied;
+all omitted cuts remain available to the separation oracle.}
+}
+\tag{19}
+\]
+
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+The effective-face rank-collapse experiment has two different layers.
+
+The first can now be closed.
+
+\[
+\boxed{
+N_{\mathrm{eff}}
+\text{ is not an intrinsic geometric complexity measure.}
+}
+\]
+
+It can be made arbitrarily large by representational duplication while
+the underlying polyhedral function remains exactly unchanged.
+
+The second layer is more informative.
+
+For a fixed support cutoff \(M\), every root-master optimum has a sparse
+optimality certificate of size at most \(M\), even though the Bellman
+solver may generate thousands of cuts before finding it.
+
+Thus the central computational question is no longer
+
+\[
+\text{``How many cuts exist?''}
+\]
+
+but
+
+\[
+\boxed{
+\text{``How much work is required to discover the few cuts that
+certify the relevant optimum?''}
+}
+\]
+
+For the quartic DLE problem, this separates
+
+\[
+\boxed{
+\text{generated complexity},
+\qquad
+\text{certificate complexity},
+\qquad
+\text{discovery complexity}.
+}
+\]
+
+The first is empirically large.
+
+The second is dimensionally bounded.
+
+The third is the remaining open problem.
+
+\end{document}
