@@ -1,0 +1,268 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{mathrsfs}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{observation}{Observation}
+\newtheorem{problem}{Problem}
+\setcounter{problem}{13}
+\newtheorem{remark}{Remark}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\D}{\mathscr D}
+
+\title{\textbf{Order-Memory Compression of Zero-Repair Trees:\\
+An Adaptive-Readout Fix and a Growing-Gap Warning}}
+\author{}
+\date{August 29, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We report on a family of solvers that approximate the finite-horizon zero-repair
+value $\D_r(B_8)$ by restricting to trees whose node law depends on history only
+through a signature $\sigma_K(h) = (\mathrm{count}(h), \mathrm{suffix}_K(h))$ --
+the branch-count vector together with the last $K$ symbols. This interpolates
+between the fully count-collapsed class ($K=0$, previously shown to be
+substantially lossy) and the exact problem ($K=r-1$). A fixed top-4-of-5 readout
+in the one-shot binary32 field solver used for this class fails
+(\emph{certified infeasible}) from depth 5 onward, independent of $K$. We
+implement and verify an adaptive margin-based readout that resolves this at
+$r=5,K=3$, and we show, by an explicit counterexample, that the heuristic
+solver's own successful output at that setting violates the class-inclusion
+hierarchy $\D_r^{K}(B_8) \ge \D_r^{K+1}(B_8)$ -- a valid, exactified, verified
+tree can still be a materially suboptimal witness within its own class. Direct
+exact optimization within the $K$-restricted class (bypassing the field and
+readout entirely) gives certified values consistent with the hierarchy. The
+resulting data give the main finding of this note: the gap between
+$\D_r^{K}(B_8)$ and the best available reference, at \emph{fixed} $K\in\{1,2\}$,
+does not plateau as $r$ grows from 2 to 5 -- it grows, and the available data are
+consistent with accelerating growth. This is evidence against fixed-memory
+order compression as a route to a tractable exact solver, and reframes the
+target question as one about the growth rate $K(r)$ required to keep the gap
+controlled.
+\end{abstract}
+
+\section{Setting}
+
+Fix the quartic pair $P,Q$ on $\{0,\dots,4\}$, support cutoff $M=8$, and the
+certified three-atom target $B_8$ used throughout this project. For a history
+$h\in\{0,\dots,4\}^{\le r}$, write
+\[
+\sigma_K(h) = \bigl(\mathrm{count}(h),\ \mathrm{suffix}_K(h)\bigr),
+\]
+where $\mathrm{count}(h)\in\mathbb Z_{\ge0}^5$ records how many times each
+symbol occurs in $h$, and $\mathrm{suffix}_K(h)$ records the last $\min(K,|h|)$
+symbols of $h$, in order. A depth-$r$ \emph{$K$-memory tree} is a zero-repair
+tree in which every node's law is required to depend on its history only
+through $\sigma_K$. Let $\D_r^{K}(B_8)$ denote the minimum root mean over such
+trees whose leaves stochastically dominate $B_8$.
+
+\begin{proposition}[Monotone hierarchy]
+For every $r$ and every $0\le K \le K' \le r-1$,
+\[
+\D_r(B_8) = \D_r^{\,r-1}(B_8) \le \D_r^{K'}(B_8) \le \D_r^{K}(B_8).
+\]
+\end{proposition}
+
+\begin{proof}
+Every $K$-memory tree is in particular a $K'$-memory tree for $K'\ge K$ (a
+function that depends on history only through $\sigma_K$ also depends on it
+only through the finer signature $\sigma_{K'}$, simply ignoring the extra
+information). Hence the $K$-memory feasible class is contained in the
+$K'$-memory feasible class, and the minimum over a subset is at least the
+minimum over the larger set. At $K=r-1$, $\sigma_{r-1}(h)$ recovers $h$
+exactly (up to the redundant count information), so the restriction vanishes
+and $\D_r^{\,r-1}(B_8) = \D_r(B_8)$.
+\end{proof}
+
+This hierarchy is not a numerical observation; it is definitional, and it is
+the yardstick against which every solver output below is checked.
+
+\section{A readout failure independent of \texorpdfstring{$K$}{K}}
+
+The one-shot solver architecture used throughout this project -- one
+deterministic binary32 field, one frozen support readout, one exactification
+LP with no add-back -- was previously found to fail (certified infeasible) on
+the unrestricted problem at depth 6. The same failure mode reappears inside
+the $K$-memory class at smaller depths: a fixed top-4-of-5 readout produced a
+certified-infeasible frozen face at $r=5$ for $K=3$, and at other
+$(r,K)$ pairs at comparable depth.
+
+\subsection{Adaptive margin readout}
+
+We implement a second readout policy. For each semantic row (a node together
+with a carry state $j$ and fresh symbol $y$) with all five branch values
+admissible, compare the fourth- and fifth-largest field activations. If the
+margin between them is at or above a threshold $\tau$, the row is compressed
+to its top four values, exactly as before. If the margin is below $\tau$, all
+five values are retained for that row only. This is still a single
+deterministic pass over a frozen field output -- no field feedback, no
+iteration, no second field run -- differing from the original policy only in
+\emph{which} atoms one readout keeps.
+
+\begin{observation}[The fix resolves the specific failure]
+At $r=5$, $K=3$, $\tau=0.001$: 15{,}620 rows are trivial (five or fewer
+admissible branches to begin with), 18{,}777 rows are compressed under the
+margin test, and 748 rows are kept in full because their margin fell below
+threshold. The resulting frozen face is feasible; exactification succeeds and
+independently verifies (freshness, branch-marginal, child-generation, and
+leaf-dominance errors all at machine precision).
+\end{observation}
+
+\section{A verification-discipline failure, caught by the hierarchy itself}
+
+The adaptive-margin fix, run at $r=5$, $K=3$, $\tau=0.001$, returned a
+verified exact tree with root mean
+\[
+0.791644578279324.
+\]
+This passed every check internal to that single run: normalization,
+freshness, branch marginals, child generation, and leaf dominance were all at
+machine precision.
+
+\begin{observation}[Hierarchy violation]
+$K=1$ is a strictly poorer memory class than $K=3$ (Proposition~1), so
+$\D_5^{K=3}(B_8) \le \D_5^{K=1}(B_8)$ must hold. The independently computed
+exact value $\D_5^{K=1}(B_8) = 0.700727081277764$ is smaller than
+$0.791644578279324$. The field-plus-readout output is therefore \emph{not}
+$\D_5^{K=3}(B_8)$: it is a valid but substantially suboptimal point in the
+$K=3$ class.
+\end{observation}
+
+This is the central methodological point of this note. A successful
+exactification with a passing internal verifier certifies that the returned
+object is a genuine feasible tree in its class. It does not certify
+optimality, and nothing internal to the run detects the gap: only a
+cross-check against an independently established bound in the same
+hierarchy exposed it. Every number in Section~4 below was obtained by
+discarding the field and readout entirely and solving the $K$-restricted
+class directly, so that the reported values are optimal within their class,
+not merely feasible.
+
+\section{Direct exact optimization within the \texorpdfstring{$K$}{K}-restricted class}
+
+Bypassing the field and readout, we solve the full linear program over the
+$\sigma_K$-signature DAG directly, with no support restriction beyond the one
+already implied by $K$ itself.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccc}
+\toprule
+$r$ & $K$ & $\D_r^{K}(B_8)$ & solve time \\
+\midrule
+5 & 2 & $0.651329712088707$ & $367.2\,\mathrm{s}$ \\
+5 & 3 & $0.623322004930434$ & $781.3\,\mathrm{s}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Both values are consistent with the hierarchy
+($0.6233 \le 0.6513 \le \D_5^{K=1}(B_8) = 0.7007$). The solve time more than
+doubled from $K=2$ to $K=3$ at fixed $r=5$ ($781.3/367.2 = 2.13$), on top of
+an already large absolute cost; this class is not becoming cheap to solve
+exactly as $K$ grows, even though its state space grows only polynomially in
+$r$ for fixed $K$.
+
+\section{The growing-gap finding}
+
+Define, for the best currently available reference $\widehat\D_r(B_8)$ at
+depth $r$ (the exact value where known, or the tightest verified upper bound
+otherwise) the residual
+\[
+\mathrm{gap}(r,K) := \D_r^{K}(B_8) - \widehat\D_r(B_8) \ge 0.
+\]
+At $r=5$ the only available reference is $\D_5^{K=3}(B_8)$ itself, so the
+reported values are lower bounds on the true gap against $\D_5(B_8)$, which
+is itself unknown and can only be smaller.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ccc}
+\toprule
+$r$ & $\mathrm{gap}(r,1)$ & $\mathrm{gap}(r,2)$ \\
+\midrule
+2 & $0$ & -- \\
+3 & $0.0186431427$ & $0$ \\
+4 & $0.0514670626$ & $0.0147072406$ \\
+5 & $\ge 0.0774050763$ & $\ge 0.0280077072$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{observation}[No plateau]
+At both $K=1$ and $K=2$, $\mathrm{gap}(r,K)$ increases at every step for
+which data exist, and the increase does not shrink: the $K=2$ gap at least
+nearly doubles from $r=4$ to $r=5$ ($\ge 1.90\times$), and the $K=1$ gap grows
+by a factor of at least $1.50\times$ over the same step. Because the $r=5$
+entries are lower bounds, the true growth factors may be larger still.
+\end{observation}
+
+\subsection{What this does and does not show}
+
+Four data points at $K=1$ and three at $K=2$ do not establish an asymptotic
+law. In particular:
+\begin{itemize}
+\item We cannot rule out that $\mathrm{gap}(r,K)$ eventually plateaus for
+$r>5$; the observed growth could be a transient of small $r$.
+\item We cannot rule out a faster-than-geometric (e.g. genuinely unbounded,
+non-decaying-increment) growth either; the data are equally compatible with
+several qualitatively different regimes at this sample size.
+\item The $r=5$ numbers are contaminated by using $\D_5^{K=3}(B_8)$, itself
+only an upper bound, as the reference; every reported $r=5$ gap is a
+\emph{lower} bound on the true gap against $\D_5(B_8)$.
+\end{itemize}
+What the data do support, without needing to resolve the rate, is a direct
+warning against the working hypothesis that motivated this whole line of
+attack: that a small, depth-independent memory $K$ might suffice to
+approximate $\D_r(B_8)$ well for all $r$. At both memory lengths tested, the
+approximation is getting \emph{worse}, not better, exactly over the range
+where it was hoped to stabilize.
+
+\section{Relation to the dyadic doubling-premium question}
+
+This note's object, $\D_r^{K}(B_8)$, holds the target law $B_8$ \emph{fixed}
+and asks how a memory-restricted class approximates the value at growing
+depth $r$. This is a different question from Problem 8 of the latent-fibers
+commentary, which asks about a prefix-compatible \emph{sequence} of targets
+$B_{2^k}$ and a bounded increment $\D_{2^{k+1}}(B_{2^k}) - \E B_{2^k}$ across
+dyadic scales. Growth in $\mathrm{gap}(r,K)$ at fixed $B_8$ says nothing
+directly about whether a cleverly chosen dyadic target sequence admits a
+bounded-memory or bounded-premium construction; the two should not be
+conflated. This note's contribution is confined to the fixed-target
+compressibility question.
+
+\section{An open problem}
+
+\begin{problem}[Required memory growth rate]
+Does there exist a function $K(r) = o(r)$ such that
+$\mathrm{gap}(r, K(r)) \to 0$ as $r\to\infty$? If so, what is the slowest
+such rate -- is $K(r) = O(\log r)$ attainable, or is a stronger rate
+required? Equivalently: is there a genuine exponential compression of the
+history signature that keeps $\D_r^{K(r)}(B_8)$ asymptotically exact, or does
+the growing-gap trend in Section~5 continue in a way that forces $K(r)$ to be
+a non-trivial fraction of $r$?
+\end{problem}
+
+\section{Scope}
+
+This note reports one engineering fix (adaptive margin readout, verified to
+resolve one specific certified infeasibility), one methodological finding
+(a heuristic solver's successful, internally-verified output can still
+violate an external monotonicity constraint of its own problem class, and
+only checking against that constraint exposes it), and one empirical warning
+(the fixed-$K$ approximation gap grows, not shrinks, over the only range
+tested). It does not establish $\D_r(B_8)$ at $r=5$ or beyond, does not
+determine the asymptotic behavior of $\D_r^{K}(B_8)$ for any fixed $K$, and
+does not bear directly on Problem 8 or on $B_n = \Theta(\log n)$. Code
+implementing the adaptive readout and the direct exact $K$-class solver
+accompanies this note.
+
+\end{document}
