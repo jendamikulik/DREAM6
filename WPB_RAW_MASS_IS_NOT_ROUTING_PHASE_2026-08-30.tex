@@ -1,0 +1,592 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\F}{\mathcal F}
+\newcommand{\W}{\mathcal W}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\spread}{\operatorname{spread}}
+\newcommand{\jointfloor}{\operatorname{jointfloor}}
+
+\newcommand{\PROVED}{\textcolor{green!45!black}{\textbf{PROVED}}}
+\newcommand{\NUM}{\textcolor{blue!70!black}{\textbf{NUMERICAL}}}
+\newcommand{\OPEN}{\textcolor{red!70!black}{\textbf{OPEN}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{remark}[proposition]{Remark}
+\newtheorem{definition}[proposition]{Definition}
+
+\title{\textbf{Raw Mass Is Not Routing Phase}\\
+\large A normalization correction for antidiagonal optimal-face tomography}
+
+\author{}
+\date{30 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A recent optimal-face audit of the quartic zero-repair linear program found a
+strictly positive joint antidiagonal spread,
+\[
+\jointfloor^\star
+=
+1.475854331283591\times 10^{-2},
+\]
+together with an essentially exact dual certificate.  The certificate is
+mathematically correct, but it reveals that the tested observable was the
+\emph{raw antidiagonal routing mass}
+\[
+W_h(s,x)
+=
+\sum_{j+y=s} z_h(j,y,x),
+\]
+rather than the normalized conditional routing law
+\[
+G_h(x\mid s)
+=
+\frac{W_h(s,x)}{R_h(s)},
+\qquad
+R_h(s)=\sum_x W_h(s,x).
+\]
+In the reported instance the entire positive joint floor is explained by a
+difference in total antidiagonal mass:
+\[
+\jointfloor^\star
+=
+\frac{1}{3}
+\left|
+R_{(3,0)}(2)-R_{(2,1)}(2)
+\right|
+\]
+up to approximately \(3.5\times10^{-15}\).
+Thus the computation rigorously detects unavoidable history dependence of
+\emph{mass}, but it does not by itself prove unavoidable history dependence of
+the \emph{normalized routing proportions}.  This note isolates the distinction,
+proves the general pigeonhole certificate behind the observed floor, retracts
+the stronger phase interpretation, and formulates the correct next tests.
+\end{abstract}
+
+\paragraph{Epistemic convention.}
+Statements of finite-dimensional linear algebra are labelled \PROVED.
+Reported solver values are labelled \NUM.
+No finite numerical observation is promoted to an infinite-horizon theorem.
+
+% ------------------------------------------------------------------
+\section{Setup}
+% ------------------------------------------------------------------
+
+At an internal history \(h\), let
+\[
+z_h(j,y,x)
+=
+\Pr(J=j,Y=y,X=x)
+\]
+denote the zero-repair coupling variables.  Introduce the antidiagonal
+coordinate
+\[
+s=j+y.
+\]
+For a fixed \(s\) and output symbol \(x\), define the raw routed mass
+\begin{equation}
+\boxed{
+W_h(s,x)
+:=
+\sum_{j+y=s} z_h(j,y,x).
+}
+\tag{1}
+\end{equation}
+Summing over admissible \(x\) gives the total mass incident on the
+antidiagonal:
+\begin{equation}
+\boxed{
+R_h(s)
+:=
+\sum_x W_h(s,x)
+=
+\sum_{j+y=s} A_h(j)Q(y).
+}
+\tag{2}
+\end{equation}
+Whenever \(R_h(s)>0\), the normalized conditional routing law is
+\begin{equation}
+\boxed{
+G_h(x\mid s)
+:=
+\frac{W_h(s,x)}{R_h(s)}.
+}
+\tag{3}
+\end{equation}
+
+Equations \((1)\)--\((3)\) describe two genuinely different notions of
+history dependence:
+
+\[
+\boxed{
+\begin{array}{ll}
+\text{mass dependence:}
+&
+R_h(s)\ \text{depends on }h,
+\\[1mm]
+\text{routing-phase dependence:}
+&
+G_h(\cdot\mid s)\ \text{depends on }h.
+\end{array}
+}
+\tag{4}
+\]
+
+The first may occur even when all histories use exactly the same normalized
+routing proportions.
+
+% ------------------------------------------------------------------
+\section{What the joint-floor LP actually certifies}
+% ------------------------------------------------------------------
+
+Let \(\F^\star\) denote the chosen optimal or near-optimal face.  For a raw
+cell \(q=(s,x)\), define
+\[
+\spread_q(z)
+=
+\max_h W_h(s,x)-\min_h W_h(s,x).
+\]
+The joint-face program computes
+\begin{equation}
+\boxed{
+\jointfloor^\star
+=
+\min_{z\in\F^\star}
+\max_q \spread_q(z).
+}
+\tag{5}
+\end{equation}
+This is a linear program after introducing upper and lower envelope variables
+for each \(q\).
+
+The important point is that \((5)\) is a statement about \(W\), not \(G\).
+A positive value therefore proves that no point of \(\F^\star\) can make all
+\emph{raw} routing masses history-independent.  It does not yet identify why.
+
+The extracted dual certificate resolves that question in the tested instance.
+
+\begin{proposition}[Total-mass pigeonhole bound]
+\label{prop:pigeonhole}
+Fix an antidiagonal \(s\) with \(m\) admissible output symbols
+\(x\in X_s\), and two histories \(h_+\) and \(h_-\).  Then
+\begin{equation}
+\boxed{
+\max_{x\in X_s}
+\left|
+W_{h_+}(s,x)-W_{h_-}(s,x)
+\right|
+\ge
+\frac{
+\left|R_{h_+}(s)-R_{h_-}(s)\right|
+}{m}.
+}
+\tag{6}
+\end{equation}
+Consequently,
+\begin{equation}
+\boxed{
+\max_{x\in X_s}
+\spread_{s,x}(z)
+\ge
+\frac{
+\left|R_{h_+}(s)-R_{h_-}(s)\right|
+}{m}.
+}
+\tag{7}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Write
+\[
+d_x
+=
+W_{h_+}(s,x)-W_{h_-}(s,x).
+\]
+By definition,
+\[
+\sum_{x\in X_s} d_x
+=
+R_{h_+}(s)-R_{h_-}(s).
+\]
+Hence
+\[
+\left|R_{h_+}(s)-R_{h_-}(s)\right|
+=
+\left|\sum_x d_x\right|
+\le
+\sum_x |d_x|
+\le
+m\max_x |d_x|,
+\]
+which proves \((6)\).  Since
+\[
+\spread_{s,x}(z)
+\ge
+\left|
+W_{h_+}(s,x)-W_{h_-}(s,x)
+\right|,
+\]
+equation \((7)\) follows.
+\end{proof}
+
+\paragraph{Status.}
+Proposition~\ref{prop:pigeonhole} is \PROVED.
+
+% ------------------------------------------------------------------
+\section{The observed certificate}
+% ------------------------------------------------------------------
+
+In the depth-\(3\), \(M=8\) audit, the active dual support selected the three
+cells
+\[
+(s,x)\in\{(2,0),(2,1),(2,2)\}
+\]
+with equal weights
+\[
+\boxed{
+\alpha_0=\alpha_1=\alpha_2=\frac13,
+}
+\tag{8}
+\]
+and the history pair
+\[
+\boxed{
+h_+=(3,0),
+\qquad
+h_-=(2,1).
+}
+\tag{9}
+\]
+Since \(x=0,1,2\) are exactly the admissible output symbols on \(s=2\), their
+sum is the full antidiagonal mass:
+\[
+\sum_{x=0}^2 W_h(2,x)=R_h(2).
+\]
+The extracted certificate therefore reduces to
+\begin{equation}
+\boxed{
+\jointfloor^\star
+\ge
+\frac13
+\left|
+R_{(3,0)}(2)-R_{(2,1)}(2)
+\right|.
+}
+\tag{10}
+\end{equation}
+
+The reported numerical values are
+\begin{align}
+\jointfloor^\star
+&=
+0.01475854331283591,
+\tag{11}\\
+\frac13
+\left|
+R_{(3,0)}(2)-R_{(2,1)}(2)
+\right|
+&=
+0.01475854331283239.
+\tag{12}
+\end{align}
+Their difference is approximately
+\[
+\boxed{
+3.5\times10^{-15}.
+}
+\tag{13}
+\]
+The KKT stationarity residual of the extracted dual certificate is of the
+same order.
+
+\paragraph{Status.}
+Equations \((11)\)--\((13)\) are \NUM.  They show, to essentially machine
+precision, that the measured joint floor is saturated by the total-mass
+pigeonhole obstruction.
+
+This is an important \emph{explanation} of the finite LP value, but it changes
+the interpretation of that value.
+
+% ------------------------------------------------------------------
+\section{Correction of the phase interpretation}
+% ------------------------------------------------------------------
+
+The previously tempting interpretation was:
+
+\begin{quote}
+A positive joint floor proves that some history-dependent fresh routing phase
+survives quotienting by optimal-face degeneracy.
+\end{quote}
+
+That statement is too strong for the observable actually tested.
+
+Indeed, suppose for some fixed probability vector \(p_s(x)\) that
+\begin{equation}
+\boxed{
+W_h(s,x)=R_h(s)\,p_s(x)
+\qquad
+\text{for every history }h.
+}
+\tag{14}
+\end{equation}
+Then
+\[
+G_h(x\mid s)=p_s(x)
+\]
+is completely history-independent, while the raw masses \(W_h(s,x)\) still
+vary whenever \(R_h(s)\) varies.
+
+Thus
+\[
+R_{h_+}(s)\neq R_{h_-}(s)
+\]
+can force a strictly positive raw joint floor even in a world with
+\emph{zero normalized routing phase}.
+
+The corrected conclusion is therefore
+\begin{equation}
+\boxed{
+\jointfloor^\star(W)>0
+\quad\Longrightarrow\quad
+\text{unavoidable history dependence of raw antidiagonal mass,}
+}
+\tag{15}
+\end{equation}
+but not
+\begin{equation}
+\boxed{
+\jointfloor^\star(W)>0
+\quad\not\Longrightarrow\quad
+\text{unavoidable history dependence of }G_h(\cdot\mid s).
+}
+\tag{16}
+\end{equation}
+
+\paragraph{Status.}
+The implication distinction \((15)\)--\((16)\) is \PROVED.
+
+% ------------------------------------------------------------------
+\section{Why this does not make the computation useless}
+% ------------------------------------------------------------------
+
+The joint-floor computation remains mathematically valuable for three reasons.
+
+First, it correctly exposed a nontrivial fact about the entire optimal face:
+the raw antidiagonal mass profile cannot be made simultaneously
+history-independent.
+
+Second, the dual extractor did more than reproduce a number.  It identified
+the exact finite-dimensional mechanism behind the floor: a three-channel
+partition of one antidiagonal together with a total-mass imbalance between two
+histories.
+
+Third, the correction cleanly separates two levels of structure that should
+not be conflated:
+\[
+\boxed{
+A_h
+\ \longrightarrow\
+R_h(s)
+\ \longrightarrow\
+W_h(s,x)
+=
+R_h(s)G_h(x\mid s).
+}
+\tag{17}
+\]
+History dependence can enter already at the \(A_h\) or \(R_h\) level.
+A claim of genuinely new routing phase must survive after that amplitude
+dependence has been controlled.
+
+% ------------------------------------------------------------------
+\section{The correct next tests}
+% ------------------------------------------------------------------
+
+\subsection{A linear mass-controlled slice}
+
+For a selected pair of histories \(h_+,h_-\) and antidiagonal \(s\), impose
+the additional linear equality
+\begin{equation}
+\boxed{
+R_{h_+}(s)=R_{h_-}(s).
+}
+\tag{18}
+\end{equation}
+If the resulting face slice is nonempty, then any remaining raw routing
+difference between those two histories cannot be explained by a difference in
+their total antidiagonal mass.
+
+Define
+\begin{equation}
+\Phi^{\mathrm{eqmass}}_{h_+,h_-;s}
+:=
+\min_{\substack{z\in\F^\star\\
+R_{h_+}(s)=R_{h_-}(s)}}
+\max_{x\in X_s}
+\left|
+W_{h_+}(s,x)-W_{h_-}(s,x)
+\right|.
+\tag{19}
+\end{equation}
+After the usual epigraph linearization, \((19)\) is an LP.
+
+If
+\[
+\Phi^{\mathrm{eqmass}}_{h_+,h_-;s}>0,
+\]
+then normalized routing differs between \(h_+\) and \(h_-\) on that
+equal-mass slice, because their denominators are identical.
+
+This is a direct and inexpensive falsification test.
+
+\subsection{Direct normalized routing}
+
+The intrinsic quantity is
+\[
+G_h(x\mid s)=\frac{W_h(s,x)}{R_h(s)}.
+\]
+Single-ratio extrema such as
+\[
+\min_{z\in\F^\star} G_h(x\mid s),
+\qquad
+\max_{z\in\F^\star} G_h(x\mid s)
+\]
+are linear-fractional programs and may be converted to LPs by a
+Charnes--Cooper transformation when \(R_h(s)>0\) is controlled.
+
+The genuinely history-comparative condition
+\[
+G_h(x\mid s)=G_g(x\mid s)
+\]
+is equivalent to
+\[
+W_h(s,x)R_g(s)=W_g(s,x)R_h(s),
+\]
+which is bilinear.  A complete optimal-face test of simultaneous equality of
+normalized routing therefore requires either a dedicated bilinear/global
+optimization formulation or a suitable exact reformulation.
+
+\paragraph{Status.}
+The equal-mass LP \((19)\) is a concrete \PROVED\ reduction.
+A complete normalized-routing face tomography is \OPEN.
+
+% ------------------------------------------------------------------
+\section{Revised interpretation of the ``ghost'' cell}
+% ------------------------------------------------------------------
+
+The same normalization warning applies to the previously reported positive
+floor at
+\[
+(j,y,x)=(6,1,4).
+\]
+A positive raw spread there proves that the corresponding coupling mass cannot
+be made history-independent over the tested face.  It does not, by itself,
+separate a change in total incident mass from a change in normalized routing
+preference.
+
+Accordingly, the phrase ``fresh causal phase is proved to exist'' should not
+be used for that observation unless the effect survives a mass-controlled or
+normalized-routing test.
+
+The safe statement is:
+
+\begin{quote}
+The finite optimal face contains solver-independent history dependence in raw
+coupling mass at the reported cell.  Whether this represents genuinely
+history-dependent normalized routing remains unresolved.
+\end{quote}
+
+% ------------------------------------------------------------------
+\section{Implication for the upper-bound program}
+% ------------------------------------------------------------------
+
+This correction does not settle the logarithmic upper bound in either
+direction.
+
+A history-dependent \(R_h(s)\) may be entirely compatible with a bounded or
+logarithmic total bill.  Conversely, even a small normalized-routing phase
+could in principle carry a large transport cost.  The upper-bound question
+therefore cannot be decided from raw joint floors alone.
+
+The useful consequence is methodological:
+
+\begin{equation}
+\boxed{
+\text{Any future antidiagonal ``phase'' observable must quotient or control
+the total-mass coordinate }R_h(s).
+}
+\tag{20}
+\end{equation}
+
+Only the residual structure after this normalization is a candidate for a
+genuinely new causal routing obstruction.
+
+% ------------------------------------------------------------------
+\section{Research protocol}
+% ------------------------------------------------------------------
+
+For future finite-depth audits we propose the following order.
+
+\begin{enumerate}[leftmargin=2em]
+\item Compute the raw optimal-face observable \(W_h(s,x)\).
+\item Compute and report \(R_h(s)=\sum_xW_h(s,x)\) on the same face.
+\item Before interpreting a positive raw spread as routing phase, test the
+      equal-mass slice \((18)\).
+\item Where feasible, compute direct linear-fractional bounds on
+      \(G_h(x\mid s)\).
+\item Promote a ``fresh phase'' claim only if history dependence survives
+      normalization by \(R_h(s)\).
+\item Keep the raw-mass and normalized-routing ledgers separate.
+\end{enumerate}
+
+This protocol prevents amplitude variation from being misidentified as phase
+variation.
+
+% ------------------------------------------------------------------
+\section{Bottom line}
+% ------------------------------------------------------------------
+
+The joint-floor dual certificate is not wrong.  It is, in fact, sufficiently
+clean to diagnose the earlier overinterpretation.
+
+What was proved numerically on the finite face is
+\[
+\boxed{
+\text{unavoidable history dependence of raw antidiagonal mass.}
+}
+\]
+What remains to be proved is
+\[
+\boxed{
+\text{unavoidable history dependence of normalized antidiagonal routing.}
+}
+\]
+
+The distinction is exactly
+\[
+\boxed{
+W_h(s,x)
+=
+R_h(s)\,G_h(x\mid s).
+}
+\]
+
+The next experiment should therefore not ask whether \(W\) differs across
+histories.  It should ask whether any difference survives after the
+\(R\)-coordinate has been removed.
+
+\end{document}
