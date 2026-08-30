@@ -1,0 +1,147 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{mathrsfs}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{observation}{Observation}
+\newtheorem{problem}{Problem}
+\setcounter{problem}{15}
+\newtheorem{remark}{Remark}
+\newtheorem{erratumthm}{Erratum}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\D}{\mathscr D}
+
+\title{\textbf{Erratum: ``Bulk is Gauge'' Was a Quantifier Error}\\
+\large The Joint Bulk Floor is Nonzero, and Larger Than the Ghost Mode}
+\author{}
+\date{August 29, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Observation~1 of the preceding note (``Bulk is gauge'') claimed that every
+tested bulk antidiagonal cell has minimal achievable spread exactly zero,
+and concluded that bulk routing carries no forced history-dependence. This
+conflated two different statements: that every cell \emph{individually}
+admits a face point with zero spread, versus that \emph{one} face point
+gives every cell zero spread simultaneously. The first is what was tested;
+the second is what the conclusion needed. Running the correct joint test --
+minimizing the worst-case spread across all bulk cells under a single
+shared point of the near-optimal face -- gives a floor of
+$1.475854\times10^{-2}$ at depth 3, an order of magnitude \emph{larger}
+than the previously reported ghost-cell floor of $1.557\times10^{-3}$.
+Bulk routing is not gauge. Six of the seven tested cells sit at exactly the
+same spread value at the joint optimum, indicating a shared coupling
+constraint rather than seven independent phenomena.
+\end{abstract}
+
+\section{The error}
+
+Observation~1 of the prior note stated: ``At depth 4, for every tested
+$(s,x)$... $\mathrm{spread}^\star(s,x)=0$... Every bulk routing pattern
+previously observed to vary across histories was solver gauge, not forced
+structure.'' The computation behind the first sentence is correct: each
+cell, tested in isolation, does admit a face point with zero spread. The
+second sentence does not follow from it. Symbolically, what was shown is
+\[
+(\forall (s,x))\,(\exists z_{(s,x)}\in F^\star)\ \ \mathrm{spread}(s,x;z_{(s,x)})=0,
+\]
+where $F^\star$ is the near-optimal face and $z_{(s,x)}$ may depend on
+$(s,x)$. What ``bulk is gauge'' requires is the quantifier-reversed
+statement
+\[
+(\exists z\in F^\star)\,(\forall (s,x))\ \ \mathrm{spread}(s,x;z)=0,
+\]
+a single $z$ working for every cell at once. These are not equivalent, and
+only the second licenses the conclusion that was drawn.
+
+\section{The corrected test}
+
+\begin{proposition}[Joint face-spread LP]
+For observables $q=1,\dots,m$ (here, the tested bulk cells), the quantity
+\[
+\mathrm{jointfloor}^\star := \min_{z\in F^\star}\ \max_{q}\Bigl(\max_h L_{q,h}(z) - \min_h L_{q,h}(z)\Bigr)
+\]
+is computable by one linear program: introduce $(U_q,L_q)$ per observable
+and a shared $t$ with $U_q-L_q\le t$ for every $q$, and minimize $t$ subject
+to the same face constraint $|c^\top z-v^\star|\le\tau$ used throughout.
+$\mathrm{jointfloor}^\star=0$ correctly certifies that bulk is gauge;
+$\mathrm{jointfloor}^\star>0$ certifies that it is not, regardless of what
+the per-cell minima were.
+\end{proposition}
+
+\section{Corrected result}
+
+\begin{observation}[Retraction]
+At depth 3, $M=8$, testing the seven cells $s\in\{2,3\}$ (all admissible
+$x$), every individual cell has $\mathrm{spread}^\star(s,x)=0$, reproducing
+the earlier (correct, but insufficient) per-cell computation. The joint
+floor is
+\[
+\mathrm{jointfloor}^\star = 1.475854\times10^{-2},
+\]
+five orders of magnitude above the numerical tolerance. \textbf{Observation
+1 of the prior note is retracted}: bulk routing is not gauge. No single
+point of the near-optimal face removes history-dependence from every bulk
+cell at once.
+\end{observation}
+
+\begin{observation}[A shared bottleneck, not seven independent facts]
+At the joint optimizer, six of the seven cells --
+$(s,x)\in\{(2,0),(2,1),(2,2),(3,1),(3,2),(3,3)\}$ -- have spread exactly
+equal to the joint floor, $1.475854\times10^{-2}$; the seventh, $(3,0)$, has
+a strictly smaller spread, $4.983532\times10^{-3}$, at that same point.
+Six unrelated cells landing on the identical numerical value at the
+optimizer is not expected of seven independent obstructions; it is the
+signature of one shared coupling constraint (most plausibly a conservation
+or flow-consistency relation linking these cells' routing) that the
+optimizer cannot relax without paying elsewhere. Identifying that
+constraint explicitly is more promising than treating the seven cells as
+separate data points.
+\end{observation}
+
+\begin{remark}[Larger than the mode we were chasing]
+The corrected bulk floor, $1.48\times10^{-2}$, is roughly ten times the
+ghost-cell floor, $1.557\times10^{-3}$, reported as the main finding of the
+prior note. The ghost cell was not wrong -- it remains independently
+confirmed at two depths and two tolerances -- but it is evidently not the
+dominant source of forced structure. The bulk coupling is.
+\end{remark}
+
+\section{What remains to be done}
+
+The depth-4 joint bulk floor did not complete within the time budget
+available at the time of writing (the corresponding single-cell tests at
+depth 4 already ran to several hundred seconds each; the joint LP couples
+all cells into one larger program). Obtaining it, and comparing to the
+depth-3 value here, is the immediate next step: if the joint floor is
+roughly stable across depth (as the ghost cell's floor was, Section~4 of
+the prior note), that is further evidence for a marginal, scale-stable
+mode; if it grows with depth, that is evidence for a relevant, dangerous
+one, in the renormalization language used elsewhere in this project.
+
+\begin{problem}[Identify and track the joint coupling]
+Determine the linear relation among $z$ responsible for pinning six of the
+seven tested cells to a common spread value, and track
+$\mathrm{jointfloor}^\star$ across depth (at minimum depth 4, ideally depth
+5) to determine whether this mode is bounded, shrinking, or growing with
+scale.
+\end{problem}
+
+\section{Scope}
+
+This note corrects a specific, identified overreach in a previously
+circulated result and reports the outcome of the correct test in its
+place. It does not yet supply the depth-4 joint floor, does not identify
+the specific coupling constraint responsible for the six-way tie, and does
+not change the status of the ghost-cell finding, which stands independently
+of this correction.
+
+\end{document}
