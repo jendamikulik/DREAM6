@@ -1,0 +1,602 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\F}{\mathcal F}
+\newcommand{\opt}{v^\star}
+\newcommand{\Wp}{W_{(3,4)}(1,0)}
+\newcommand{\Wm}{W_{(2,1)}(1,0)}
+\newcommand{\Rp}{R_{(3,4)}(1)}
+\newcommand{\Rm}{R_{(2,1)}(1)}
+\newcommand{\Gp}{G_{(3,4)}(0\mid1)}
+\newcommand{\Gm}{G_{(2,1)}(0\mid1)}
+
+\title{\textbf{A Rational Separator for Forced Normalized Routing}\\
+\large A finite optimal-face certificate in quartic zero-repair}
+\author{}
+\date{30 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We exhibit a finite-dimensional certificate showing that normalized
+anti-diagonal routing is necessarily history-dependent in a quartic
+zero-repair linear program at depth \(r=3\) and cutoff \(M=8\).
+The obstruction is separated by the rational threshold \(1/3\):
+every optimizer satisfies
+\[
+G_{(3,4)}(0\mid1)>\frac13>G_{(2,1)}(0\mid1).
+\]
+The claim is supported by two independent LP formulations.
+First, direct minimization on the numerical optimal face gives strictly
+positive margins
+\[
+\min(3\Wp-\Rp)
+=
+3.190779088825230\times10^{-3},
+\]
+and
+\[
+\min(\Rm-3\Wm)
+=
+5.063855122542593\times10^{-3}.
+\]
+Second, without imposing the floating-point optimal-face equality,
+forcing either threshold crossing increases the original objective by at least
+\[
+1.775860314067179\times10^{-4}
+\]
+and
+\[
+1.680289289208603\times10^{-3},
+\]
+respectively.
+Two independent HiGHS algorithms agree to numerical precision, with KKT
+stationarity residuals of order \(10^{-13}\) or smaller.
+The result isolates a normalized routing obstruction that cannot be explained
+by total anti-diagonal mass variation, solver-dependent vertex selection, or
+raw-mass spread.
+It is a finite numerical LP certificate only; no scale-uniform or
+\(O(\log n)\) conclusion is claimed.
+\end{abstract}
+
+\section{Normalization before interpretation}
+
+Let
+\[
+z_h(j,y,x)
+\]
+denote the coupling mass at history \(h\), state \(j\), noise symbol \(y\),
+and output \(x\).  Introduce the anti-diagonal coordinate
+\[
+s=j+y.
+\]
+For fixed \(h,s,x\), define the raw routed mass
+\[
+W_h(s,x)
+=
+\sum_{j+y=s} z_h(j,y,x),
+\]
+and the total mass incident on anti-diagonal \(s\),
+\[
+R_h(s)
+=
+\sum_x W_h(s,x).
+\]
+Whenever \(R_h(s)>0\), define the normalized routing law
+\[
+G_h(x\mid s)
+=
+\frac{W_h(s,x)}{R_h(s)}.
+\]
+
+The factorization
+\[
+\boxed{
+W_h(s,x)=R_h(s)\,G_h(x\mid s)
+}
+\]
+separates amplitude from routing shape.
+
+This distinction is essential.  A history-dependent raw mass
+\(W_h(s,x)\) does not by itself imply history-dependent routing:
+the same normalized profile \(G_h(\cdot\mid s)\) can be shared by all
+histories while only \(R_h(s)\) varies.
+
+Accordingly, the present note concerns a separator in \(G\), not merely in
+\(W\).
+
+\section{Finite zero-repair problem}
+
+Let
+\[
+\F
+=
+\{z:Az=b,\ Cz\le d,\ z\ge0\}
+\]
+be the finite zero-repair feasible polytope, and let
+\[
+\opt
+=
+\min_{z\in\F} c^\top z.
+\]
+
+For the instance
+\[
+r=3,\qquad M=8,
+\]
+the numerically computed optimum is
+\[
+\boxed{
+\opt
+=
+0.601704229318791.
+}
+\]
+
+The automatic separator scan selects the histories
+\[
+h_+=(3,4),
+\qquad
+h_-=(2,1),
+\]
+on the first nontrivial anti-diagonal
+\[
+s=1
+\]
+and channel
+\[
+x=0.
+\]
+
+The corresponding incident masses remain strictly positive on the numerical
+optimal face:
+\[
+\Rp \ge 0.2024541420278345,
+\]
+\[
+\Rm \ge 0.1983268249221807.
+\]
+
+Thus the normalized quantities \(\Gp\) and \(\Gm\) are well defined at every
+numerically certified optimizer.
+
+\section{Discovery of the rational separator}
+
+A conservative ratio audit gives
+\[
+\Gp
+\ge
+0.3385868342938674,
+\]
+while
+\[
+\Gm
+\le
+0.3248223731636069.
+\]
+The gap
+\[
+0.3385868342938674
+-
+0.3248223731636069
+=
+1.37644611302605\times10^{-2}
+\]
+contains the simple rational number
+\[
+\boxed{\frac13}.
+\]
+
+This suggests replacing the two ratios by the linear functionals
+\[
+S_+(z)
+=
+3\Wp-\Rp,
+\]
+and
+\[
+S_-(z)
+=
+\Rm-3\Wm.
+\]
+
+Since \(\Rp,\Rm>0\),
+\[
+S_+(z)>0
+\iff
+\Gp>\frac13,
+\]
+and
+\[
+S_-(z)>0
+\iff
+\Gm<\frac13.
+\]
+
+Hence the normalized obstruction can be certified entirely by linear
+optimization.
+
+\section{Certificate I: positive margins on the optimal face}
+
+Let
+\[
+\F^\star_{\mathrm{num}}
+=
+\{z\in\F:c^\top z=\opt\}
+\]
+denote the numerical optimal face.
+
+Direct minimization gives
+\[
+\boxed{
+\min_{z\in\F^\star_{\mathrm{num}}}
+S_+(z)
+=
+3.190779088825230\times10^{-3},
+}
+\]
+and
+\[
+\boxed{
+\min_{z\in\F^\star_{\mathrm{num}}}
+S_-(z)
+=
+5.063855122542593\times10^{-3}.
+}
+\]
+
+The two independent LP algorithms agree to essentially machine precision:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+ & HiGHS-DS & HiGHS-IPM\\
+\midrule
+\(\min S_+\)
+&
+\(3.190779088825230\times10^{-3}\)
+&
+\(3.190779088854429\times10^{-3}\)
+\\[1mm]
+\(\min S_-\)
+&
+\(5.063855122542593\times10^{-3}\)
+&
+\(5.063855122545979\times10^{-3}\)
+\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The reported KKT stationarity residuals are between approximately
+\(10^{-14}\) and \(3\times10^{-13}\), and the corresponding duality gaps are
+of order \(10^{-14}\).
+
+Thus, on the numerical optimal face,
+\[
+\Gp>\frac13,
+\qquad
+\Gm<\frac13.
+\]
+
+\section{Certificate II: objective penalty for threshold crossing}
+
+The direct face calculation uses the floating-point equality
+\(c^\top z=\opt\).  A second formulation avoids that dependence.
+
+Define
+\[
+v_{\mathrm{cross},+}
+=
+\min\{c^\top z:z\in\F,\ S_+(z)\le0\},
+\]
+and
+\[
+v_{\mathrm{cross},-}
+=
+\min\{c^\top z:z\in\F,\ S_-(z)\le0\}.
+\]
+
+Numerically,
+\[
+v_{\mathrm{cross},+}
+=
+0.6018818153501977,
+\]
+and
+\[
+v_{\mathrm{cross},-}
+=
+0.6033845186079996.
+\]
+
+Therefore
+\[
+\boxed{
+\delta_+
+:=
+v_{\mathrm{cross},+}-\opt
+=
+1.775860314067179\times10^{-4}>0,
+}
+\]
+and
+\[
+\boxed{
+\delta_-
+:=
+v_{\mathrm{cross},-}-\opt
+=
+1.680289289208603\times10^{-3}>0.
+}
+\]
+
+Both crossing optima lie on the separator hyperplane to numerical precision:
+\[
+S_+(z_{\mathrm{cross},+})=0,
+\qquad
+S_-(z_{\mathrm{cross},-})=0.
+\]
+
+The corresponding separator constraints carry nonzero dual shadow prices,
+approximately
+\[
+-0.05918633085115
+\]
+and
+\[
+-0.33244321823965.
+\]
+
+\begin{proposition}[Finite separator implication]
+Assume
+\[
+v_{\mathrm{cross},+}>\opt,
+\qquad
+v_{\mathrm{cross},-}>\opt.
+\]
+Then every optimizer \(z^\star\in\F\) satisfies
+\[
+S_+(z^\star)>0,
+\qquad
+S_-(z^\star)>0.
+\]
+Consequently,
+\[
+\Gp>\frac13>\Gm.
+\]
+\end{proposition}
+
+\begin{proof}
+Suppose an optimizer \(z^\star\) satisfied \(S_+(z^\star)\le0\).
+Then \(z^\star\) would be feasible for the first crossing problem, giving
+\[
+v_{\mathrm{cross},+}
+\le
+c^\top z^\star
+=
+\opt,
+\]
+contradicting \(v_{\mathrm{cross},+}>\opt\).
+
+The second inequality is identical.
+
+Since \(\Rp,\Rm>0\), the two strict linear inequalities are equivalent to the
+two strict normalized-routing inequalities.
+\end{proof}
+
+The proposition is an exact finite-dimensional implication.
+The numerical content lies only in the computed LP values.
+
+\section{Main finite-depth conclusion}
+
+Combining the two certificates gives the finite numerical statement
+\[
+\boxed{
+G_{(3,4)}(0\mid1)
+>
+\frac13
+>
+G_{(2,1)}(0\mid1)
+}
+\]
+for every optimizer of the tested \(r=3\), \(M=8\) LP.
+
+Hence no history-independent normalized routing law can exist on the
+anti-diagonal \(s=1\).
+
+Indeed, if a common profile \(g_1(\cdot)\) existed, then its first channel
+would have to satisfy simultaneously
+\[
+g_1(0)>\frac13
+\]
+and
+\[
+g_1(0)<\frac13,
+\]
+which is impossible.
+
+Thus, for the tested finite problem,
+\[
+\boxed{
+F^{\mathrm{pf}}_1=\varnothing.
+}
+\]
+
+This is qualitatively stronger than a raw history-dependent mass spread.
+The obstruction remains after quotienting out the total anti-diagonal
+amplitude \(R_h(1)\).
+
+\section{What has been eliminated}
+
+The separator is not an artifact of any of the following:
+
+\begin{itemize}
+\item \textbf{Choice of LP vertex.}
+      The inequalities hold over the entire numerical optimal face.
+\item \textbf{Raw-mass amplitude.}
+      The claim is expressed in the normalized ratio \(G=W/R\).
+\item \textbf{Solver-specific routing identity.}
+      Two independent HiGHS algorithms agree numerically.
+\item \textbf{Single-vertex pattern recognition.}
+      The obstruction is expressed by two explicit linear half-spaces.
+\item \textbf{Floating optimal-face equality alone.}
+      The crossing-penalty formulation reproduces the obstruction without
+      imposing \(c^\top z=\opt\).
+\end{itemize}
+
+What remains is therefore a normalized routing-shape obstruction.
+
+\section{What is still open}
+
+The separator establishes existence of normalized fresh phase at one finite
+depth.  It does \emph{not} determine its asymptotic cost.
+
+In particular, the present calculation does not prove or disprove
+\[
+\mathcal B_n=O(\log n).
+\]
+
+It also does not establish that the same pair of histories or the same
+threshold \(1/3\) persists with depth.
+
+The next load-bearing quantities are naturally
+\[
+m_+(r)
+=
+\min S_+,
+\qquad
+m_-(r)
+=
+\min S_-,
+\]
+and
+\[
+\delta_+(r)
+=
+v_{\mathrm{cross},+}(r)-v^\star(r),
+\qquad
+\delta_-(r)
+=
+v_{\mathrm{cross},-}(r)-v^\star(r).
+\]
+
+The central asymptotic question becomes:
+
+\[
+\boxed{
+\text{How much objective cost is forced by normalized routing separation,
+and how does that cost evolve with depth?}
+}
+\]
+
+A useful scale study should therefore track:
+\[
+m_+(r),\quad
+m_-(r),\quad
+\delta_+(r),\quad
+\delta_-(r),
+\]
+together with
+\[
+\text{separator dual multipliers}
+\]
+and
+\[
+\text{the identities of the load-bearing histories.}
+\]
+
+If these quantities stabilize under an appropriate scale map, the separator
+may become the finite seed of a scale-uniform causal obstruction.
+If they decay, move, or cancel, the finite phase may remain asymptotically
+cheap.
+
+\section{Reproducibility ledger}
+
+For the reported run:
+\[
+r=3,\qquad M=8,
+\]
+\[
+\opt=0.601704229318791.
+\]
+
+The two direct face margins are
+\[
+m_+
+=
+3.190779088825230\times10^{-3},
+\]
+\[
+m_-
+=
+5.063855122542593\times10^{-3}.
+\]
+
+The two crossing penalties are
+\[
+\delta_+
+=
+1.775860314067179\times10^{-4},
+\]
+\[
+\delta_-
+=
+1.680289289208603\times10^{-3}.
+\]
+
+The corresponding separator dual marginals are approximately
+\[
+-0.059186330851152,
+\qquad
+-0.332443218239647.
+\]
+
+The base optimum computed by HiGHS-DS and HiGHS-IPM differs by approximately
+\[
+6.7\times10^{-16}.
+\]
+
+All four load-bearing LPs pass the implemented primal/dual KKT audit.
+
+\section{Conclusion}
+
+The finite \(r=3\), \(M=8\) quartic zero-repair LP contains a
+solver-independent, amplitude-quotiented normalized routing obstruction.
+
+Its minimal observed form is the rational separator
+\[
+\boxed{
+G_{(3,4)}(0\mid1)
+>
+\frac13
+>
+G_{(2,1)}(0\mid1).
+}
+\]
+
+The statement is supported in two complementary ways:
+strict positive margins on the numerical optimal face and strict positive
+objective penalties required to cross either separator half-space.
+
+This reduces the earlier qualitative search for ``fresh phase'' to a pair of
+explicit linear inequalities.
+
+The remaining problem is no longer whether normalized phase exists at this
+finite depth, but whether its forced cost is scale-stable, summable, or
+growing.
+
+\end{document}
