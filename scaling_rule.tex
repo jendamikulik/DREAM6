@@ -1,0 +1,693 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=2.7cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Věta}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Důsledek}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Poznámka}
+
+\newcommand{\FQ}{F_Q}
+\newcommand{\HH}{\mathcal H}
+\newcommand{\Eop}{\mathsf E}
+\newcommand{\Dop}{\mathsf D}
+\newcommand{\Sop}{\mathsf S}
+\newcommand{\Fop}{\mathsf F}
+\newcommand{\Rop}{\mathsf R}
+
+\title{Univerzální renormalizační škálovací pravidlo pro quartic zero-repair}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Nastavení a přesný Farkasův lift}
+
+Nechť
+\[
+P=\left(\frac18,\frac14,\frac14,\frac14,\frac18\right),
+\qquad
+Q=\left(\frac7{64},\frac{20}{64},\frac{10}{64},\frac{20}{64},\frac7{64}\right).
+\]
+Pro konečně podporovanou nerostoucí posloupnost
+\[
+1=a_0\ge a_1\ge a_2\ge\cdots\ge0,
+\qquad a_j=0\ \text{pro }j\gg1,
+\]
+označme symbolem
+\[
+\mathsf C(a,d):\qquad \sum_{j\ge0}a_j b_j\le d
+\]
+lineární řez platný pro všechny přípustné rodičovské zákony daného horizontu.
+Posloupnost $a$ lze ekvivalentně interpretovat jako survival funkci konečně
+podporované náhodné bariéry $Z$:
+\[
+a_j=\Pr(Z\ge j),\qquad
+\Pr(Z=j)=a_j-a_{j+1}.
+\]
+
+Položme
+\[
+\FQ(m):=\Pr_{Y\sim Q}(Y\le m),
+\]
+s konvencí $\FQ(m)=0$ pro $m<0$ a $\FQ(m)=1$ pro $m\ge4$.
+
+\begin{lemma}[Přesný Farkasův lift]\label{lem:farkas}
+Nechť $\mathsf C(a^{(f)},d_f)$ jsou již dokázané řezy na přísně nižších
+horizontech. Zvolme reálná $e_x$, nezáporná $u_k$ a nezáporná $v_{xf}$ tak,
+aby pro všechna $x\in\{0,1,2,3,4\}$ a $j\ge0$ platilo
+\begin{equation}\label{eq:farkas-pointwise}
+ e_x+\sum_{1\le k\le x+j}u_k
+ +\sum_f v_{xf}a^{(f)}_j\ge0.
+\end{equation}
+Pak je na následujícím horizontu platný řez
+\[
+\sum_{j\ge0}A_j b_j\le D,
+\]
+kde
+\begin{align}
+A_j&=\sum_{k\ge1}u_k\FQ(k-j-1),\label{eq:Afromu}\\
+D&=\sum_xP_xe_x+\sum_ku_k+\sum_{x,f}P_xv_{xf}d_f.\label{eq:Dfromdual}
+\end{align}
+Je-li $A_0>0$, lze celý řez vydělit $A_0$ a normalizovat na $a_0=1$.
+\end{lemma}
+
+\begin{proof}
+Pišme $f_{xj}=P_x\Pr(J_x=j)$ pro fan proměnné. Normalizace dětí dává
+$\sum_jf_{xj}=P_x$. Stochastické superfan nerovnosti mají tvar
+\[
+\sum_{x,j:\,x+j\ge k}f_{xj}
+\le \Pr(Y+J\ge k),
+\qquad Y\sim Q,
+\]
+a každý starší řez dává
+\[
+\sum_j a^{(f)}_j f_{xj}\le P_xd_f.
+\]
+Vynásobíme normalizační rovnosti koeficienty $e_x$, superfan nerovnosti
+koeficienty $u_k\ge0$ a starší řezy koeficienty $v_{xf}\ge0$ a vše sečteme.
+Koeficient u každého $f_{xj}$ je právě levá strana
+\eqref{eq:farkas-pointwise}, a je tedy nezáporný. Proto
+\[
+0\le
+\sum_xP_xe_x+\sum_k u_k\Pr(Y+J\ge k)
++\sum_{x,f}P_xv_{xf}d_f.
+\]
+Pro pevné $J=j$ platí
+\[
+\Pr(Y+j\ge k)=1-\FQ(k-j-1),
+\]
+a tedy
+\[
+\sum_ku_k\Pr(Y+J\ge k)
+=
+\sum_ku_k-\sum_jb_j\sum_ku_k\FQ(k-j-1).
+\]
+Po dosazení dostáváme přesně $\sum_jA_jb_j\le D$.
+\end{proof}
+
+\section{Weak--$L^1$ bezpečnostní funkcionál}
+
+Nechť $R_{1/2}$ je kritický weak--$L^1$ kořen se survival funkcí
+\[
+\Pr(J\ge j)=\frac1{2j},\qquad j\ge1.
+\]
+Pro bariéru $Z$ se survival funkcí $a$ definujme
+\[
+\alpha(a):=a_1,
+\qquad
+h(a):=\mathbb E\frac1{Z+1}
+=\sum_{j\ge0}\frac{a_j-a_{j+1}}{j+1}.
+\]
+Pak
+\begin{equation}\label{eq:weak-eval}
+\sum_ja_j\Pr(J=j)
+=\Pr(J\le Z)
+=1-\frac12h(a).
+\end{equation}
+Bezpečnostní slack řezu $\mathsf C(a,d)$ vůči $C=1/2$ je proto
+\begin{equation}\label{eq:slack-general}
+s(a,d):=d-1+\frac12h(a).
+\end{equation}
+Řez je splněn kořenem $R_{1/2}$ právě tehdy, když $s(a,d)\ge0$.
+
+Pro HEAD bariéru
+\[
+H_{\lambda,d}:\qquad a=(1,\lambda,0,0,\ldots)
+\]
+platí
+\[
+h=1-\frac\lambda2,
+\qquad
+s_H=d-\frac12-\frac\lambda4.
+\]
+Budeme pracovat s intervalem
+\begin{equation}\label{eq:Hcone}
+\boxed{
+\HH:=\left\{H_{\lambda,d}:\frac18\le\lambda\le\frac7{27},\quad
+s_H\ge0\right\}.}
+\end{equation}
+
+\section{Čtyři lokální transformace}
+
+\subsection{HEAD reset $\Sop$}
+
+\begin{lemma}[Univerzální one-step škálování]\label{lem:S}
+Z libovolného normalizovaného platného řezu $\mathsf C(a,d)$ vznikne jedním
+Farkasovým liftem HEAD řez
+\begin{equation}\label{eq:Smap}
+\boxed{
+\Sop(a,d)=H_{\,7/27,\,(8+16d)/27}.}
+\end{equation}
+Tento vzorec nezávisí na absolutní hloubce.
+\end{lemma}
+
+\begin{proof}
+V Lematu~\ref{lem:farkas} zvolme
+\[
+u_2=1,
+\qquad
+e_0=0,
+\qquad e_1=e_2=e_3=e_4=-1,
+\qquad v_{1}=1,
+\]
+a všechny ostatní multiplikátory nulové. Pro dítě $x=1$ je koeficient
+v \eqref{eq:farkas-pointwise} roven $-1+a_0=0$ při $j=0$ a $a_j\ge0$
+pro $j\ge1$. Pro $x\ge2$ je roven nule a pro $x=0$ je nezáporný.
+Z \eqref{eq:Afromu}
+\[
+A_0=\FQ(1)=\frac{27}{64},
+\qquad
+A_1=\FQ(0)=\frac7{64},
+\qquad
+A_j=0\quad(j\ge2).
+\]
+Po normalizaci tedy $\lambda'=7/27$. Z \eqref{eq:Dfromdual}
+\[
+D_{\rm raw}=-\frac78+1+\frac14d=\frac18+\frac14d,
+\]
+a dělení $27/64$ dává $d'=(8+16d)/27$.
+\end{proof}
+
+Je-li $H_{\lambda,d}\in\HH$ a
+\[
+s:=d-\frac12-\frac\lambda4\ge0,
+\]
+pak pro první dva resety platí
+\begin{align}
+ s_{\Sop H}
+ &=\frac{3+16\lambda+64s}{108}>0,\label{eq:Sslack1}\\
+ s_{\Sop^2 H}
+ &=\frac{241+256\lambda+1024s}{2916}>0.\label{eq:Sslack2}
+\end{align}
+
+\subsection{ESCAPE lift $\Eop$}
+
+Položme
+\[
+\rho:=\frac\lambda{1-\lambda}
+\]
+a v Lematu~\ref{lem:farkas} použijme jedinou HEAD závislost
+$H_{\lambda,d}$ s multiplikátory
+\begin{align*}
+u_{m+2}&=\rho^m, &&m=0,1,2,3,4,\\
+v_x&=\frac{\rho^{x-1}}{1-\lambda}, &&x=1,2,3,4,\\
+e_0&=0,
+\qquad
+e_x=-\sum_{m=0}^{x-2}\rho^m-v_x, &&x=1,2,3,4,
+\end{align*}
+se standardní konvencí, že prázdný součet je nula.
+
+\begin{lemma}[Přesný ESCAPE lift]\label{lem:E}
+Pro $0<\lambda<1$ výše uvedené multiplikátory splňují
+\eqref{eq:farkas-pointwise}. Po normalizaci vznikne bariéra
+$G=\Eop(H_{\lambda,d})$ se survival koeficienty
+\begin{align}
+g_0&=1,\notag\\
+g_1&=\frac{24\lambda^4+36\lambda^3-2\lambda^2-\lambda+7}{\Delta},\notag\\
+g_2&=\frac{\lambda(2\lambda+1)(20\lambda^2-8\lambda+7)}{\Delta},\notag\\
+g_3&=\frac{\lambda^2(17\lambda^2+13\lambda+7)}{\Delta},\label{eq:Eshape}\\
+g_4&=\frac{\lambda^3(20\lambda+7)}{\Delta},\notag\\
+g_5&=\frac{7\lambda^4}{\Delta},
+\qquad g_j=0\quad(j\ge6),\notag
+\end{align}
+kde
+\begin{equation}\label{eq:Delta}
+\Delta=47\lambda^4-47\lambda^3+108\lambda^2-71\lambda+27.
+\end{equation}
+Jeho pravá strana je
+\begin{equation}\label{eq:dE}
+\boxed{
+ d_E(\lambda,d)
+ =\frac{8\bigl(\kappa(\lambda)d+\theta(\lambda)\bigr)}{\Delta},}
+\end{equation}
+kde
+\[
+\kappa(\lambda)=2-4\lambda+4\lambda^2-\lambda^3,
+\qquad
+\theta(\lambda)=1-3\lambda+6\lambda^2-2\lambda^3+5\lambda^4.
+\]
+\end{lemma}
+
+\begin{proof}
+Pro $x\ge1$ je výraz v \eqref{eq:farkas-pointwise} při $j=0,1,2$
+roven přesně nule. Skutečně používáme identity
+\[
+\frac1{1-\lambda}=1+\rho,
+\qquad
+v_x(1-\lambda)=\rho^{x-1}.
+\]
+Pro $j>2$ může kumulativní součet $u_k$ už jen vzrůst, zatímco HEAD
+koeficient je nulový, takže výraz zůstává nezáporný. Pro $x=0$ je tvrzení
+okamžité z $u_k\ge0$.
+
+Z \eqref{eq:Afromu} před normalizací
+\[
+A_j=\sum_{m=0}^4\rho^m\FQ(m+1-j).
+\]
+Jde o nezápornou nerostoucí posloupnost. Přímé sjednocení jmenovatelů dává
+\[
+A_0=\frac{\Delta}{64(1-\lambda)^4}>0,
+\]
+a po vydělení $A_0$ dostáváme \eqref{eq:Eshape}. Dosazení stejných
+multiplikátorů do \eqref{eq:Dfromdual} dává po stejné normalizaci
+\eqref{eq:dE}.
+\end{proof}
+
+Pro další použití zaznamenejme přesný weak--$L^1$ slack ESCAPE stavu. Je-li
+$d=\frac12+\frac\lambda4+s$, pak
+\begin{equation}\label{eq:sE}
+ s_E
+ =\frac{8\kappa(\lambda)}{\Delta}s
+ +\frac{N_E(\lambda)}{120\Delta},
+\end{equation}
+kde
+\[
+N_E(\lambda)=461\lambda^4+174\lambda^3+205\lambda^2-100\lambda+90.
+\]
+Na intervalu $\lambda\in[1/8,7/27]\subset(0,1/3)$ je
+\[
+\kappa'(\lambda)=-4+8\lambda-3\lambda^2< -\frac43,
+\qquad
+\kappa(\lambda)\ge\kappa(1/3)=\frac{29}{27}>0,
+\]
+a zároveň
+\[
+N_E(\lambda)\ge 90-100\lambda
+\ge 90-\frac{100}{3}=\frac{170}{3}>0.
+\]
+Tedy $s_E>0$.
+
+\subsection{DELAY lift $\Dop$}
+
+\begin{lemma}[Přesný DELAY lift]\label{lem:D}
+Nechť $G=(g,\delta)$ je libovolný normalizovaný bariérový řez a $Z$ jeho
+bariéra. Nechť $Y\sim Q$ je nezávislé na $Z$. Potom jedním Farkasovým
+liftem vznikne řez $\Dop G$ s bariérou
+\begin{equation}\label{eq:delayZ}
+\boxed{Z'=Z+4-Y}
+\end{equation}
+a pravou stranou
+\begin{equation}\label{eq:delayd}
+\boxed{\delta'=\frac78+\frac18\delta.}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Položme $p_z=\Pr(Z=z)=g_z-g_{z+1}$. V Lematu~\ref{lem:farkas} zvolme
+\[
+u_{5+z}=p_z\quad(z\ge0),
+\qquad e_4=-1,
+\qquad v_{4,G}=1,
+\]
+a všechny ostatní multiplikátory nulové. Pro $x=4$ a každý $j\ge0$ platí
+\[
+-1+\sum_{k\le4+j}u_k+g_j
+=-1+(1-g_j)+g_j=0,
+\]
+zatímco pro $x<4$ jsou koeficienty zjevně nezáporné. Dále
+\[
+A_m
+=\sum_zp_z\FQ(z+4-m)
+=\Pr(Z+4-Y\ge m),
+\]
+což je přesně survival funkce \eqref{eq:delayZ}. Konečně
+\[
+D=-\frac18+1+\frac18\delta
+=\frac78+\frac18\delta.
+\]
+\end{proof}
+
+Důležitá je nyní specializace na $G=\Dop\Eop(H_{\lambda,d})$.
+Označme
+\[
+\alpha:=\Pr(Z'\ge1),
+\qquad
+h:=\mathbb E\frac1{Z'+1},
+\qquad
+\eta:=1-\frac\alpha2-h.
+\]
+Z \eqref{eq:Eshape} a \eqref{eq:delayZ} dostáváme
+\begin{equation}\label{eq:alphaDE}
+\alpha
+=1-\frac7{64}(1-g_1)
+=\frac{N_\alpha(\lambda)}{64\Delta},
+\end{equation}
+kde
+\[
+N_\alpha(\lambda)
+=2847\lambda^4-2427\lambda^3+6142\lambda^2-4054\lambda+1588,
+\]
+a
+\begin{equation}\label{eq:hDE}
+h
+=\frac{1992081\lambda^4-4128338\lambda^3+7213185\lambda^2
+-4834200\lambda+1661940}{161280\Delta}.
+\end{equation}
+Dvě rozhodující veličiny se zjednoduší na
+\begin{align}
+16\eta-5\alpha+2
+&=\frac{N_\Phi(\lambda)}{20160\Delta},\label{eq:phase-margin}\\
+s_{DE}
+&=\frac{\kappa(\lambda)}{\Delta}s
++\frac{N_D(\lambda)}{322560\Delta},\label{eq:DEslack}
+\end{align}
+kde
+\begin{align*}
+N_\Phi(\lambda)
+&=1412733\lambda^4+1139881\lambda^3-386820\lambda^2
++505050\lambda-28980,\\
+N_D(\lambda)
+&=1629201\lambda^4-2717138\lambda^3+5116545\lambda^2
+-3423000\lambda+1218420.
+\end{align*}
+
+\begin{lemma}[Fusion-ready vlastnosti delayed ESCAPE stavu]\label{lem:DEsafe}
+Pro každý $H_{\lambda,d}\in\HH$ platí pro
+$G=\Dop\Eop(H_{\lambda,d})$
+\begin{equation}\label{eq:DEproperties}
+\boxed{
+s_{DE}>0,
+\qquad
+16\eta-5\alpha+2>0,
+\qquad
+\frac{57}{64}\le\alpha\le1.}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Již víme, že $\Delta>0$ a $\kappa>0$. Pro $N_D$ použijeme čistě
+algebraický certifikát pozitivity. Položme $t=3\lambda$. Na $0\le\lambda\le1/3$
+platí $t\in[0,1]$ a
+\[
+N_D(\lambda)
+=\sum_{k=0}^4 c_k\binom4k t^k(1-t)^{4-k},
+\]
+kde
+\[
+(c_0,c_1,c_2,c_3,c_4)
+=\left(
+1218420,\ 933170,\ \frac{4456025}{6},\
+\frac{16787623}{27},\ \frac{15265904}{27}
+\right).
+\]
+Všechny Bernsteinovy koeficienty jsou kladné, tedy $N_D>0$ a
+\eqref{eq:DEslack} dává $s_{DE}>0$.
+
+Pro $N_\Phi$ máme na $[1/8,7/27]$
+\[
+N_\Phi'(\lambda)
+=5650932\lambda^3+3419643\lambda^2-773640\lambda+505050
+\ge \frac{913430}{3}>0.
+\]
+Proto
+\[
+N_\Phi(\lambda)
+\ge N_\Phi(1/8)
+=\frac{125658821}{4096}>0,
+\]
+a \eqref{eq:phase-margin} je kladná.
+
+Konečně z \eqref{eq:delayZ} nastane $Z'=0$ pouze tehdy, když současně
+$Z=0$ a $Y=4$. Proto
+\[
+\alpha=1-\frac7{64}\Pr(Z=0)
+\ge1-\frac7{64}=\frac{57}{64},
+\]
+a samozřejmě $\alpha\le1$.
+\end{proof}
+
+\subsection{FUSION lift $\Fop$}
+
+\begin{lemma}[Přesná fusion formule]\label{lem:F}
+Nechť $G=(g,\delta)$ je bariérový řez s
+\[
+\alpha=g_1,
+\qquad
+h=\mathbb E\frac1{Z+1},
+\qquad
+\eta=1-\frac\alpha2-h,
+\qquad
+s_G=\delta-1+\frac h2,
+\]
+a nechť $H_{\beta,d}$ je HEAD řez se slackem
+\[
+s_H=d-\frac12-\frac\beta4.
+\]
+Pak existuje přesný one-step Farkasův lift
+\[
+\Fop(G,H_{\beta,d})=H_{\lambda',d'},
+\]
+kde
+\begin{equation}\label{eq:fusion-map}
+\boxed{
+\lambda'=\frac{7\alpha}{7+20\alpha},
+\qquad
+d'=\frac{8\delta+16\alpha d}{7+20\alpha}.}
+\end{equation}
+Jeho weak--$L^1$ slack je přesně
+\begin{equation}\label{eq:fusion-slack}
+\boxed{
+s'
+=\frac{32s_G+64\alpha s_H+16\eta+2-7\alpha+16\alpha\beta}
+{4(7+20\alpha)}.}
+\end{equation}
+Zvláště, jestliže
+\begin{equation}\label{eq:fusion-sufficient}
+16\eta-5\alpha+2\ge0,
+\qquad
+\beta\ge\frac18,
+\qquad
+s_G,s_H\ge0,
+\end{equation}
+pak $s'\ge0$.
+\end{lemma}
+
+\begin{proof}
+Zvolme libovolné $T>0$ a v Lematu~\ref{lem:farkas} položme
+\[
+u_1=T(1-\alpha),
+\qquad
+u_2=T\alpha,
+\qquad
+e_x=-T\quad(0\le x\le4),
+\]
+\[
+v_{0,G}=T,
+\qquad
+v_{1,H}=T\alpha,
+\]
+a ostatní $v$ rovny nule. Pro $x=0$ se rovnost v
+\eqref{eq:farkas-pointwise} saturuje při $j=0,1$ a pro $j\ge2$ zůstává
+$Tg_j\ge0$. Pro $x=1$ se saturuje při $j=0$ a při $j=1$ zbývá
+$T\alpha\beta\ge0$. Pro $x\ge2$ se $u_1+u_2=T$ přesně vyruší s $e_x=-T$.
+
+Z \eqref{eq:Afromu}
+\[
+A_0=\frac{T(7+20\alpha)}{64},
+\qquad
+A_1=\frac{7T\alpha}{64},
+\qquad
+A_j=0\quad(j\ge2),
+\]
+což po normalizaci dává první formuli v \eqref{eq:fusion-map}. V
+\eqref{eq:Dfromdual} se členy $\sum_xP_xe_x=-T$ a $\sum_ku_k=T$ zruší;
+zůstane
+\[
+D_{\rm raw}=T\left(\frac\delta8+\frac{\alpha d}{4}\right),
+\]
+což dává druhou formuli v \eqref{eq:fusion-map}.
+
+Dosadíme
+\[
+\delta=1-\frac h2+s_G,
+\qquad
+d=\frac12+\frac\beta4+s_H,
+\qquad
+h=1-\frac\alpha2-\eta
+\]
+do $d'-1/2-\lambda'/4$. Po přesném zkrácení vznikne
+\eqref{eq:fusion-slack}. Poslední část plyne z identity
+\[
+16\eta+2-7\alpha+16\alpha\beta
+=(16\eta-5\alpha+2)+2\alpha(8\beta-1)\ge0.
+\]
+\end{proof}
+
+\section{Hlavní škálovací věta}
+
+Definujme tříkrokový renormalizační operátor na HEAD řezech
+\begin{equation}\label{eq:Rdef}
+\boxed{
+\Rop(H):=
+\Fop\bigl(\Dop\Eop(H),\,\Sop^2(H)\bigr).}
+\end{equation}
+První argument fusion i druhý argument fusion mají o dva horizonty méně než
+výsledný řez, takže konstrukce je prefixově kauzální a neobsahuje kruhové
+odůvodnění.
+
+\begin{theorem}[Univerzální renormalizační škálovací pravidlo]\label{thm:scaling}
+Pro každý horizont, na němž je HEAD řez $H_{\lambda,d}\in\HH$ již dokázán,
+je o tři úrovně výše dokázán HEAD řez
+\[
+\Rop(H_{\lambda,d})=H_{\Lambda(\lambda),D(\lambda,d)}
+\]
+s
+\begin{equation}\label{eq:Lambda}
+\boxed{
+\Lambda(\lambda)
+=\frac{7\alpha(\lambda)}{7+20\alpha(\lambda)},}
+\end{equation}
+kde
+\begin{equation}\label{eq:alpha-explicit}
+\alpha(\lambda)
+=\frac{2847\lambda^4-2427\lambda^3+6142\lambda^2-4054\lambda+1588}
+{64\Delta(\lambda)},
+\end{equation}
+a
+\begin{equation}\label{eq:Dmap}
+\boxed{
+D(\lambda,d)
+=
+\frac{8\delta(\lambda,d)+16\alpha(\lambda)d_2(d)}
+{7+20\alpha(\lambda)},}
+\end{equation}
+kde
+\[
+\delta(\lambda,d)=\frac78+\frac18d_E(\lambda,d),
+\qquad
+d_2(d)=\frac{344+256d}{729}.
+\]
+Navíc
+\begin{equation}\label{eq:inclusion}
+\boxed{\Rop(\HH)\subseteq\HH.}
+\end{equation}
+Tvrzení je nezávislé na absolutní hloubce; hloubka vstupuje pouze přes
+požadavek, že použité řezy již byly dokázány na přísně nižších horizontech.
+\end{theorem}
+
+\begin{proof}
+Vezměme $H_{\lambda,d}\in\HH$ a označme jeho slack $s\ge0$.
+Lemma~\ref{lem:DEsafe} říká, že
+\[
+G:=\Dop\Eop(H_{\lambda,d})
+\]
+má $s_G>0$, splňuje
+\[
+16\eta_G-5\alpha_G+2>0
+\]
+a zároveň $57/64\le\alpha_G\le1$.
+
+Na druhé větvi použijeme dvakrát Lemma~\ref{lem:S}. Z
+\eqref{eq:Sslack2} dostáváme
+\[
+\Sop^2(H_{\lambda,d})=H_{7/27,d_2(d)},
+\qquad s_{\Sop^2H}>0.
+\]
+V Lematu~\ref{lem:F} tedy můžeme vzít $\beta=7/27>1/8$; všechny podmínky
+\eqref{eq:fusion-sufficient} jsou splněny. Výstupní HEAD řez má proto
+$s'\ge0$.
+
+Zbývá ověřit interval pro nový shape parametr. Funkce
+\[
+f(\alpha)=\frac{7\alpha}{7+20\alpha}
+\]
+je rostoucí, protože
+\[
+f'(\alpha)=\frac{49}{(7+20\alpha)^2}>0.
+\]
+Proto z $57/64\le\alpha\le1$ plyne
+\[
+\frac{399}{1588}
+=f\!\left(\frac{57}{64}\right)
+\le\Lambda(\lambda)
+\le f(1)=\frac7{27}.
+\]
+Navíc $399/1588>1/4>1/8$. Tedy
+\[
+\frac18<\Lambda(\lambda)\le\frac7{27},
+\]
+a spolu s $s'\ge0$ dostáváme
+$\Rop(H_{\lambda,d})\in\HH$. To dokazuje \eqref{eq:inclusion}.
+\end{proof}
+
+\begin{corollary}[Přesná reprodukce zlomu v šestém horizontu]\label{cor:n6}
+Pro HEAD řez
+\[
+\lambda=\frac7{27},
+\qquad
+d=\frac{5144}{6561}
+\]
+dává jednotlivý renormalizační cyklus přesně
+\begin{align*}
+d_E&=\frac{202152433}{246095334},\\
+\delta&=\frac{1924819771}{1968762672},\\
+d_2&=\frac{3573848}{4782969},\\
+\Lambda(\lambda)&=\frac{855963003}{3353021828},\\
+D(\lambda,d)&=\frac{986801982722048}{1336449954970611}.
+\end{align*}
+Odpovídající weak--$L^1$ dolní mez je
+\[
+\frac{1-D(\lambda,d)}{1-\Lambda(\lambda)/2}
+=\frac{2797183777988504}{9326918136932919}
+=0.299904398958\ldots,
+\]
+tedy přesně hodnota, která nahrazuje jednoduchou HEAD rekurenci v šestém
+kroku.
+\end{corollary}
+
+\begin{remark}[Přesný rozsah věty]
+Věta~\ref{thm:scaling} nedokazuje, že libovolný Farkasův separator leží v
+HEAD/PHASE gramatice, ani sama o sobě nedokazuje $C_n\le1/2$ pro všechna
+$n$. Dokazuje přesně jednu load-bearing skutečnost: konkrétní
+renormalizační grammar
+\[
+H\longmapsto \Fop\bigl(\Dop\Eop(H),\Sop^2(H)\bigr)
+\]
+je uzavřená na $\HH$ a její pravidla jsou nezávislá na hloubce. K úplnému
+all-horizon důkazu zbývá completeness/dominance lemma, které ukáže, že žádný
+jiný rekurzivně vznikající separator nemůže weak--$L^1$ kořen $C=1/2$
+vyloučit.
+\end{remark}
+
+\begin{remark}[Důležitá kontrolní korekce]
+Není pravda, že DELAY operátor $\Dop$ zachovává podmínku
+$16\eta-5\alpha+2\ge0$ na celém abstraktním PHASE kuželu. Výše se nic
+takového nepoužívá. Dokázána je pouze potřebná specializace
+\[
+\Dop\Eop(\HH)\subseteq
+\{G:s_G\ge0,\ 16\eta_G-5\alpha_G+2\ge0\},
+\]
+což je přesně obsah Lematu~\ref{lem:DEsafe}. Tato restrikce je nutná:
+pro deterministickou bariéru $Z\equiv0$ je vstupní hodnota
+$16\eta-5\alpha+2=2$, ale po DELAY kroku vychází
+$16\eta'-5\alpha'+2=-251/960<0$. Tím se odstraňuje dřívější příliš silná
+formulace a důkaz je uzavřen bez tohoto neplatného kroku.
+\end{remark}
+
+\end{document}
