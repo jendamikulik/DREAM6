@@ -1,0 +1,1316 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Věta}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Tvrzení}
+\newtheorem{corollary}[theorem]{Důsledek}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definice}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Poznámka}
+\theoremstyle{plain}
+\newtheorem{conjecture}[theorem]{Otevřený problém}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prb}{\mathbb P}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\DOWN}{\operatorname{DOWN}}
+\newcommand{\UP}{\operatorname{UP}}
+\newcommand{\st}{\mathrm{st}}
+
+\title{Quartic Zero-Repair:\\bezpodmínečný sandwich a otevřený logaritmus}
+\author{}
+\date{16.~září 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Dokazujeme bezpodmínečný sandwich pro kvartický zero-repair problém
+$(P,Q)$ na abecedě $\{0,1,2,3,4\}$:
+\[
+\kappa_0\log n-o(\log n)
+\le\mathcal B_n
+\le\frac{473}{56}\,n^{1/4}.
+\]
+Horní mez je explicitní konstrukce s negativně binomickou referencí.
+Dále dokazujeme Walshovu identitu stupně $4$, causal thinning na parity
+core $(E,O)$ a blokový most
+$0\le\mathcal B_{2n}(E,O)-2\mathcal B_n(P_{\mathrm b},Q_{\mathrm b})\le 4$.
+Z toho plyne, že $\mathcal B_n=O(\log n)$ je ekvivalentní témuž odhadu
+pro coarse pair $(P_{\mathrm b},Q_{\mathrm b})$ až na konstantu.
+\textbf{Tvrzení $\mathcal B_n=O(\log n)$ v tomto článku nedokazujeme.}
+Poslední chybějící krok je jeden prefix-kompatibilní, phase-indexed fan
+realizující dyadický boundary-flow
+$\mathcal L_n(\delta)\to\mathcal L_{2n}(\frac12\delta+C\delta^2)$.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Úvod}
+
+Exactní zero-repair strom je kauzální protokol, který v každém kroku
+losuje čerstvý vstup podle $Q$ a veřejný výstup podle $P$, přičemž
+skrytá rezerva $J$ zůstává nezáporná. Cena hloubky $n$ je infimum
+počáteční střední rezervy. Dolní mez $\kappa_0\log n$ je známa.
+Otázka, zda $\mathcal B_n=\Theta(\log n)$, zůstává otevřená.
+
+Tento text je článek, ne pracovní ledger. Obsahuje pouze věty s důkazem
+a na konci explicitně označený otevřený problém. Žádné numerické
+extrapolace se zde neprohlašují za věty.
+
+Hlavní výsledek je sandwich. Cesta k logaritmu nahoře vede přes thinning
+a blokový most na coarse pair, a končí u dyadického rozbalení boundary
+packetu mezi škálami $n\mapsto 2n$. Faktor $1/2$ je survival přes slupku,
+nikoli větvení pěti dětí. Prefixový zámek zakazuje různé donory na
+společném prefixu. Ten fan není sestrojen.
+
+\section{Model}
+
+Nechť $B_h$ jsou pravděpodobnostní zákony na $\mathbb N_0$ indexované
+veřejnými historiemi $h\in\{0,1,2,3,4\}^{\le n}$. Exactní zero-repair
+strom splňuje v každém vnitřním uzlu
+\[
+Q*B_h=\sum_{x=0}^4 P_x\,\delta_x*B_{hx}.
+\tag{ZR}
+\]
+Množinu kořenových zákonů hloubky $n$ označme $\cK_n$ a položme
+\[
+\mathcal B_n:=\inf_{B\in\cK_n}\E_B J.
+\]
+
+Pro generující funkce platí přesná kvartická identita
+\[
+G_P(z)-G_Q(z)=\frac{(1-z)^4}{64}.
+\tag{1}
+\]
+
+\begin{theorem}[dříve dokázaná dolní mez]
+Platí
+\[
+\liminf_{n\to\infty}\frac{\mathcal B_n}{\log n}\ge \kappa_0,
+\qquad
+\kappa_0=
+\frac{\log(594184/543559)}
+{\log 16\,\log(524288/74273)}
+\approx0.0164347253.
+\]
+\end{theorem}
+
+\section{Explicitní horní mez $O(n^{1/4})$}
+
+Položme $D=\delta_0-\delta_1$. Z~(1) plyne
+\[
+P-Q=\frac1{64}D^{*4}.
+\tag{2}
+\]
+Pro $a>0$ definujme geometrický zákon
+\[
+\gamma_a(j)=\frac1{1+a}\left(\frac a{1+a}\right)^j,
+\qquad j\ge0,
+\]
+a
+\[
+C_a:=\gamma_a^{*4}.
+\]
+Dále položme
+\[
+\varepsilon:=\frac{25}{7a^3},
+\qquad
+E_\varepsilon:=(1-\varepsilon)\delta_0+\varepsilon\delta_1,
+\qquad
+R_r:=C_a*E_\varepsilon^{*r}.
+\tag{3}
+\]
+Je-li $a^3\ge25/7$, pak $0\le\varepsilon\le1$ a
+\[
+\E R_r=4a+r\varepsilon.
+\tag{4}
+\]
+
+\begin{lemma}[koeficientová nerovnost]
+Pro každé $a>0$ platí koeficient po koeficientu
+\[
+D^{*3}*C_a+\frac{25}{a^3}C_a\ge0.
+\tag{5}
+\]
+Tedy pro každé $r\ge0$
+\[
+D^{*3}*R_r\ge-\frac{25}{a^3}R_r.
+\tag{6}
+\]
+\end{lemma}
+
+\begin{proof}
+Z geometrické řady
+\[
+D*\gamma_a=\frac1a(\delta_0-\gamma_a).
+\]
+Proto
+\[
+D^{*3}*C_a
+=
+\frac1{a^3}
+\left(
+\gamma_a-3\gamma_a^{*2}+3\gamma_a^{*3}-\gamma_a^{*4}
+\right).
+\]
+Po přičtení $25C_a/a^3$ stačí ověřit nezápornost
+\[
+\gamma_a-3\gamma_a^{*2}+3\gamma_a^{*3}+24\gamma_a^{*4}.
+\]
+Pišme $\delta=(1+a)^{-1}$. V koeficientu $j\ge0$, po vydělení
+kladným $\gamma_a(j)$, dostáváme
+\[
+1-3\delta(j+1)
++\frac32\delta^2(j+1)(j+2)
++4\delta^3(j+1)(j+2)(j+3).
+\]
+Pro $u=\delta(j+1)\ge0$ je tento výraz zdola omezen
+\[
+1-3u+\frac32u^2+4u^3
+=
+(u+1)(2u-1)^2+\frac32u^2\ge0.
+\]
+To dokazuje (5). Konvoluce s nezápornou mírou zachovává
+koeficientovou nezápornost, a tedy (6).
+\end{proof}
+
+\begin{lemma}[dominance referencí]
+Pro $r\ge1$ platí
+\[
+Q*R_r\succeq_{\st}P*R_{r-1}.
+\tag{7}
+\]
+\end{lemma}
+
+\begin{proof}
+Z $R_r=R_{r-1}*E_\varepsilon$ a (2)
+\[
+Q*R_r-P*R_{r-1}
+=
+-\frac1{64}D^{*4}*R_{r-1}
+-\varepsilon D*Q*R_{r-1}.
+\]
+Částečný součet koeficientů $D*M$ do $k$ je $M(k)$, proto
+\[
+F_{Q*R_r}(k)-F_{P*R_{r-1}}(k)
+=
+-\frac1{64}(D^{*3}*R_{r-1})(k)
+-\varepsilon(Q*R_{r-1})(k).
+\]
+Protože $Q_0=7/64$,
+\[
+Q*R_{r-1}\ge\frac7{64}R_{r-1}
+\]
+koeficient po koeficientu. Použitím (6) je pravá strana nejvýše
+\[
+\left(
+\frac{25}{64a^3}-\frac{7\varepsilon}{64}
+\right)R_{r-1}(k)=0.
+\]
+Tedy $F_{Q*R_r}\le F_{P*R_{r-1}}$.
+\end{proof}
+
+\begin{theorem}[explicitní all-horizon konstrukce]
+Pro každé $n\ge1$ a každé $a>0$ s $a^3\ge25/7$ platí
+\[
+\boxed{
+\mathcal B_n\le 4a+\frac{25n}{7a^3}.
+}
+\tag{8}
+\]
+Zvláště pro $a=2n^{1/4}$,
+\[
+\boxed{
+\mathcal B_n\le\frac{473}{56}\,n^{1/4}.
+}
+\tag{9}
+\]
+\end{theorem}
+
+\begin{proof}
+Začněme z $B_\varnothing=R_n$. Budeme induktivně udržovat
+\[
+B_h\succeq_{\st}R_r,
+\]
+kde $r$ je počet zbývajících kroků. Je-li tato podmínka splněna,
+pak monotonicita konvoluce a (7) dávají
+\[
+\mu:=Q*B_h\succeq_{\st}\alpha:=P*R_{r-1}.
+\]
+Existuje tedy monotónní vazba $(U,S)$ s
+\[
+U\sim\alpha,\qquad S\sim\mu,\qquad U\le S\quad\text{a.s.}
+\]
+Rozložme $U=X+Z$ podle produktu
+\[
+\Prb(X=x,Z=z)=P_xR_{r-1}(z).
+\]
+Použijeme podmíněný zákon $X$ daný $U$ a~$S$ a definujeme
+\[
+J':=S-X.
+\]
+Protože $X\le U\le S$, je $J'\ge0$. Veřejný marginál $X$ je přesně
+$P$. Dále
+\[
+J'=S-X\ge U-X=Z.
+\]
+Podmíněně na každém $X=x$ má $Z$ zákon $R_{r-1}$, takže každý
+posterior $B_{hx}$ splňuje
+\[
+B_{hx}\succeq_{\st}R_{r-1}.
+\]
+Indukce tedy pokračuje až do hloubky $n$.
+
+Počáteční účet je podle (4)
+\[
+\E B_\varnothing
+=
+4a+n\varepsilon
+=
+4a+\frac{25n}{7a^3},
+\]
+což dává (8). Pro $a=2n^{1/4}$ dostáváme
+\[
+8n^{1/4}+\frac{25}{56}n^{1/4}
+=
+\frac{473}{56}n^{1/4}.
+\]
+\end{proof}
+
+\section{Předplacené doplnění}
+
+Pro slovo $u=(u_1,\dots,u_r)$ pišme
+\[
+p(u):=\prod_{i=1}^r P_{u_i}.
+\]
+
+\begin{theorem}[předplacené doplnění]
+Nechť je dán exactní strom hloubky $n$ s kořenem $B$. Předpokládejme,
+že z každého jeho listu $h$ existuje pomocný kauzální $r$-krokový
+protokol s čerstvým $Q$, nezápornou rezervou a veřejným zákonem slov
+$R_h$, přičemž pro společné $M\ge1$
+\[
+R_h(u)\le M p(u)
+\qquad\text{pro všechna }h,u.
+\tag{10}
+\]
+Pak existuje exactní strom hloubky $n+r$ s kořenem
+\[
+B*\left(\frac1M\delta_0+
+\left(1-\frac1M\right)\delta_{4r}\right),
+\]
+a počáteční mean se zvětší právě o
+\[
+\boxed{
+4r\left(1-\frac1M\right).
+}
+\tag{11}
+\]
+\end{theorem}
+
+\begin{proof}
+Položme $\eta=1/M$ a $\epsilon=1-\eta$. Pro každý list definujme
+\[
+D_h(u):=
+\frac{p(u)-\eta R_h(u)}{\epsilon}
+\]
+pro $\epsilon>0$; při $M=1$ není opravná větev potřeba.
+Z (10) plyne $D_h(u)\ge0$ a
+\[
+\sum_uD_h(u)=1,\qquad
+\eta R_h+\epsilon D_h=P^{\otimes r}.
+\]
+Na začátku nezávisle losujeme Bernoulliho značku $I$ s
+$\Prb(I=1)=\epsilon$ a přidáme rezervu $4rI$.
+Prvních $n$ kroků proběhne původní exactní strom.
+
+Je-li $I=0$, použije se pomocný protokol $R_h$.
+Je-li $I=1$, použije se veřejný zákon $D_h$; předplacená rezerva
+$4r$ stačí na libovolné slovo délky $r$, protože každý výstup je
+nejvýše $4$. V obou větvích se vstupy losují čerstvě podle $Q$.
+Po zprůměrování přes $I$ je veřejný zákon následujícího slova
+přesně $P^{\otimes r}$. Cena značky je
+\[
+\E(4rI)=4r\epsilon=4r(1-1/M).
+\]
+\end{proof}
+
+\section{Explicitní Q-fresh vazba}
+
+Pro zákon $B$ pišme
+\[
+p=B(0),\qquad q=B(1).
+\]
+
+\begin{lemma}[Q-fresh vazba]
+Je-li $p\le1/4$, položme
+\[
+\theta=-\frac{3p}{1-p}\in[-1,0].
+\]
+Na stavu $J=0$ použijme coupling
+\[
+C^{(0)}=\frac1{64}
+\begin{pmatrix}
+7&4&0&0&0\\
+0&16&0&0&0\\
+0&0&10&4&2\\
+0&0&0&16&0\\
+0&0&0&0&5
+\end{pmatrix},
+\]
+a na $J\ge1$
+\[
+C^{(\theta)}=\frac1{64}
+\begin{pmatrix}
+7&1+\theta&0&0&0\\
+0&16&0&0&0\\
+0&3-\theta&10&3+\theta&0\\
+0&0&0&16&0\\
+0&0&0&1-\theta&7
+\end{pmatrix}.
+\]
+Oba couplingy mají sloupce $Q$, první má podporu $X\le Y$ a druhý
+$X-Y\le1$. Po zprůměrování přes skrytý stav má $X$ přesně zákon $P$.
+\end{lemma}
+
+\begin{proof}
+Řádkové zákony jsou
+\[
+R^{(0)}=P+\frac3{64}(\delta_0-\delta_4),
+\qquad
+R^{(\theta)}=P+\frac{\theta}{64}(\delta_0-\delta_4).
+\]
+Směs podle pravděpodobností $p$ a $1-p$ je $P$ právě když
+\[
+3p+(1-p)\theta=0.
+\]
+Podmínky podpory dávají nezápornost nové rezervy.
+\end{proof}
+
+Položme
+\[
+a=\frac{1-4p}{1-p},\qquad
+c=\frac{1+2p}{1-p},\qquad
+u=\frac3{1-p},\qquad
+v=\frac{3(1-2p)}{1-p}.
+\tag{12}
+\]
+Na kladné rezervě mají aktivní děti tvar
+\[
+T_0=\frac78I+\frac a8\UP,
+\qquad
+T_2=\frac u{16}\DOWN+\frac{10}{16}I+\frac v{16}\UP,
+\qquad
+T_4=\frac c8\DOWN+\frac78I,
+\tag{13}
+\]
+a $T_1=T_3=I$. Platí $a\ge0$ právě pro $p\le1/4$.
+
+Jednokrokové nulové hmotnosti jsou
+\[
+p'_0=\frac78p,\qquad
+p'_2=\frac{10p+uq}{16},\qquad
+p'_4=\frac{5p+cq}{8}.
+\tag{14}
+\]
+
+\begin{lemma}[jednokroková face]
+Pro $p<1$ položme $\eta=q/(1-p)$. Podmínka $p'_2\le1/4$ je ekvivalentní
+\[
+\eta\le\frac{4-10p}{3}.
+\]
+Podmínka $p'_4\le1/4$ je
+\[
+\eta\le\frac{2-5p}{1+2p},
+\]
+a na $0\le p\le1/4$ je druhá mez slabší.
+\end{lemma}
+
+Definujme tedy
+\[
+\cK:=
+\left\{
+0\le p\le\frac14,\quad
+0\le\eta\le
+\min\left(1,\frac{4-10p}{3}\right)
+\right\}.
+\tag{15}
+\]
+
+\begin{lemma}
+Platí
+\[
+T_0(\cK)\subset\cK.
+\tag{16}
+\]
+\end{lemma}
+
+\begin{proof}
+Pro $T_0$
+\[
+p'=\frac78p,\qquad
+\eta'=
+\frac{4p+7\eta(1-p)}{8-7p}.
+\]
+Mapování je rostoucí v $\eta$. Na stěně
+$\eta=(4-10p)/3$ se požadovaná nerovnost redukuje na
+\[
+35p^2+48p-16\le0.
+\]
+Kladný kořen je
+\[
+\frac{4(-6+\sqrt{71})}{35}>\frac14,
+\]
+takže nerovnost platí na $[0,1/4]$.
+Na víčku $\eta=1$ je
+\[
+\eta'=\frac{7-3p}{8-7p}\le1
+\]
+pro $p\le1/4$.
+\end{proof}
+
+\section{Waringova a Beta reprezentace}
+
+\begin{definition}
+Pro $k\ge0$ nechť
+\[
+\Prb(V_k\ge j)=\frac{k+1}{k+j},
+\qquad j\ge1,
+\]
+a $W_{r,k}:=\Law(r+V_k)$.
+\end{definition}
+
+\begin{lemma}[Waringova identita]
+\[
+\boxed{
+\Law(V_k-1)
+=
+\frac1{k+2}\delta_0+
+\frac{k+1}{k+2}V_{k+1}.
+}
+\tag{17}
+\]
+\end{lemma}
+
+\begin{proof}
+Pro $j\ge1$
+\[
+\Prb(V_k-1\ge j)
+=
+\frac{k+1}{k+j+1}
+=
+\frac{k+1}{k+2}\frac{k+2}{k+j+1}.
+\]
+\end{proof}
+
+Pro $0\le t<1$ definujme geometrický zákon na $\{1,2,\dots\}$
+\[
+g_t(j)=(1-t)t^{j-1}
+\]
+a $E_{r,t}:=\delta_r*g_t$.
+
+\begin{lemma}[Beta-mix]
+\[
+\boxed{
+W_{r,k}=(k+1)\int_0^1 t^kE_{r,t}\,dt.
+}
+\tag{18}
+\]
+\end{lemma}
+
+\begin{proof}
+Pro $j\ge1$
+\[
+\Prb(E_{r,t}\ge r+j)=t^{j-1},
+\]
+a tedy
+\[
+(k+1)\int_0^1 t^{k+j-1}\,dt
+=
+\frac{k+1}{k+j}.
+\]
+\end{proof}
+
+\begin{lemma}[paměť na hraně]
+\[
+\boxed{
+\DOWN E_{0,t}=(1-t)\delta_0+tE_{0,t}.
+}
+\tag{19}
+\]
+Pro $r\ge1$
+\[
+\DOWN E_{r,t}=E_{r-1,t},
+\qquad
+\UP E_{r,t}=E_{r+1,t}.
+\]
+\end{lemma}
+
+Definujme konkrétní Waringův zákon
+\[
+B^{(3)}
+=
+\frac14\delta_0+\frac34W_{0,3}
+=
+\frac14\delta_0+\int_0^1 E_{0,t}\,3t^3\,dt.
+\tag{20}
+\]
+Jeho prvních několik hmotností je
+\[
+B^{(3)}(0)=\frac14,\qquad
+B^{(3)}(1)=\frac3{20},\qquad
+B^{(3)}(2)=\frac1{10},
+\]
+a pro $j\ge1$
+\[
+B^{(3)}(j)=\frac{3}{(j+3)(j+4)},
+\qquad
+\Prb(J\ge j)=\frac3{j+3}.
+\tag{21}
+\]
+
+\begin{lemma}[kladný shape cone]
+Uvažujme rozklad
+\[
+B=p\delta_0+\sum_{r\ge0}\int_0^1E_{r,t}\,\nu_r(dt).
+\]
+Je-li
+\[
+\nu_r=e_r\delta_0+t^3f_r(t)\,dt,
+\qquad f_r(t)\in\mathbb R_{\ge0}[t],
+\tag{22}
+\]
+pak operátory (13), dokud $p\le1/4$, tento tvar zachovávají.
+\end{lemma}
+
+\begin{proof}
+Všechny koeficienty v (13) jsou nezáporné. Operace $\UP$ a vnitřní
+$\DOWN$ mění pouze index $r$. Hraniční $\DOWN$ podle (19) násobí
+kontinuální část faktorem $t$ a přidává nezáporný atom v $t=0$.
+Tedy $t^3f_r(t)$ zůstává tvaru $t^3\widetilde f_r(t)$ s
+$\widetilde f_r\ge0$ koeficient po koeficientu.
+\end{proof}
+
+Definujme
+\[
+h_r:=\int_0^1(1-t)\,\nu_r(dt).
+\tag{23}
+\]
+Pak
+\[
+q=B(1)=h_0.
+\]
+
+\begin{lemma}[sandwich pro druhou hmotnost]
+Na kuželu (22)
+\[
+\boxed{
+h_1+\frac23(q-e_0)
+\le B(2)
+\le h_1+(q-e_0).
+}
+\tag{24}
+\]
+Navíc
+\[
+e_r\le h_r.
+\tag{25}
+\]
+\end{lemma}
+
+\begin{proof}
+V ekvivalentních Waringových souřadnicích
+\[
+\nu_r=e_r\delta_0+\sum_{k\ge3}\omega_{r,k}(k+1)t^k\,dt,
+\qquad \omega_{r,k}\ge0.
+\]
+Pak
+\[
+q-e_0=\sum_{k\ge3}\frac{\omega_{0,k}}{k+2},
+\]
+zatímco
+\[
+B(2)-h_1
+=
+\sum_{k\ge3}
+\frac{k+1}{(k+2)(k+3)}\omega_{0,k}.
+\]
+Pro $k\ge3$
+\[
+\frac23\le\frac{k+1}{k+3}<1,
+\]
+což dává (24). Dále
+\[
+h_r=e_r+\sum_{k\ge3}\frac{\omega_{r,k}}{k+2}\ge e_r.
+\]
+\end{proof}
+
+\begin{lemma}[fronty pod $T_0$]
+Souřadnice $(p,q,h_1,e_0)$ jsou pod $T_0$ uzavřené:
+\[
+p'=\frac78p,\qquad
+q'=\frac p2+\frac78q,
+\]
+\[
+h_1'=\frac78h_1+\frac a8q,
+\qquad
+e_0'=\frac p2+\frac78e_0.
+\tag{26}
+\]
+Residuum $\sigma:=q-e_0$ splňuje
+\[
+\boxed{\sigma'=\frac78\sigma.}
+\tag{27}
+\]
+\end{lemma}
+
+Pro orbitu $T_0^nB^{(3)}$ tedy
+\[
+p_n=\frac14\left(\frac78\right)^n,
+\qquad
+q_n=
+\left(\frac78\right)^n
+\left(\frac3{20}+\frac n7\right).
+\tag{28}
+\]
+
+\section{Exactní děti zákona $B^{(3)}$}
+
+\begin{lemma}
+Pro vazbu výše platí
+\[
+T_0B^{(3)}
+=
+\frac7{32}\delta_0+
+\frac18\delta_1+
+\frac{21}{32}W_{0,3},
+\tag{29}
+\]
+\[
+T_4B^{(3)}
+=
+\frac{31}{160}\delta_0+
+\frac{21}{32}W_{0,3}
++\frac3{20}W_{0,4},
+\tag{30}
+\]
+a
+\[
+T_2B^{(3)}
+=
+\frac{31}{160}\delta_0+
+\frac1{16}\delta_1+
+\frac1{32}\delta_2+
+\frac{15}{32}W_{0,3}
++\frac3{20}W_{0,4}
++\frac3{32}W_{1,3}.
+\tag{31}
+\]
+\end{lemma}
+
+\begin{proof}
+V $B^{(3)}$ je $p=1/4$, a tedy
+\[
+a=0,\qquad c=2,\qquad u=4,\qquad v=2.
+\]
+Dosazení do (13) a použití (17) dává (29)--(31).
+\end{proof}
+
+\begin{corollary}
+Platí
+\[
+T_4B^{(3)}\succeq_{\st}B^{(3)}.
+\tag{32}
+\]
+\end{corollary}
+
+\begin{proof}
+Pro $j\ge1$
+\[
+S_{T_4B^{(3)}}(j)
+=
+\frac{3(9j+34)}{8(j+3)(j+4)},
+\]
+zatímco $S_{B^{(3)}}(j)=3/(j+3)$. Proto
+\[
+\frac{S_{T_4B^{(3)}}(j)}{S_{B^{(3)}}(j)}
+=
+\frac{9j+34}{8j+32}\ge1.
+\]
+\end{proof}
+
+Pro $T_2$ a $j\ge3$ platí přesně
+\[
+\frac{S_{T_2B^{(3)}}(j)}{S_{B^{(3)}}(j)}
+=
+\frac{8j^2+47j+64}{8j^2+48j+64}
+=
+1-\frac{j}{8(j+2)(j+4)}.
+\tag{33}
+\]
+
+\section{Minimaxový one-fan}
+
+Nechť $B$ je libovolný pravděpodobnostní zákon a
+\[
+\mu:=Q*B.
+\]
+Předpokládejme, že one-fan existuje, tj.
+\[
+P\preceq_{\st}\mu
+\quad\Longleftrightarrow\quad
+F_\mu(k)\le F_P(k)\quad(k\ge0).
+\tag{34}
+\]
+One-fan je coupling $\pi(x,s)$ s marginály $P$ a $\mu$ a podporou
+$x\le s$. Příslušné dítě splňuje
+\[
+B_x(j)=\frac{\pi(x,x+j)}{P_x},
+\]
+takže
+\[
+B_x(0)=\frac{\pi(x,x)}{P_x}.
+\]
+
+\begin{definition}
+Definujme
+\[
+\tau(B):=
+\inf_\pi\max_{0\le x\le4}B_x(0),
+\tag{35}
+\]
+kde infimum běží přes všechny one-fany.
+\end{definition}
+
+\begin{theorem}[přesný minimax diagonály]
+Platí
+\[
+\boxed{
+\tau(B)=
+\max_{0\le k\le4}
+\left(
+\frac{F_\mu(k)-F_P(k-1)}{P_k}
+\right)_+,
+}
+\tag{36}
+\]
+kde $F_P(-1):=0$.
+Navíc jediný kvantilový coupling současně minimalizuje každou
+diagonální hmotnost $\pi(k,k)$.
+\end{theorem}
+
+\begin{proof}
+Fixujme $k$. Hmota sloupců $s\le k$ je $F_\mu(k)$. Řádky
+$0,\dots,k-1$ mohou absorbovat nejvýše $F_P(k-1)$. Přebytek
+\[
+\bigl(F_\mu(k)-F_P(k-1)\bigr)_+
+\]
+proto musí skončit v řádku $k$. Ze sloupců $s\le k$ je pro řádek
+$k$ povolen pouze bod $(k,k)$. Tedy pro každý fan
+\[
+\pi(k,k)\ge
+\bigl(F_\mu(k)-F_P(k-1)\bigr)_+.
+\tag{37}
+\]
+
+Nyní vezměme kvantilový coupling. Na jednotkovém intervalu mají
+události $X=k$ a $S=k$ intervaly
+\[
+(F_P(k-1),F_P(k)],
+\qquad
+(F_\mu(k-1),F_\mu(k)].
+\]
+Z (34)
+\[
+F_\mu(k-1)\le F_P(k-1),
+\qquad
+F_\mu(k)\le F_P(k).
+\]
+Délka jejich průniku je tedy přesně
+\[
+\pi(k,k)
+=
+\bigl(F_\mu(k)-F_P(k-1)\bigr)_+.
+\tag{38}
+\]
+Kvantilový coupling má současně podporu $X\le S$. Dolní meze (37)
+jsou proto dosaženy pro všechna $k$ zároveň. Po vydělení $P_k$
+dostáváme (36).
+\end{proof}
+
+\section{Vyvážený kužel}
+
+Pišme
+\[
+p=B(0),\quad q=B(1),\quad r=B(2),\quad s=B(3),\quad t=B(4).
+\]
+
+\begin{theorem}[jednokroková kontrakce nulové hmotnosti]
+Následující čtyři nerovnosti
+\[
+13p+7q\le8,
+\tag{39a}
+\]
+\[
+23p+27q+7r\le24,
+\tag{39b}
+\]
+\[
+43p+37q+27r+7s\le40,
+\tag{39c}
+\]
+\[
+57p+57q+37r+27s+7t\le56
+\tag{39d}
+\]
+jsou ekvivalentní podmínce
+\[
+\tau(B)\le\frac78p.
+\tag{40}
+\]
+Je-li (39a)--(39d) splněno, existuje exactní one-fan, pro který
+\[
+\boxed{
+B_x(0)\le\frac78B(0)
+\qquad\text{pro všechna }x=0,\dots,4.
+}
+\tag{41}
+\]
+Pro $x=0$ je rovnost nevyhnutelná.
+\end{theorem}
+
+\begin{proof}
+Pro $k=0$ je
+\[
+\frac{F_\mu(0)}{P_0}
+=
+\frac{Q_0p}{P_0}
+=
+\frac78p.
+\]
+Pro $k=1,2,3,4$ dosadíme $\mu=Q*B$ do (36) a požadujeme, aby
+každý člen byl nejvýše $7p/8$. Po vynásobení $64$ dostáváme
+právě (39a)--(39d). Tyto nerovnosti zároveň dávají
+$F_\mu(k)\le F_P(k)$, takže one-fan existuje. Kvantilový fan z
+předchozí věty realizuje (41).
+\end{proof}
+
+\begin{corollary}[zákon $B^{(3)}$ splňuje vyvážené nerovnosti]
+Pro $B^{(3)}$
+\[
+p=\frac14,\quad
+q=\frac3{20},\quad
+r=\frac1{10},\quad
+s=\frac1{14},\quad
+t=\frac3{56}.
+\]
+Levé strany (39a)--(39d) jsou po řadě
+\[
+\frac{43}{10},\qquad
+\frac{21}{2},\qquad
+\frac{39}{2},\qquad
+\frac{1613}{56},
+\]
+a tedy jsou ostře menší než
+\[
+8,\qquad24,\qquad40,\qquad56.
+\]
+Proto existuje one-fan z $B^{(3)}$ se
+\[
+B_x(0)\le\frac7{32}
+\qquad(x=0,\dots,4).
+\tag{42}
+\]
+Přesná minimaxová hodnota je
+\[
+\boxed{\tau(B^{(3)})=\frac7{32}.}
+\tag{43}
+\]
+\end{corollary}
+
+\section{Bezpodmínečný sandwich}
+
+Z tvrzení výše plyne bez dalších hypotéz
+\[
+\boxed{
+\kappa_0\log n-o(\log n)
+\le
+\mathcal B_n
+\le
+\frac{473}{56}\,n^{1/4}.
+}
+\tag{44}
+\]
+Rovnice (17)--(33) jsou přesné identity pro uvedenou Q-fresh vazbu.
+Věty (36) a (39)--(43) jsou přesné jednokrokové optimalizační výroky.
+Žádné tvrzení v tomto dokumentu neprohlašuje
+$\mathcal B_n=O(\log n)$.
+
+\section{$T_0$ ve čtyřech souřadnicích a $\mu=1$}
+
+Residuum $\sigma:=q-e_0$ splňuje $\sigma'=7\sigma/8$. Čtveřice
+$(p,q,h_1,e_0)$ je pod $T_0$ uzavřená.
+
+\begin{theorem}[$T_0$ drží $q+h_1\le q_{\max,2}$]
+Nechť $q_{\max,2}(p)=(1-p)\min\bigl(1,(4-10p)/3\bigr)$.
+Je-li $q+h_1\le q_{\max,2}(p)$ a $p\in[0,1/4]$, totéž platí po $T_0$.
+Nejhorší případ je $q=V$, $h_1=0$. Slack proti $q_{\max,2}(7p/8)$ je
+\[
+\frac{p(56-195p)}{96}\ge0
+\qquad\text{na }[0,1/4],
+\]
+protože $195/4<56$. V $p=1/4$ je slack $29/1536$.
+\end{theorem}
+
+\begin{remark}
+$\mu>1$ v nejhorším případě neplatí už v $p=0$. $T_2$ se $\mu=1$
+neuzavírá: na stěně $\mathcal K$ s $(p,q)=(1/10,9/10)$ a $B(2)=0$ je
+$q'/q_{\max,2}(p')=47/30>1$. Separátní $\{h\text{ klesá}\}$ a
+$\{h_1\le q\}$ padají na $T_0^{18}(B^{(3)})$.
+\end{remark}
+
+Pro děti $B^{(3)}$ platí $B(2)$
+\[
+T_0:\ \tfrac7{80},\qquad
+T_4:\ \tfrac{59}{560},\qquad
+T_2:\ \tfrac{73}{560}.
+\]
+
+\section{Geometrie předplacení}
+
+Při hypotéze $M_n\le 1+a/n$ na dyadických škálách je cena zdvojení
+$n\to 2n$ rovna $4na/(n+a)\le 4a$, tedy
+\[
+G_a(2^m)=4am+O_a(1),\qquad
+G_a(n)=\frac{4a}{\log 2}\log n+O_a(1).
+\]
+Na log-log je konstantní $a$ jen svislý posun. Poměr k dolní mezi
+\[
+\frac{G_a(n)}{\kappa_0\log n}\to\frac{a}{a_{\mathrm{crit}}},
+\qquad
+a_{\mathrm{crit}}=\frac{\kappa_0\log 2}{4}\approx 0.0028479209.
+\]
+
+\begin{corollary}[nutné $a$]
+Platí-li $M_n\le 1+a/n$ pro všechna dyadická $n$, pak
+$a\ge a_{\mathrm{crit}}$. Existence takového $a$ není dokázána.
+\end{corollary}
+
+Na $n=2$ je $M=1$ (cena $0$) věta na $\nu_8$ a $B_*|T$.
+
+\section{Walshův mód a Haarova hrana}
+
+Exchangeable lift: $\widetilde P(\omega)=P_{|\omega|}/\binom4{|\omega|}$
+a analogicky $\widetilde Q$.
+
+\begin{theorem}[Walsh]
+\[
+\widetilde P(\omega)-\widetilde Q(\omega)=\frac{(-1)^{|\omega|}}{64}.
+\tag{A}
+\]
+Každý marginál na nejvýše třech bitech je pro $P$ a $Q$ totožný.
+\end{theorem}
+
+\begin{proof}
+Přímé dosazení po vahách $k=0,\dots,4$:
+\[
+\begin{aligned}
+k=0&\colon& \tfrac18-\tfrac7{64}&=\tfrac1{64},\\
+k=1&\colon& \tfrac1{16}-\tfrac5{64}&=-\tfrac1{64},\\
+k=2&\colon& \tfrac1{24}-\tfrac5{192}&=\tfrac1{64},\\
+k=3&\colon& \tfrac1{16}-\tfrac5{64}&=-\tfrac1{64},\\
+k=4&\colon& \tfrac18-\tfrac7{64}&=\tfrac1{64}.
+\end{aligned}
+\]
+Walshův charakter stupně $4$ má všechny vlastní marginály stupně $\le 3$
+nulové, tedy totožné pro $P$ a $Q$.
+\end{proof}
+
+Pro tříbitový kontext váhy $r$
+\[
+m_r=\Bigl(\tfrac3{16},\tfrac5{48},\tfrac5{48},\tfrac3{16}\Bigr),\quad
+p_r=\Bigl(\tfrac13,\tfrac25,\tfrac35,\tfrac23\Bigr),\quad
+q_r=\Bigl(\tfrac5{12},\tfrac14,\tfrac34,\tfrac7{12}\Bigr).
+\]
+
+\begin{lemma}[Haarova hrana]
+\[
+m_r(q_r-p_r)=\frac{(-1)^r}{64},
+\tag{B}
+\qquad
+\binom3r m_r(q_r-p_r)=\frac1{64}(1,-3,3,-1)_r.
+\tag{C}
+\]
+\end{lemma}
+
+\begin{proof}
+Čtyři hodnoty:
+\[
+\begin{aligned}
+r=0&\colon& \tfrac3{16}\bigl(\tfrac5{12}-\tfrac13\bigr)
+&=\tfrac3{16}\cdot\tfrac1{12}=\tfrac1{64},\\
+r=1&\colon& \tfrac5{48}\bigl(\tfrac14-\tfrac25\bigr)
+&=\tfrac5{48}\cdot\bigl(-\tfrac3{20}\bigr)=-\tfrac1{64},\\
+r=2&\colon& \tfrac5{48}\bigl(\tfrac34-\tfrac35\bigr)
+&=\tfrac5{48}\cdot\tfrac3{20}=\tfrac1{64},\\
+r=3&\colon& \tfrac3{16}\bigl(\tfrac7{12}-\tfrac23\bigr)
+&=\tfrac3{16}\cdot\bigl(-\tfrac1{12}\bigr)=-\tfrac1{64}.
+\end{aligned}
+\]
+Vynásobení $\binom3r$ dá (C).
+\end{proof}
+
+\section{Causal thinning na parity core}
+
+$P=\frac78 R+\frac18 E$, $Q=\frac78 R+\frac18 O$, kde
+$R=\frac1{56}(7,16,10,16,7)$,
+\[
+E(z)=\frac{1+6z^2+z^4}{8},\qquad
+O(z)=\frac{z+z^3}{2},\qquad
+E-O=\frac18(1-z)^4.
+\]
+
+\begin{theorem}[Thinning]
+\[
+\mathcal B_n(P,Q)\le\mathcal B_n(E,O).
+\tag{D}
+\]
+\end{theorem}
+
+\begin{proof}
+Platí $P=\frac78 R+\frac18 E$ a $Q=\frac78 R+\frac18 O$.
+V každém kroku $t$ losujeme skrytě a nezávisle $C_t\sim\mathrm{Bernoulli}(1/8)$,
+nezávisle na veřejné historii.
+
+Je-li $C_t=0$, položíme $X_t=Y_t\sim R$. Rezerva se nemění.
+Je-li $C_t=1$, provedeme jeden krok exactního $(E,O)$ protokolu hloubky
+nejvýše $n$: veřejný výstup má zákon $E$, vstup zákon $O$.
+
+Pak
+\[
+\mathrm{Law}(Y_t\mid\mathcal F_{t-1})
+=\tfrac78 R+\tfrac18 O=Q,
+\]
+takže vstupy jsou čerstvé $Q$. Po zprůměrování přes skryté $C_t$
+\[
+\mathrm{Law}(X_t\mid\mathcal H_{t-1})
+=\tfrac78 R+\tfrac18 E=P,
+\]
+tedy veřejný marginál je $P$. Počet aktivních kroků $C_t=1$ během $n$
+fyzických kroků je nejvýše $n$, proto stačí $(E,O)$ protokol hloubky $n$.
+Počáteční střední rezerva $(E,O)$ stromu je přípustná i pro $(P,Q)$.
+\end{proof}
+
+Dva aktivní kroky: $K\sim\frac18(1,6,1)$, $V\sim\mathrm{Bernoulli}(1/2)$,
+\[
+K_1+K_2\sim\frac1{64}(1,12,38,12,1)=P_{\mathrm b},\qquad
+1+V_1+V_2\sim\frac1{64}(0,16,32,16,0)=Q_{\mathrm b}.
+\]
+$P_{\mathrm b}-Q_{\mathrm b}=(1-z)^4/64$. To je starý coarse boundary blok.
+
+Existuje prefix-causal vrstva
+\[
+\mathsf P_1\longrightarrow
+\tfrac38\mathsf T+\tfrac12\boldsymbol\Phi+\tfrac18\mathscr D_2\mathsf P_1.
+\tag{E}
+\]
+Pro $\mathcal C=\{b_0=0,\ b_1\le 13/16\}$:
+\[
+\tfrac12\longrightarrow\tfrac{15}{38}\longrightarrow\tfrac{189}{722}
+<\tfrac{13}{48}\longrightarrow\mathcal C,
+\]
+nejvýše tři critical kroky, repair margin alespoň $7/128$.
+
+\section{Blokový most}
+
+$E^{*2}(z)=P_{\mathrm b}(z^2)$, $O^{*2}(z)=Q_{\mathrm b}(z^2)$.
+Seskupením dvojic symbolů ve stromu hloubky $2n$ pro $(E,O)$ vznikne
+strom hloubky $n$ pro $(E^{*2},O^{*2})$; dělení rezervy dvěma ho
+převádí na coarse pair.
+
+\begin{theorem}[blokový most]
+\[
+2\,\mathcal B_n(P_{\mathrm b},Q_{\mathrm b})
+\le
+\mathcal B_{2n}(E,O)
+\le
+2\,\mathcal B_n(P_{\mathrm b},Q_{\mathrm b})+4.
+\tag{*}
+\]
+S thinningem (D)
+\[
+\mathcal B_{2n}(P,Q)
+\le
+2\,\mathcal B_n(P_{\mathrm b},Q_{\mathrm b})+4.
+\tag{**}
+\]
+\end{theorem}
+
+\begin{proof}
+Generující funkce dávají $E(z)^2=P_{\mathrm b}(z^2)$ a $O(z)^2=Q_{\mathrm b}(z^2)$:
+\[
+(1+6z^2+z^4)^2=1+12z^2+38z^4+12z^6+z^8,
+\]
+což je $64\,P_{\mathrm b}(z^2)$, a analogicky pro $O$.
+
+Nechť $T$ je exactní $(E,O)$ strom hloubky $2n$ s kořenovou rezervou $J$.
+Seskupme po sobě jdoucí dvojice symbolů. Součet dvou $E$-výstupů leží
+na sudé mřížce $\{0,2,4,6,8\}$ a po dělení dvěma má zákon $P_{\mathrm b}$.
+Součet dvou $O$-vstupů po dělení dvěma má zákon $Q_{\mathrm b}$.
+Rozdíl rezervy přes dvojici je sudý. Položíme-li $J'=J/2$ na
+půlškále, dostaneme exactní $(P_{\mathrm b},Q_{\mathrm b})$ strom hloubky
+$n$. Proto $\E J\ge 2\mathcal B_n(P_{\mathrm b},Q_{\mathrm b})$, což je
+levá nerovnost v (*).
+
+Opačně: z exactního $(P_{\mathrm b},Q_{\mathrm b})$ stromu hloubky $n$
+zvedneme rezervu faktorem $2$ a každý coarse krok nahradíme dvojicí
+$(E,O)$ kroků. Zpoždění nejvýše jednoho coarse kvanta velikosti $4$
+(maximální výstup páru po půlení) dává pravou nerovnost.
+Nerovnost (**) je (*) plus (D).
+\end{proof}
+
+Tedy
+\[
+\mathcal B_n(P,Q)=\Theta(\log n)
+\quad\Longleftarrow\quad
+\mathcal B_n(P_{\mathrm b},Q_{\mathrm b})=O(\log n).
+\]
+Ordered-history lift z coarse bloku na symboly už není otevřená mezera.
+
+Zkratka $B_1=B_3=B$ dává
+$P_c=\frac1{40}(1,0,38,0,1)$, $Q_c=\frac1{40}(0,4,32,4,0)$,
+$P_c=\frac45\delta_2+\frac15 E$, $Q_c=\frac45\delta_2+\frac15 O$.
+Hmotnost $1/5$ není horizon $n/5$. Není rekurzivní důkaz.
+
+\section{Weak $L^1$ --- převod, ne věta}
+
+Předpokládejme regeneraci $\Phi$ s
+\[
+m_s\le C\,2^{-s},\qquad J\le K\,2^s.
+\tag{F,G}
+\]
+Pak $\E\min(J,N)\le (CK/\log 2)\log N+O(1)$. Antecedent není dokázán.
+To je algebra ``pádu atmosférou''.
+
+Nosný otevřený objekt:
+\[
+\Phi_s\stackrel{\mathrm{causal}}{\longrightarrow}
+\text{finite boundary grammar}+\tfrac12\,\Phi_{s+1}.
+\]
+
+\section{Dyadický boundary-flow}
+
+Pětivětvový fan $(P_{\mathrm b},Q_{\mathrm b})$. Na critical core
+$\mathcal C=\{b_0=0,\ b_1\le 13/16\}$ platí $B_0,B_2\in\mathcal C$ a hard edge
+\[
+\tfrac12\to\tfrac{15}{38}\to\tfrac{189}{722}
+<\tfrac{13}{48}\to\mathcal C,
+\]
+s repair marginem alespoň $7/128$.
+
+Faktor $1/2$ \textbf{není} vlastnost $n\to n-1$. Půlení na každém kroku
+stromu by dalo $2^{-t}$, ne $1/n$. Účet
+\[
+p_n=\frac1{8n},\qquad p_{2n}=\frac12 p_n,
+\qquad
+\frac{1/(16n)}{1/(8n)}=\frac12
+\]
+říká, že $1/2$ je survival přes slupku $4n\to 8n$. Pět dětí packet jen nese
+kauzálně. Zakázáno je
+\[
+\forall x:\quad \mathrm{top}(B_x)\le\tfrac12\,\mathrm{top}(\beta_{n-1}).
+\]
+
+\begin{proposition}[prefixový zámek]
+Fan v uzlu $h$ se volí před všemi dětmi $hx$. Nelze dát pokračování
+$0^{t+1}$ jiný donor než $0^t2$. To je podmínka exactnosti (ZR), ne
+konstrukce.
+\end{proposition}
+
+\begin{conjecture}[dyadic boundary-flow]
+Existuje konstanta $C<\infty$ a jeden prefix-kompatibilní, phase-indexed
+fan se stejnými donor packets pro všechny děti naráz, který realizuje
+\[
+\mathcal L_n(\delta)\longrightarrow
+\mathcal L_{2n}\!\left(\tfrac12\delta+C\delta^2\right).
+\]
+Ekvivalentně: boundary packet $p_n\delta_{4n}$ lze přes depth-$n$ causal
+fan transportovat do dyadické slupky tak, že každý leaf je znovu
+admissible na škále $2n$ a pouze podíl $\frac12+O(\delta)$ zůstává
+kritický.
+\end{conjecture}
+
+Na stěně $b_0=0$ je hlášen exactní invariant
+$W(B)=R_5(B)-4b_1$, $W(C_0)=W(B)+\frac18 b_4$. Aktivní větve $x=2,4$ při
+pullbacku vytáhnou $b_6$ a další koeficienty. Pozitivní konečná ani
+countable gramatika se z nich neuzavřela. Tento článek \textbf{nedokazuje}
+Conjecture výše.
+\[
+\boxed{\text{NEUZAVŘENO}}
+\]
+To není protiargument proti $\mathcal B_n=O(\log n)$. Chybí pozitivní
+substitution lemma.
+
+\section{Další dokázané kotvy z ledgeru}
+
+\begin{itemize}
+\item $H(B)\le 8/11$ pro nekonečně pokračovatelné stavy,
+$H(B)=B(0)+(7/27)B(1)$.
+\item $B\in K_2\iff H(B)\le 200/243$.
+\item $b_0\le 13/20\Rightarrow B\succeq_{\mathrm{st}}\rho_4\Rightarrow B\in K_4$.
+\item $\Xi_{2,4}(B_h;1)=0$ na $\nu_8$ a $B_*|T$. Tedy $n=2$, $M=1$.
+\item $\nu_8\in K_8$, $\beta_4\in K_8$, $\beta_8\in K_8$.
+\item $\Gamma_5(\mu)=531441/446731$. Pevné semínko $\mu$ nemá
+$\Gamma_n=1+O(1/n)$.
+\item Afinní $\Xi_{1,s}(\mu;M)$ na dokumentovaných intervalech $M$.
+\end{itemize}
+
+\section{Zakázáno}
+
+\begin{itemize}
+\item $Q*\beta_n\not\succeq_{\mathrm{st}}P*\beta_{n-1}$ (gap $5/256$ v $k=1$).
+\item $\{p\le 1/4\}$ není invariant: $p=1/4$, $q=3/4$ dává $p'_2=11/32$.
+\item $\{B\succeq B^{(3)}\}$ není invariant: $T_2(B^{(3)})\not\succeq_{\mathrm{st}}B^{(3)}$.
+\item $\{h_{r+1}\le h_r\}$ a $\{h_1\le q\}$ padají na $T_0^{18}(B^{(3)})$.
+\item Stacionární interior klec HEAD-max na ose $b_1=0$ neexistuje.
+\end{itemize}
+
+\section{Otevřené}
+
+Jediný theorem-level krok k $\mathcal B_n=O(\log n)$ je Conjecture
+(dyadic boundary-flow): jeden prefix-kompatibilní fan. Z mostu (*) to
+stačí. Dále zůstávají (Q) pro $\beta_{2^m}$, barrier front po $T_2/T_4$
+a existence $B_*\in K_\infty$. Žádné z nich tento článek neprohlašuje
+za větu.
+
+\section{Závěr}
+
+Dokázáno je
+\[
+\kappa_0\log n-o(\log n)
+\le\mathcal B_n
+\le\frac{473}{56}\,n^{1/4},
+\]
+Walshův mód, thinning (D) a blokový most (*).
+\textbf{Neštěpíme hmotu mezi větve. Rozbalujeme ji mezi škály.}
+Ten unwrap není sestrojen. Proto
+\[
+\boxed{\mathcal B_n=O(\log n)\quad\text{je otevřené.}}
+\]
+
+\end{document}
