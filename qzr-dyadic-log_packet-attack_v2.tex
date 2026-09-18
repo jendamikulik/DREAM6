@@ -1,0 +1,869 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{czech}
+\setotherlanguage{english}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Věta}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Důsledek}
+\newtheorem{proposition}[theorem]{Tvrzení}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definice}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Poznámka}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\Nzero}{\mathbb N_0}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cH}{\mathcal H}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cR}{\mathcal R}
+\newcommand{\cW}{\mathcal W}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\DOWN}{\mathsf D}
+\newcommand{\UP}{\mathsf U}
+\newcommand{\supp}{\operatorname{supp}}
+
+\title{Quartic Zero-Repair:\\Galeův 4-fan, rodina na \(\{2,3\}\) a chudá větev}
+\author{}
+\date{17.~září 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Statický kužel \(\cC_\ast=\{b_0=0\}\cap\cR\cap\cW_2\) se neuzavírá.
+Invariant \(\cH=\{b_0=b_1=0\}\) leží v~\(\cR\) automaticky.
+Explicitní jádro (greedy nula + pravý 4-fan) má v~\(\cH\) všechny Hoffmanovy--Galeovy řezy;
+to je QED. Rodina \(\cG\) zákonů na \(\{2,3\}\) se pro \(\beta\in[3/20,17/20]\)
+zobrazuje do \(\cG^5\) s~explicitními \(\beta_x\).
+Mapa \(\beta_1=(20\beta-1)/16\) ale \(\beta\) zvedá, chudá větev míří k~\(\delta_2\)
+a v~hloubce \(6\) opouští \(\cH\) i~\(\cR\) (Hall2 \(>8\)).
+Proto \(\cB_n=O(\log n)\) z~tohoto jádra \emph{neplyne}.
+\end{abstract}
+
+\tableofcontents
+
+\section{Stav}
+
+\begin{theorem}[Co je a není QED]
+\label{thm:status}
+\begin{enumerate}[leftmargin=1.4em]
+\item Věty~\ref{thm:no-static}--\ref{thm:Nr} (statický \(\cC_\ast\), hierarchie \(N_r\)) jsou QED.
+\item Lemma~\ref{lem:H-in-R}: \(\cH\subset\cR\), QED.
+\item Věta~\ref{thm:residual}: zbytkový Gale v~\(\cH\), QED.
+\item Tvrzení~\ref{prop:G}: \(\cG\to\cG^5\) na intervalu \(\beta\in[3/20,17/20]\) s~explicitními vzorci, QED.
+\item Tvrzení~\ref{prop:poor}: chudá větev \(\beta_1=(20\beta-1)/16\) je rostoucí pro \(\beta>1/4\)
+      a v~hloubce \(6\) dyadického stromu existuje uzel s~\(b_1>0\) a Hall2 \(>8\). Tedy toto jádro
+      \emph{nemapuje} dyadický strom do \(\cH\cap\cR\) v~libovolné hloubce.
+\item Rovnost \(\cB_n\le 2+\lceil\log_2 n\rceil\) z~tohoto jádra neplyne.
+\end{enumerate}
+\end{theorem}
+
+Zero-ray (greedy nula, \(\beta'=7\beta/8\) klesá) je lehká větev. Těžká je \(x=1\).
+
+\section{Značení}
+
+\(P=(8,16,16,16,8)/64\), \(Q=(7,20,10,20,7)/64\). Exactní ZR:
+\begin{equation}
+\label{eq:zr}
+Q*B_h=\sum_{x=0}^4 P_x\,\delta_x*B_{hx}.
+\end{equation}
+\(b_j=B(\{j\})\), \(\beta:=b_2\), \(\mu=Q*B\).
+\begin{align*}
+\cR&=\bigl\{12b_1+7b_2\le 8,\;
+9b_1+8b_2+8b_3+7b_4\le 8\bigr\},\\
+\cW_2&=\bigl\{S_B(j)\le 2/j\bigr\},\qquad
+\cC_\ast=\{b_0=0\}\cap\cR\cap\cW_2,\\
+\cH&=\{B:b_0=b_1=0\},\\
+\cG&=\{B\in\cH:\operatorname{supp}B\subset\{2,3\}\}.
+\end{align*}
+Dyadický kořen: \(I_s=\ind_{\{U\le 2^{-s}\}}\), \(J_0=1+\sum_{s=0}^m 2^s I_s\), \(m=\lceil\log_2 n\rceil\).
+Pak \(b_0=b_1=0\), \(\beta=1/2\), nosič \(\{2,4,\dots,2^{m+1}\}\), \(\E J_0=2+m\).
+
+\section{Statický kužel je mrtvý}
+
+\begin{theorem}
+\label{thm:no-static}
+\(B=\frac13(\delta_2+\delta_3+\delta_4)\in\cC_\ast\), ale žádný exactní fan do \(\cC_\ast^5\) neexistuje.
+\end{theorem}
+
+\begin{proof}
+Hall \(7/3<8\), \(23/3<8\). \(S(2)=1\), \(S(3)=2/3\), \(S(4)=1/3\).
+\(\mu_1=0\), \(\mu_2=7/192\), \(P_0=24/192\), tedy \(S_{B_0}(3)\ge 17/24>2/3\).
+\end{proof}
+
+\begin{theorem}
+\label{thm:Nr}
+Zero-child s~\(a c_1+b c_2\ge R\) nutí \((7a+20b)b_1+7b\,b_2\ge 8R\).
+Start \((27,7,8/3)\) dává
+\begin{equation}
+\label{eq:Nr}
+(27+20r)b_1+7b_2\ge\frac83\Bigl(\frac87\Bigr)^r. \tag{\(N_r\)}
+\end{equation}
+\end{theorem}
+
+\begin{corollary}
+Infinite exact tree v~jednom \(\cW_2\) na zero-ray neexistuje.
+\end{corollary}
+
+\section{\(\cH\subset\cR\) a greedy jádro}
+
+\begin{lemma}
+\label{lem:H-in-R}
+\(\cH\subset\cR\): \(7\beta\le 7<8\) a \(8\beta+8b_3+7b_4\le 8(\beta+b_3+b_4)\le 8\).
+\end{lemma}
+
+\begin{definition}[Jádro]
+\label{def:kernel}
+Řádek \(x=0\) bere nejmenší \(s\ge 1\) do hmotnosti \(P_0\).
+Zbytek plní \(x=4,3,2,1\) zprava, každý jen \(s\ge x+1\).
+\end{definition}
+
+\begin{lemma}[Greedy nula v~\(\cH\)]
+\label{lem:greedy0}
+Pro \(B\in\cH\) je \(\mu_1=0\), \(\mu_2=7\beta/64\). \(B_0\in\cH\).
+Je-li navíc \(B\in\cG\) a \(\beta\ge 1/20\), pak \(B_0\in\cG\) s~\(\beta'=7\beta/8\).
+\end{lemma}
+
+\begin{proof}
+\(\mu_3=(13\beta+7)/64\) na \(\cG\). Srovnání s~\(P_0-\mu_2=(8-7\beta)/64\) je \(20\beta\ge 1\).
+\end{proof}
+
+\section{Galeův 4-fan v~\(\cH\)}
+\label{sec:gale}
+
+Po greedy nule: \(\mu^{\mathrm{res}}_2=0\), celková hmota \(7/8\).
+Hrana \((x,s)\) iff \(x\in\{1,2,3,4\}\) a \(s\ge x+1\).
+
+\begin{lemma}[Vnořené řezy]
+\label{lem:gale-form}
+Úloha je řešitelná, právě když
+\[
+\begin{aligned}
+P_4&\le\mu^{\mathrm{res}}(s\ge 5),&
+P_3+P_4&\le\mu^{\mathrm{res}}(s\ge 4),\\
+P_2+P_3+P_4&\le\mu^{\mathrm{res}}(s\ge 3),&
+\sum_{x\ge 1}P_x&=\mu^{\mathrm{res}}(\mathrm{celkem}),
+\end{aligned}
+\]
+a \(\mu^{\mathrm{res}}(\{2,\dots,k\})\le\sum_{x=1}^{\min(k-1,4)}P_x\) pro \(k\ge 2\).
+\end{lemma}
+
+\begin{lemma}[Řádky]
+\label{lem:row}
+V~\(\cH\) platí řádkové řezy.
+\end{lemma}
+
+\begin{proof}
+\(T_{\ge 3}=(8-7\beta)/64\) vždy, protože \(\mu_2<P_0\).
+Pak \(\mu^{\mathrm{res}}(s\ge 3)=1-\mu_2-T_{\ge 3}=7/8\ge 5/8\).
+
+Cut \(s\ge 4\): \(U=((8-7\beta)/64-\mu_3)_+\).
+Při \(U>0\) je \(\mu^{\mathrm{res}}(s\ge 4)=7/8\ge 3/8\).
+Při \(U=0\) je \(\mu(s\ge 4)=1-(27\beta+7b_3)/64\) a \(27\beta+7b_3=7(\beta+b_3)+20\beta\le 7+20=27<40\).
+
+Cut \(s\ge 5\): \(T=((8-7\beta)/64-\mu_3-\mu_4)_+\).
+Při \(T>0\) je \(\mu^{\mathrm{res}}(s\ge 5)=7/8\).
+Při \(T=0\) potřebujeme \(37\beta+27b_3+7b_4\le 56\).
+Z~Hall2 \(8\beta+8b_3+7b_4\le 8\) je levá \(\le 4\cdot 8+5\beta-5b_3-21b_4\le 32+5\beta\le 37<56\).
+\end{proof}
+
+\begin{lemma}[Sloupce]
+\label{lem:col}
+V~\(\cH\) platí sloupcové řezy.
+\end{lemma}
+
+\begin{proof}
+\(k=2\): \(\mu^{\mathrm{res}}_2=0\).
+\(k=3\): \(\mu^{\mathrm{res}}_3\le(27\beta+7b_3-8)_+/64\), a \(27\beta+7b_3\le 27<40=64\cdot 1/2+8\).
+\(k=4\): \(\mu^{\mathrm{res}}(\{2,3,4\})\le(37\beta+27b_3+7b_4-8)_+/64\le 29/64<48/64\).
+\(k\ge 5\): pravá strana je \(7/8\).
+\end{proof}
+
+\begin{theorem}[Zbytkový fan]
+\label{thm:residual}
+Pro každé \(B\in\cH\) je zbytková úloha řešitelná a pravý filling doběhne. Děti mají \(b_0=0\).
+\end{theorem}
+
+\section{Rodina \(\cG\) na \(\{2,3\}\)}
+\label{sec:G}
+
+Na \(\cG\) je \(\mu\) nesené \(\{2,\dots,7\}\):
+\begin{align*}
+\mu_2&=7\beta/64,&
+\mu_3&=(13\beta+7)/64,&
+\mu_4&=(20-10\beta)/64,\\
+\mu_5&=(10+10\beta)/64,&
+\mu_6&=(20-13\beta)/64,&
+\mu_7&=7(1-\beta)/64.
+\end{align*}
+Po greedy nule (\(\beta\ge 1/20\)):
+\(\mu^{\mathrm{res}}_2=0\), \(\mu^{\mathrm{res}}_3=(20\beta-1)/64\), \(\mu^{\mathrm{res}}_s=\mu_s\) pro \(s\ge 4\).
+
+\begin{proposition}[Explicitní mapa \(\cG\to\cG^5\)]
+\label{prop:G}
+Pro \(\beta\in[3/20,17/20]\) jádro posílá \(\cG\) do \(\cG^5\) a
+\begin{equation}
+\label{eq:betas}
+\begin{aligned}
+\beta_0&=7\beta/8,\\
+\beta_1&=(20\beta-1)/16,\\
+\beta_2&=(3+10\beta)/16,\\
+\beta_3&=(20\beta-3)/16,\\
+\beta_4&=(1+7\beta)/8.
+\end{aligned}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+\(\beta\ge 1/20\Rightarrow B_0\in\cG\), \(\beta_0=7\beta/8\).
+
+\(x=4\) zprava: \(\mu_7=7(1-\beta)/64<P_4\), zbytek ze \(s=6\).
+Podmínka \(\mu_6\ge P_4-\mu_7\) je \(20-13\beta\ge 1+7\beta\), \(\beta\le 19/20\).
+Pak \(j\in\{2,3\}\), \(\beta_4=(1+7\beta)/8\).
+
+\(x=3\): zbývá \(s=6\) v~objemu \((19-20\beta)/64\) a celé \(\mu_5\).
+Součet \((29-10\beta)/64\ge 16/64\) iff \(\beta\le 13/10\). Tedy \(x=3\) nepoužije \(s=4\),
+děti na \(\{j=2,3\}\). Pro \(\beta\ge 3/20\) je \(\pi(3,6)<P_3\), zbytek ze \(s=5\),
+\(\beta_3=(20\beta-3)/16\).
+
+\(x=1\) zleva: \(\mu^{\mathrm{res}}_3=(20\beta-1)/64\le P_1\) iff \(\beta\le 17/20\).
+Tedy \(x=1\) sebere celé \(s=3\) a část \(s=4\), \(B_1\in\cG\), \(\beta_1=(20\beta-1)/16\).
+
+\(x=2\) dostane střed. Zbývající \(s=5\) a \(s=4\) dají přesně \(P_2\):
+\(\pi(2,4)=(3+10\beta)/64\), \(\beta_2=(3+10\beta)/16\), nosič \(\{2,3\}\).
+\end{proof}
+
+Kontrola v~\(\beta=1/2\): \((\beta_x)=(7/16,\,9/16,\,1/2,\,7/16,\,9/16)\).
+
+\section{Chudá větev}
+\label{sec:poor}
+
+\begin{proposition}
+\label{prop:poor}
+Zobrazení \(\beta\mapsto(20\beta-1)/16\) má pevný bod \(\beta=1/4\).
+Pro \(\beta>1/4\) je \(\beta_1>\beta\). Start-li \(\cG\) v~\(\beta=1/2\), iterace \(x=1\) dává
+\[
+\tfrac12,\; \tfrac9{16},\; \tfrac{41}{64},\; \tfrac{189}{256},\;
+\tfrac{881}{1024},\;\dots
+\]
+a čtvrtý iterát už překročí \(\tfrac{17}{20}\).  Formule~\eqref{eq:betas}
+je tedy použitelná na prvních čtyřech parent stavech této \(1\)-ray, ale
+výsledný stav \(\beta_4=881/1024\) už leží mimo interval
+\([3/20,17/20]\); další použití stejného \(\cG\)-fillingu proto není
+oprávněné.
+\end{proposition}
+
+\begin{proof}
+Pevný bod: \(16\beta=20\beta-1\). Přesněji, pro
+\(f(\beta)=(20\beta-1)/16\),
+\[
+\boxed{
+f^k(\beta)-\frac14=
+\left(\frac54\right)^k\left(\beta-\frac14\right).
+}
+\]
+Pro start \(\beta_0=1/2\) tedy
+\[
+\beta_k=\frac14+\frac14\left(\frac54\right)^k.
+\]
+Protože
+\[
+\left(\frac54\right)^3=\frac{125}{64}<\frac{12}{5}
+<\frac{625}{256}=\left(\frac54\right)^4,
+\]
+platí \(\beta_3<17/20<\beta_4\). Hranice \(\beta=17/20\) je přesně
+\(\mu^{\mathrm{res}}_3=P_1\).
+\end{proof}
+
+Numericky na dyadickém stromu s~tímto jádrem: do hloubky \(5\) všichni potomci v~\(\cH\cap\cR\),
+\(\max\beta\approx 0{,}88\). V~hloubce \(6\) existuje uzel s~\(b_1=7767/262144>0\) a Hall2 \(\approx 8{,}030>8\).
+Tedy jádro \emph{není} invariantní na celém \(5\)-árním stromě.
+
+Zero-ray \(\beta_0=7\beta/8\) je kontraktivní a v~\(\cG\) zůstává až do \(\beta=1/20\); to k~QED na celém stromě nestačí.
+
+\section{Co z toho plyne}
+
+Gale v~\(\cH\) znamená: solventní 4-fan s~\(b_0=0\) existuje, kdykoli je rodič v~\(\cH\).
+To \emph{není} totéž co \(\cH\to\cH^5\), protože děti mohou nabýt \(b_1>0\) a porušit Hall2.
+
+K~logaritmické ceně chybí jádro, které
+\begin{enumerate}[leftmargin=1.4em]
+\item na zero-ray nechá \(\beta\) klesat (greedy nula to umí),
+\item na větvi \(x=1\) \emph{nežene} \(\beta\) k~\(\delta_2\):
+      musí tam poslat dost ocasu, nebo připustit \(b_1>0\) v~kuželu, který Hall2 unese.
+\end{enumerate}
+WPB dyadických značek pracuje na \emph{bohaté} větvi \(x=4\) (velké \(S\)).
+Chudá větev je posterior malého \(J\), značky \(I_s\) tam nepomohou.
+
+Dyadický kořen tedy dává \(\Law(J_0)\in K_n\) jen tehdy, když se chudá větev uzavře jiným fillingem.
+Tohle jádro to neudělá.
+
+
+% ============================================================
+\section{Packetov\'a Q-fresh vazba: konstruktivn\'i oprava chud\'e v\v etve}
+\label{sec:packet}
+% ============================================================
+
+Tato sekce nepou\v z\'iv\'a statick\'y ku\v zel $\cW_2$.
+Jej\'im c\'ilem je odstranit konkr\'etn\'i mechanismus z~odd\'ilu~\ref{sec:poor}:
+r\r ust hlavy na ve\v rejn\'e v\v etvi $x=1$.
+Rozli\v sujeme ji\v z zn\'am\'e couplingy (\textbf{SOURCE}) od nov\'e packetov\'e
+kombinace (\textbf{NEW}).
+
+\subsection{T\v ri element\'arn\'i couplingy}
+
+V\v sechny matice n\'i\v ze maj\'i sloupce $Q$; \v r\'adky jsou indexov\'any
+$x=0,\dots,4$ a sloupce $y=0,\dots,4$.
+
+Pro stav $J=0$ pou\v zijeme bezpe\v cnou matici
+\begin{equation}
+\label{eq:Cplus}
+C^{+}:=\frac1{64}
+\begin{pmatrix}
+7&4&0&0&0\\
+0&16&0&0&0\\
+0&0&10&4&2\\
+0&0&0&16&0\\
+0&0&0&0&5
+\end{pmatrix}.
+\end{equation}
+Jej\'i \v r\'adkov\'y z\'akon je
+\[
+R^{+}=P+\frac3{64}(\delta_0-\delta_4),
+\]
+a podpora spl\v nuje $X\le Y$, tak\v ze z~$J=0$ nikdy nevznikne z\'aporn\'a
+rezerva.
+
+Na kladn\'e rezerv\v e je p\v r\'ipustn\'a zn\'am\'a neut\'aln\'i matice
+\begin{equation}
+\label{eq:Czero}
+C^{0}:=\frac1{64}
+\begin{pmatrix}
+7&1&0&0&0\\
+0&16&0&0&0\\
+0&3&10&3&0\\
+0&0&0&16&0\\
+0&0&0&1&7
+\end{pmatrix},
+\end{equation}
+jej\'i\v z \v r\'adkov\'y z\'akon je p\v resn\v e $P$ a podpora spl\v nuje
+$X\le Y+1$.
+
+\begin{lemma}[Extr\'emn\'i kompenza\v cn\'i coupling]
+\label{lem:Cminus}
+Matice
+\begin{equation}
+\label{eq:Cminus}
+C^{-}:=\frac1{64}
+\begin{pmatrix}
+0&0&0&0&0\\
+7&9&0&0&0\\
+0&11&5&0&0\\
+0&0&5&11&0\\
+0&0&0&9&7
+\end{pmatrix}
+\end{equation}
+m\'a sloupce $Q$, podporu $X\le Y+1$ a \v r\'adkov\'y z\'akon
+\[
+\boxed{
+R^{-}=P-\frac8{64}(\delta_0-\delta_4)
+      =\left(0,\frac14,\frac14,\frac14,\frac14\right).
+}
+\]
+\end{lemma}
+
+\begin{proof}
+Sloupcov\'e sou\v cty matice~\eqref{eq:Cminus} jsou
+\[
+(7,20,10,20,7)/64=Q,
+\]
+\v r\'adkov\'e sou\v cty jsou
+\[
+(0,16,16,16,16)/64.
+\]
+Ka\v zd\'a nenulov\'a bu\v nka spl\v nuje $x\le y+1$.
+\end{proof}
+
+\subsection{Packetov\'e vyru\v sen\'i boundary dluhu}
+
+Pro z\'akon $B$ pi\v sme
+\[
+p:=B(0),\qquad B_+:=B-p\delta_0.
+\]
+Nech\v t $G\le B_+$ je kone\v cn\'a nez\'aporn\'a subm\'ira.
+
+\begin{theorem}[Packetov\'a Q-fresh vazba]
+\label{thm:packet-fresh}
+P\v redpokl\'adejme
+\[
+p\le\frac8{11}.
+\]
+Pak lze zvolit nez\'apornou subm\'iru
+\[
+\boxed{
+G\le B_+,\qquad |G|=\frac{3p}{8}.
+}
+\tag{P1}
+\]
+Je-li \(p<8/11\), lze \(G\) zvolit s~kone\v cnou podporou; tot\'e\v z
+plat\'i p\v ri \(p=8/11\), je-li \(B_+\) kone\v cn\v e podporovan\'a.
+a sestrojit exactn\'i kauz\'aln\'i jeden krok takto:
+\begin{enumerate}[leftmargin=1.4em]
+\item na $J=0$ pou\v zij $C^{+}$;
+\item na kladn\'e \v c\'asti ozna\v cen\'e subm\'irou $G$ pou\v zij $C^{-}$;
+\item na zbytku $A:=B_+-G$ pou\v zij $C^{0}$.
+\end{enumerate}
+Ve\v rejn\'y v\'ystup m\'a p\v resn\v e z\'akon $P$, fresh vstup z\r ust\'av\'a $Q$
+a nov\'a rezerva je nez\'aporn\'a.
+\end{theorem}
+
+\begin{proof}
+Podm\'inka $p\le8/11$ je ekvivalentn\'i
+\[
+\frac{3p}{8}\le1-p=|B_+|,
+\]
+tak\v ze subm\'ira $G$ existuje. Je-li nerovnost ostr\'a, kumulativn\'i
+hmota \(B_+\) p\v res kone\v cn\'e prefixy nakonec p\v rekro\v c\'i
+\(3p/8\); posledn\'i atom lze vz\'it jen \v c\'aste\v cn\v e, a \(G\)
+je pak kone\v cn\v e podporovan\'a. P\v ri rovnosti \(p=8/11\) je
+\(|G|=|B_+|\), tak\v ze nutn\v e \(G=B_+\); kone\v cn\'a podpora proto
+v~tomto hrani\v cn\'im p\v r\'ipad\v e vy\v zaduje kone\v cnou podporu
+\(B_+\).
+
+Ve\v rejn\'y \v r\'adkov\'y z\'akon je
+\[
+pR^{+}+|G|R^{-}+(1-p-|G|)P.
+\]
+Po dosazen\'i $|G|=3p/8$ se korekce v~$\delta_0-\delta_4$ zru\v s\'i:
+\[
+\frac{3p}{64}-\frac{8}{64}\frac{3p}{8}=0.
+\]
+Proto je margin\'al $X$ p\v resn\v e $P$.
+
+Na $J=0$ m\'a $C^{+}$ podporu $X\le Y$.
+Na $J\ge1$ maj\'i $C^{0},C^{-}$ podporu $X\le Y+1$.
+V~obou p\v r\'ipadech tedy
+\[
+J'=J+Y-X\ge0.
+\]
+Volba re\v zimu z\'avis\'i jen na aktu\'aln\'im skryt\'em $J$ a na parentov\v e
+subm\'i\v re $G$, nikoli na budouc\'im vstupu.
+\end{proof}
+
+\begin{remark}
+\label{rem:packet-scalar-phase}
+Rovnice~(P1) odd\v eluje p\v resn\v e scalar a phase:
+\[
+\boxed{\text{scalar boundary debt}=3p,\qquad
+       \text{phase packet mass}=3p/8.}
+\]
+Um\'ist\v en\'i $G$ je history-dependent phase. Jeho celkov\'a hmota je
+ur\v cena skal\'arn\v e.
+\end{remark}
+
+\subsection{Exactn\'i d\v eti packetov\'e vazby}
+
+Pro m\'iru $M$ na $\Nzero$ pi\v sme
+\[
+(\DOWN M)(j):=M(j+1),\qquad
+(\UP M)(j):=
+\begin{cases}
+0,&j=0,\\
+M(j-1),&j\ge1.
+\end{cases}
+\]
+S $A=B_+-G$ d\'av\'a p\v r\'im\'e \v cten\'i t\v r\'i matic
+\eqref{eq:Cplus}--\eqref{eq:Cminus}:
+
+\begin{proposition}[Packetov\'e transforma\v cn\'i rovnice]
+\label{prop:packet-children}
+D\v eti z~V\v ety~\ref{thm:packet-fresh} jsou
+\begin{align}
+B_0&=\frac18\Bigl[p(7\delta_0+4\delta_1)+7A+\UP A\Bigr],
+\label{eq:packet-B0}\\
+B_1&=\frac1{16}\Bigl[16p\delta_0+7\DOWN G+9G+16A\Bigr],
+\label{eq:packet-B1}\\
+B_2&=\frac1{16}\Bigl[
+p(10\delta_0+4\delta_1+2\delta_2)
++11\DOWN G+5G
++3\DOWN A+10A+3\UP A
+\Bigr],
+\label{eq:packet-B2}\\
+B_3&=\frac1{16}\Bigl[16p\delta_0+5\DOWN G+11G+16A\Bigr],
+\label{eq:packet-B3}\\
+B_4&=\frac18\Bigl[
+5p\delta_0+9\DOWN G+7G+\DOWN A+7A
+\Bigr].
+\label{eq:packet-B4}
+\end{align}
+Ka\v zd\'a prav\'a strana je pravd\v epodobnostn\'i z\'akon a p\v etice spl\v nuje
+exactn\'i ZR rovnici~\eqref{eq:zr}.
+\end{proposition}
+
+\begin{proof}
+Ka\v zd\'y vzorec je p\v r\'imo p\v r\'islu\v sn\'y \v r\'adek matice,
+p\v repo\v cten\'y na novou rezervu $j'=j+y-x$ a vyd\v elen\'y $P_x$.
+Normalizace a ZR identita jsou margin\'aln\'i identity
+V\v ety~\ref{thm:packet-fresh}.
+\end{proof}
+
+\subsection{Chud\'a v\v etev se ji\v z nerozb\'ih\'a}
+
+Nejd\r ule\v zit\v ej\v s\'i je volnost um\'istit packet mimo low head.
+
+\begin{corollary}[High-packet head dynamics]
+\label{cor:high-packet}
+Je-li
+\[
+\supp G\subseteq\{4,5,\dots\},
+\]
+a ozna\v c\'ime
+\[
+p=b_0,\qquad q=b_1,\qquad r=b_2,\qquad s=b_3,
+\]
+pak prvn\'i t\v ri koeficienty d\v et\'i nez\'avisej\'i na konkr\'etn\'im
+um\'ist\v en\'i $G$ a plat\'i
+\begin{align*}
+T_0:\quad&
+p'=\frac78p,\qquad
+q'=\frac12p+\frac78q,\qquad
+r'=\frac18q+\frac78r,\\[1mm]
+T_1:\quad&
+(p',q',r')=(p,q,r),\\[1mm]
+T_2:\quad&
+p'=\frac{10p+3q}{16},\qquad
+q'=\frac{4p+10q+3r}{16},\\
+&
+r'=\frac{2p+3q+10r+3s}{16},\\[1mm]
+T_3:\quad&
+(p',q',r')=(p,q,r),\\[1mm]
+T_4:\quad&
+p'=\frac{5p+q}{8},\qquad
+q'=\frac{7q+r}{8},\qquad
+r'=\frac{7r+s}{8}.
+\end{align*}
+\end{corollary}
+
+\begin{proof}
+Proto\v ze $\DOWN G$ je podporov\'ana od~$3$ v\'y\v se a $G$ od~$4$,
+packet nep\v risp\'iv\'a do koeficient\r u $0,1,2$.
+V~\eqref{eq:packet-B0}--\eqref{eq:packet-B4} lze tedy na t\v echto
+koeficientech nahradit $A$ m\'irou $B_+$ a p\v r\'imo \v c\'ist.
+\end{proof}
+
+\begin{remark}[Oprava Proposition~\ref{prop:poor}]
+V~p\r uvodn\'im greedy/right-fill j\'adru rostla na v\v etvi $x=1$ hodnota
+\[
+\beta_1-\frac14=\frac54\left(\beta-\frac14\right).
+\]
+V~high-packet re\v zimu naproti tomu
+\[
+\boxed{(p,q,r)_{h1}=(p,q,r)_h}
+\]
+(a tot\'e\v z pro $x=3$).
+Konkr\'etn\'i ``chud\'a v\v etev'' odd\'ilu~\ref{sec:poor} tedy nen\'i
+struktur\'aln\'i obstrukce QZR; je to obstrukce tam zvolen\'eho fillingu.
+\end{remark}
+
+% ============================================================
+\subsection{D\v edi\v cnost packetu a pohybliv\'y fuel front}
+\label{sec:packet-inheritance}
+% ============================================================
+
+Nyn\'i u\v z packet nevn\'im\'ame jen jako jednor\'azovou korekci.
+Jeho obraz v jednotliv\'ych public branches je s\'am kladn\'a subm\'ira
+dal\v s\'iho child law. To d\'av\'a explicitn\'i phase carrier.
+
+Nech\v t
+\[
+g:=|G|=\frac{3p}{8}
+\]
+a p\v redpokl\'adejme pro tuto podsekci
+\[
+G(\{1\})=0.
+\tag{P2}
+\]
+Z rovnic~\eqref{eq:packet-B0}--\eqref{eq:packet-B4} izolujme p\v r\'isp\v evky
+poch\'azej\'ic\'i p\v r\'imo z parent packetu:
+\begin{align}
+\widehat G_0&:=0,\nonumber\\
+\widehat G_1&:=\frac1{16}(7\DOWN G+9G),\nonumber\\
+\widehat G_2&:=\frac1{16}(11\DOWN G+5G),\nonumber\\
+\widehat G_3&:=\frac1{16}(5\DOWN G+11G),\nonumber\\
+\widehat G_4&:=\frac1{8}(9\DOWN G+7G).
+\tag{P3}
+\end{align}
+
+\begin{lemma}[Exactn\'i packet inheritance]
+\label{lem:packet-inheritance}
+Za podm\'inky~\textup{(P2)} jsou \(\widehat G_x\) kladn\'e subm\'iry
+p\v r\'islu\v sn\'ych children \(B_x\) a
+\[
+\boxed{
+|\widehat G_0|=0,\qquad
+|\widehat G_1|=|\widehat G_2|=|\widehat G_3|=g,\qquad
+|\widehat G_4|=2g.
+}
+\tag{P4}
+\]
+Nav\'ic
+\[
+\boxed{
+\sum_{x=0}^4P_x|\widehat G_x|=g.
+}
+\tag{P5}
+\]
+Je-li \(\supp G\subseteq\{L,L+1,\ldots\}\) s \(L\ge2\), pak
+\[
+\supp\widehat G_x\subseteq\{L-1,L,\ldots\}
+\qquad(x=1,2,3,4).
+\tag{P6}
+\]
+\end{lemma}
+
+\begin{proof}
+Proto\v ze \(G(1)=0\), m\'a \(\DOWN G\) stejnou celkovou hmotnost jako
+\(G\). Rovnice~\textup{(P4)} je tedy jen sou\v cet koeficient\r u
+v~\textup{(P3)}. V\'a\v zen\'a konzervace je
+\[
+\frac14g+\frac14g+\frac14g+\frac18(2g)=g.
+\]
+Subm\'irovost plyne p\v r\'imo z kladn\'eho rozkladu
+\eqref{eq:packet-B0}--\eqref{eq:packet-B4}; support se p\v ri
+\(\DOWN\) posune nejv\'y\v se o jednu doleva.
+\end{proof}
+
+\begin{corollary}[V\v etve \(1,3\) u\v z nepot\v rebuj\'i nov\'y packet]
+\label{cor:packet-13}
+Za podm\'inek Lemma~\ref{lem:packet-inheritance} a p\v ri
+\(\supp G\subseteq\{2,3,\ldots\}\) plat\'i
+\[
+B_1(0)=B_3(0)=p.
+\]
+Po\v zadovan\'a packetov\'a hmota dal\v s\'i generace je tedy v obou
+v\v etv\'ich op\v et \(3p/8=g\), a lze vz\'it p\v resn\v e
+\[
+G_1:=\widehat G_1,\qquad G_3:=\widehat G_3.
+\]
+Tedy problematick\'e public histories \(1^k\) a \(3^k\) packet
+\emph{neregeneruj\'i z ni\v ceho}: pouze jej posouvaj\'i nejv\'y\v se o
+jednu jednotku rezervy za krok.
+\end{corollary}
+
+\begin{proposition}[P\v resn\'y replenishment debt ve v\v etv\'ich \(0,2,4\)]
+\label{prop:packet-debt}
+P\v redpokl\'adejme \(G(1)=0\). Ozna\v cme
+\[
+\rho_x:=\frac38 B_x(0)
+\]
+po\v zadovanou packetovou hmotnost v child \(x\). Potom
+\begin{align}
+\rho_0&=\frac78g,\nonumber\\
+\rho_1&=\rho_3=g,\nonumber\\
+\rho_2-g&=\frac9{128}(q-2p),\nonumber\\
+\rho_4-2g&=\frac3{64}(q-11p).
+\tag{P7}
+\end{align}
+Proto jedin\'e nov\'e kladn\'e dopln\v en\'i, kter\'e inherited packet
+s\'am nemus\'i pokr\'yt, m\'a velikosti
+\[
+\boxed{
+d_0=\frac78g,\qquad
+d_2=\frac9{128}(q-2p)_+,\qquad
+d_4=\frac3{64}(q-11p)_+.
+}
+\tag{P8}
+\]
+V\v etve \(1,3\) maj\'i debt nula.
+\end{proposition}
+
+\begin{proof}
+P\v ri \(G(1)=0\) d\'avaj\'i rovnice
+\eqref{eq:packet-B0}--\eqref{eq:packet-B4}
+\[
+B_0(0)=\frac78p,\quad
+B_1(0)=B_3(0)=p,\quad
+B_2(0)=\frac{10p+3q}{16},\quad
+B_4(0)=\frac{5p+q}{8}.
+\]
+Dosad\'ime \(g=3p/8\) a ode\v cteme inherited kapacity z~\textup{(P4)}.
+\end{proof}
+
+\begin{remark}[Skal\'arn\'i tlak]
+P\v ri \(G(1)=0\) je
+\[
+\sum_xP_xB_x(0)=\frac{27p+2q}{32}.
+\]
+Proto \(P\)-v\'a\v zen\'a po\v zadovan\'a packetov\'a hmota dal\v s\'i
+generace je
+\[
+\sum_xP_x\rho_x
+=\frac{3(27p+2q)}{256}
+=g+\frac{3(2q-5p)}{256}.
+\tag{P9}
+\]
+Rovnice~\textup{(P9)} je scalar ledger; neur\v cuje, v~kter\'e public
+v\v etvi je dopln\v en\'i dostupn\'e. To je pr\'av\v e phase/fuel probl\'em.
+\end{remark}
+
+\paragraph{Moving fuel front.}
+Nech\v t \(r\ge4\) je zb\'yvaj\'ic\'i horizont a zvolme parent packet
+tak, aby
+\[
+\supp G\subseteq\{r,r+1,\ldots\}.
+\tag{P10}
+\]
+Pi\v sme
+\[
+T_k:=B([k,\infty)).
+\]
+Proto\v ze cel\'y \(G\) le\v z\'i nad ka\v zd\'ym z prah\r u
+\(r-2,r-1,r\), pro \(A=B_+-G\) plat\'i
+\[
+A([k,\infty))=T_k-g,\qquad k=r-2,r-1,r.
+\tag{P11}
+\]
+Z packetov\'ych transforma\v cn\'ich rovnic proto dost\'av\'ame exactn\v e
+\begin{align}
+T^{(0)}_{r-1}
+&=\frac{7T_{r-1}+T_{r-2}-8g}{8},\nonumber\\
+T^{(1)}_{r-1}
+&=T_{r-1},\nonumber\\
+T^{(2)}_{r-1}
+&=\frac{3T_r+10T_{r-1}+3T_{r-2}}{16},\nonumber\\
+T^{(3)}_{r-1}
+&=T_{r-1},\nonumber\\
+T^{(4)}_{r-1}
+&=g+\frac{T_r+7T_{r-1}}8.
+\tag{P12}
+\end{align}
+V\v etve \(1,3\) tedy zachov\'avaj\'i nejen packet mass, ale i moving
+tail front p\v resn\v e.
+
+\begin{lemma}[Jednokrokov\'e fuel inequalities]
+\label{lem:fuel-ineq}
+Za \textup{(P10)} lze v ka\v zd\'em child vybrat packet dal\v s\'i
+generace s~podporou v \(\{r-1,r,\ldots\}\), pokud
+\begin{align}
+T_r&\ge g,\tag{F0}\\
+7T_{r-1}+T_{r-2}&\ge15g,\tag{F1}\\
+3T_r+10T_{r-1}+3T_{r-2}
+&\ge16\max\{g,\rho_2\},\tag{F2}\\
+T_r+7T_{r-1}
+&\ge8\max\{g,\rho_4-g\}.
+\tag{F4}
+\end{align}
+Pro branches \(1,3\) nen\'i dal\v s\'i nerovnost pot\v reba.
+\end{lemma}
+
+\begin{proof}
+\textup{(F0)} je p\v resn\v e existence parent packetu nad prahem \(r\).
+V branch \(0\) nen\'i inherited packet; z~\textup{(P12)} po\v zadujeme
+\(T^{(0)}_{r-1}\ge\rho_0=7g/8\), co\v z je \textup{(F1)}.
+
+V branch \(2\) je inherited subm\'ira \(\widehat G_2\) hmotnosti \(g\)
+a supportu nad \(r-1\). Fresh \(A\)-p\v r\'isp\v evek nad \(r-1\) m\'a
+hmotnost
+\[
+\frac{3(T_r-g)+10(T_{r-1}-g)+3(T_{r-2}-g)}{16}.
+\]
+Je-li \(\rho_2\le g\), sta\v c\'i podm\'ira inherited packetu; jinak
+dopln\'ime rozd\'il z fresh \v c\'asti. Po \'uprav\v e dostaneme
+\textup{(F2)}.
+
+Stejn\v e v branch \(4\) m\'a inherited packet hmotnost \(2g\), zat\'imco
+fresh \(A\)-p\v r\'isp\v evek nad \(r-1\) je
+\[
+\frac{(T_r-g)+7(T_{r-1}-g)}8.
+\]
+Rozli\v sen\'i \(\rho_4\le2g\) a \(\rho_4>2g\) je ekvivalentn\'i
+\textup{(F4)}. Branches \(1,3\) uzav\'ir\'a
+D\r usledek~\ref{cor:packet-13}.
+\end{proof}
+
+\begin{remark}[Nov\'a ostr\'a hranice]
+All-history packet-selection se t\'im redukuje na graded fuel problem,
+nikoli na obecn\'y nekone\v cn\v e-rozm\v ern\'y transport:
+je t\v reba naj\'it history-dependent volbu packet\r u, pro ni\v z se
+\textup{(F0)--(F4)} obnov\'i po nahrazen\'i \(r\) hodnotou \(r-1\).
+D\r ule\v zit\'e je, \v ze problematick\'e \(1,3\)-ray jsou nyn\'i
+exactn\v e uzav\v ren\'e; novou hmotu mohou vy\v zadovat jen branches
+\(0,2,4\).
+\end{remark}
+
+
+\subsection{Kritick\'y tail se packetem nezni\v c\'i}
+
+\begin{lemma}[Finite packet nem\v en\'i vedouc\'i tail]
+\label{lem:packet-tail}
+P\v redpokl\'adejme
+\[
+S_B(j)=\frac{c}{j}+O(j^{-2})
+\qquad(j\to\infty),
+\]
+a nech\v t $G$ v~Theorem~\ref{thm:packet-fresh} m\'a kone\v cnou podporu.
+Pak ka\v zd\'e d\'it\v e z~\eqref{eq:packet-B0}--\eqref{eq:packet-B4} m\'a
+tent\'y\v z vedouc\'i tail:
+\[
+\boxed{
+S_{B_x}(j)=\frac{c}{j}+O(j^{-2}),
+\qquad x=0,\dots,4.
+}
+\]
+\end{lemma}
+
+\begin{proof}
+Nad podporou $G$ se $A$ shoduje s~$B$.
+Ka\v zd\'y child tail je tam kone\v cn\'a konvexn\'i kombinace posun\r u
+$B(j+\ell)$ s~$\ell\in\{-1,0,1\}$ a s~celkovou \v r\'adkovou vahou $P_x$.
+Pro pevn\'e $\ell$ plat\'i
+\[
+\frac{c}{j+\ell}=\frac{c}{j}+O(j^{-2}).
+\]
+Po normalizaci $P_x$ proto z\r ust\'av\'a koeficient $c$.
+Kone\v cn\v e podporovan\'a korekce $G$ asymptotiku nem\v en\'i.
+\end{proof}
+
+\paragraph{Nov\'y theorem target.}
+V\v eta~\ref{thm:packet-fresh} a Lemma~\ref{lem:packet-tail} redukuj\'i
+zb\'yvaj\'ic\'i probl\'em na pozitivn\'i \emph{packet selection}:
+naj\'it history-dependent volbu kone\v cn\'ych packet\r u $G_h$ takovou, aby
+\[
+|G_h|=\frac38 B_h(0),
+\]
+packet bylo mo\v zn\'e v~ka\v zd\'em uzlu um\'istit mimo aktivn\'i low head
+a v\v sech p\v et d\v et\'i znovu m\v elo dostate\v cnou kladnou rezervn\'i
+hmotu pro packet dal\v s\'i generace.
+Na rozd\'il od statick\'eho $\cW_2$ se vedouc\'i $c/j$ tail nepokou\v s\'ime
+dr\v zet v~jednom uniformn\'im envelope; Lemma~\ref{lem:packet-tail} jej
+p\v ren\'a\v s\'i automaticky.
+
+\begin{remark}[Stav po packetov\'e oprav\v e]
+Tato sekce je skute\v cn\'y konstruktivn\'i posun, nikoli QED.
+Dokazuje exactn\'i parent-level kompenzaci a odstra\v nuje konkr\'etn\'i
+r\r ust na v\v etvi $x=1$.
+Zb\'yv\'a dok\'azat all-history packet-selection lemma.
+\end{remark}
+
+
+\appendix
+\section{Vzorce \(\mu\) na \(\cG\)}
+\(B=\beta\delta_2+(1-\beta)\delta_3\), \(Y\sim Q\).
+\(S=J+Y\in\{2,\dots,7\}\), hmoty v~textu.
+
+\section{První krok z dyadického kořene}
+\(\mu_2=7/128\), greedy nula: \(7/128\) ve \(s=2\), \(1/128\) ve \(s=3\).
+\(B_0\in\cG\) s~\(\beta=7/16\). Odtud tvrzení~\ref{prop:G} až do chudé větve.
+\end{document}
