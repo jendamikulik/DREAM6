@@ -1,0 +1,194 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=2.5cm]{geometry}
+\newtheorem{theorem}{Věta}
+\newtheorem{lemma}[theorem]{Lemma}
+\newcommand{\E}{\mathbb E}
+\newcommand{\HH}{\mathsf H}
+\title{Přenos ocasu mezi větvemi se zachováním logaritmického účtu}
+\author{}
+\date{19. září 2026}
+\begin{document}
+\maketitle
+\noindent\textbf{Rozsah.} Dokazujeme přesný kladný přesun mezi konečnou
+hlavou a ocasem různých dětí a účet platný v libovolné hloubce při
+libovolných přípustných přesunech. Existence politiky, která takto udrží
+všechny budoucí fany nezáporné, zde dokázána není. Ze samotného účtu
+nevyvozujeme logaritmickou horní mez pro původní úlohu.
+
+\section*{1. Stav s proměnnou amplitudou ocasu}
+Pišme $P=(8,16,16,16,8)/64$, $Q=(7,20,10,20,7)/64$,
+$q_d=Q^{*d}$ a $W_a(j)=a/((a+j-1)(a+j))$ pro $j\ge1$.
+Pro $0\le s\le4d$ definujme konečně vážený, ale nekonečně podporovaný ocas
+\[
+ C_{d,s}=\sum_{y=0}^{4d}\frac{2q_d(y)}{8d+2-y},
+             \delta_{8d-s}*W_{8d+2-y},\qquad
+ T_d=|C_{d,s}|=\E\frac{2}{8d+2-Y_d},\quad Y_d\sim q_d.
+\]
+Obecný orbitální stav nyní má tvar
+\begin{equation}\label{state}
+ B_h=A_h+\kappa_h C_{d,s(h)},\qquad
+ A_h\ge0,\quad \operatorname{supp}A_h\subseteq[0,8d-s(h)],
+ \quad |A_h|=1-\kappa_hT_d,
+\end{equation}
+kde $\kappa_h\ge0$. Kořen je $A_\varnothing=0$, $\kappa_\varnothing=1$,
+$C_{0,0}=W_2=H_2$.
+
+Rozbalení jednotlivých Waringových fází dává
+\[
+ Q*C_{d,s}=D_{d,s}+\delta_x*C_{d+1,s+x}
+ \qquad\text{pro každé }x\in\{0,\ldots,4\}.
+\]
+Pravý ocas po posunutí o $x$ nezávisí na $x$.
+Míra $D_{d,s}\ge0$ je podporována na $8d-s+1,\ldots,8d-s+8$,
+má hmotnost $T_d-T_{d+1}$ a explicitně pro $1\le v\le8$
+\[
+ D_{d,s}(8d-s+v)=
+ 2\sum_y q_d(y)\sum_{z=0}^{\min(4,v-1)}
+ \frac{Q_z}{(8d+2-y+v-z-1)(8d+2-y+v-z)}.
+\]
+
+\begin{lemma}[Úplná rovnice rozšířené orbity]\label{fan}
+Stavy \eqref{state} splňují exactní fan právě tehdy, když
+\begin{equation}\label{system}
+ \boxed{
+ \sum_xP_x\delta_x*A_{hx}=Q*A_h+\kappa_hD_{d,s(h)},
+ \qquad \sum_xP_x\kappa_{hx}=\kappa_h.}
+\end{equation}
+Při podmínkách \eqref{state} je to kladný causal fan s čerstvým vstupem $Q$.
+\end{lemma}
+\begin{proof}
+Ocas za společným řezem $8(d+1)-s(h)$ má na obou stranách stejný
+nenulový profil. Rovnost jeho amplitud je druhá rovnice
+\eqref{system}. Po jeho odečtení zbude první rovnice. Naopak jejich
+sečtení dává celý fan koeficient po koeficientu. Zdroj lze nejprve
+vylosovat jako součet aktuální rezervy a nezávislého $Q$; příslušná
+nezáporná transportní matice poté určí výstup.
+\end{proof}
+
+\section*{2. Explicitní kladný přesun hlava--ocas}
+Nechť již máme jeden takový fan a jeho konečnou transportní matici
+$\pi_x(u)=P_xA_{hx}(u-x)$. Označme $t=T_{d+1}$ a vezměme různé řádky
+$i,j$ a konečný sloupec $u\ge\max(i,j)$. Pro
+\[
+ 0\le\varepsilon\le
+ \min\{\pi_i(u),\ P_j\kappa_{hj}t\}
+\]
+proveďme
+\begin{align*}
+ A_{hi}'&=A_{hi}-\frac{\varepsilon}{P_i}\delta_{u-i},&
+ \kappa_{hi}'&=\kappa_{hi}+\frac{\varepsilon}{P_it},\\
+ A_{hj}'&=A_{hj}+\frac{\varepsilon}{P_j}\delta_{u-j},&
+ \kappa_{hj}'&=\kappa_{hj}-\frac{\varepsilon}{P_jt}.
+\end{align*}
+Ostatní děti ponecháme.
+
+\begin{theorem}[Přesun mezi konečnou zásobou a ocasem]\label{exchange}
+Tento předpis zachovává nezápornost, normalizaci všech dětí a celý
+exactní fan. Zvyšuje rezervu v dítěti $i$ ve stochastickém pořadí a
+snižuje ji v dítěti $j$; přijímající ocas leží nad konečným sloupcem.
+\end{theorem}
+\begin{proof}
+Omezení na $\varepsilon$ přesně zajišťují nezápornost odečítaných měr.
+V každém dítěti se změna hmotnosti hlavy ruší se změnou hmotnosti ocasu.
+Ve zdrojovém sloupci $u$ se změny po násobení $P_i,P_j$ vyruší.
+Také změna $\sum_xP_x\kappa_{hx}$ je nulová.
+Lemma \ref{fan} dokazuje exactnost. Podpora ocasu začíná až za
+společným konečným řezem, tedy nad $u$.
+\end{proof}
+
+Například v již známém kvantilovém fanu z $H_2$ zvolíme
+\[
+ i=1,\quad j=0,\quad u=2,\quad\varepsilon=\frac1{128}.
+\]
+Jeho ocas má hmotnost $T_1=10327/40320$. Nové amplitudy jsou
+\[
+ \boxed{\kappa_0=\frac{7807}{10327},\qquad
+ \kappa_1=\frac{11587}{10327},\qquad
+ \kappa_2=\kappa_3=\kappa_4=1.}
+\]
+V konečných hlavách se odečte $1/32$ v rezervě $1$ dítěte $1$ a přičte
+$1/16$ v rezervě $2$ dítěte $0$. Proto se veličina
+$27A_1(0)+7A_1(1)$ zlepší o $7/32$, zatímco tatáž veličina dítěte $0$
+se nezmění. Změna jeho vyšší části samozřejmě může ovlivnit pozdější
+pokračovatelnost; ta se tímto výpočtem neprokazuje.
+
+\section*{3. Účet nezávislý na rozdělení amplitud}
+Nechť libovolný kladný exactní strom tvaru \eqref{state} existuje do
+hloubky $n$. Pro $|h|=d$ označme $p(h)=\prod_iP_{h_i}$ a
+\[
+ M_d=\sum_{|h|=d}p(h)\sum_j jA_h(j),\qquad
+ S_d=\sum_{|h|=d}p(h)\kappa_hs(h),\qquad
+ V_d=2\E\HH_{8d+2-Y_d},
+\]
+kde $\HH_k=\sum_{j=1}^k1/j$.
+
+\begin{theorem}[Invariantní logaritmický účet]\label{account}
+Pro každou hloubku $0\le d\le n$ platí přesně
+\begin{equation}\label{exactaccount}
+ \boxed{
+ \sum_{|h|=d}p(h)\kappa_h=1,\qquad
+ M_d-T_dS_d=V_d-(8d+1)T_d-2.}
+\end{equation}
+Zejména, pro $d\ge1$, rovnoměrně přes všechny takové stromy,
+\begin{equation}\label{log}
+ \boxed{M_d=2\log d+O(1).}
+\end{equation}
+Amplitudy $\kappa_h$ nemusejí mít společnou horní mez přes historie.
+\end{theorem}
+\begin{proof}
+První rovnost v \eqref{exactaccount} je indukce z druhé rovnice
+\eqref{system}. Proto také $0\le S_d\le4d$.
+
+Pro pevná celá $a\ge1,r\ge0$ platí
+\[
+ \mathbb E\min(r+W_a,N)
+ =a\HH_N+r+1-a\HH_a+o(1).
+\]
+Pro náhodnou veličinu $J_h$ se zákonem \eqref{state} tedy
+\[
+ \mathbb E\min(J_h,N)=2\kappa_h\HH_N+c_h+o(1),
+\quad c_h=\sum_jjA_h(j)+\kappa_h(8d-s(h)+1)T_d-\kappa_h V_d.
+\]
+V jednom exactním fanu se vedoucí členy ruší díky
+$\sum_xP_x\kappa_{hx}=\kappa_h$. Omezený posun náhodné veličiny o $y$
+přidává ke konstantnímu členu právě $y$, a $\mathbb EP=\mathbb EQ=2$.
+Proto $c_h=\sum_xP_xc_{hx}$.
+V kořeni je $c_\varnothing=-2$, takže vážený součet $c_h$ v libovolné
+pevné hloubce je $-2$. Dosazení a první rovnost v
+\eqref{exactaccount} dokazují druhou rovnost.
+
+Nakonec $4d+2\le8d+2-Y_d\le8d+2$ a
+$T_d\le2/(4d+2)$. Z $0\le S_d\le4d$ plyne například
+\[
+ 2\HH_{4d+2}-6\le M_d\le2\HH_{8d+2}-2.
+\]
+To dokazuje \eqref{log}. V každé pevné hloubce je pouze konečně mnoho
+uzlů a fází, takže jsme nikde nevyměňovali nekonečný součet přes
+historie s limitou ani nepoužili uniformní těsnost.
+\end{proof}
+
+\section*{4. Co tato konstrukce uzavírá a co ne}
+Přesun z věty \ref{exchange} je skutečná změna kladného fanu.
+Věta \ref{account} dokazuje, že libovolné přípustné rozdělování amplitud
+v této rozšířené orbitě zachová logaritmický účet hlav. Účet tedy
+nevyžaduje společný ocas ani společné $\kappa$ všech dětí.
+
+Není však dokázáno, že tyto přesuny vždy dovolí pokračovat až do další
+hloubky. Proto z těchto vět zatím neplyne existence svědků pro všechna
+$n$. Kdyby takoví svědci s kořenem $H_2$ existovali, jejich kořenovou
+rezervu lze pro horizont $n$ omezit na $4n$: v původním protokolu
+uchováme původní skrytou hodnotu, ale skutečnou rezervu inicializujeme
+jejím minimem s $4n$. Při původní hodnotě větší než $4n$ tato skutečná
+rezerva vystačí na libovolných $n$ výstupů; jinak protokol beze změny
+kopírujeme. Tím by vznikla horní mez
+\[
+ \mathcal B_n\le\mathbb E\min(H_2,4n)
+ =2(\HH_{4n+1}-1)=2\log n+O(1).
+\]
+Tento poslední závěr zůstává podmíněný existencí kladných svědků pro
+neomezené horizonty.
+\end{document}
