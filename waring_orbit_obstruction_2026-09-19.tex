@@ -1,0 +1,309 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{microtype}
+\newtheorem{theorem}{Věta}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Důsledek}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prb}{\mathbb P}
+\newcommand{\st}{\mathrm{st}}
+\newcommand{\Law}{\operatorname{Law}}
+\title{Orbitální uzávěr Waringových směsí:\\proč konečné splity nemohou pokračovat neomezeně}
+\author{}
+\date{19. září 2026}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Výsledek.}
+Pro danou dvojici $P,Q$ neexistuje nekonečný strom dominancí
+\[
+Q*R_{\nu_h}\succeq_{\st}
+\sum_{x=0}^4P_x\delta_x*R_{\nu_{hx}},\qquad
+R_\nu=\int W_a\,\nu(da),
+\]
+jehož kořen má konečný fázový kapitál $\int a\,\nu_\varnothing(da)$.
+To zahrnuje kořen $H_2=W_2$ a libovolné history-dependent,
+spojité či nekonečně podporované fázové míry.
+Předchozí explicitní dva stupně zůstávají platnými konečnými
+certifikáty. Tato věta ukazuje, že čisté Waringovy směsi nelze
+uzavřít do požadované nekonečné orbity.
+Obecnou logaritmickou horní mez pro exactní stromy věta nevyvrací.
+
+\section{Definice a dvě různé střední hodnoty}
+Pracujeme s
+\[
+P=\tfrac1{64}(8,16,16,16,8),\qquad
+Q=\tfrac1{64}(7,20,10,20,7).
+\]
+Platí $\E P=\E Q=2$ a $Q_0/P_0=7/8<1$.
+Pro $a>0$ je
+\[
+\Prb(W_a\ge j)=\frac{a}{a+j-1},\qquad j\ge1.
+\]
+Pro potřeby uzavřenosti rodinu \emph{rozšíříme} o $W_0=\delta_1$.
+Vyvrácení existence v této větší rodině implikuje vyvrácení
+existence v původní rodině $a>0$.
+
+Nechť $\nu$ je pravděpodobnostní míra na $[0,\infty)$. Označme
+\[
+R_\nu=\int W_a\,\nu(da),\qquad
+m(\nu)=\int a\,\nu(da),\qquad
+r(\nu)=R_\nu(1)=\int\frac{1}{1+a}\,\nu(da).
+\]
+$m(\nu)$ je střední hodnota \emph{fázového parametru}, nikoli
+střední rezerva. Střední rezerva může být nekonečná.
+Pro $k\ge1$ a $j\ge2$ máme
+\begin{equation}\label{cdf}
+F_{R_\nu}(k)=\int\frac{k}{a+k}\,\nu(da),\qquad
+\Prb(R_\nu\ge j)=\int\frac{a}{a+j-1}\,\nu(da).
+\end{equation}
+Všechny $R_\nu$ jsou podporovány na $\{1,2,\ldots\}$.
+
+Nekonečným referenčním stromem rozumíme pravděpodobnostní míry
+$(\nu_h)_{h\in\{0,1,2,3,4\}^*}$ splňující
+\begin{equation}\label{fan}
+Q*R_{\nu_h}\succeq_{\st}
+\sum_xP_x\delta_x*R_{\nu_{hx}}
+\quad\text{pro každé konečné }h.
+\end{equation}
+Nejde o předpoklad rovnosti skutečných posteriorů s referencemi.
+Vyšetřujeme právě navrženou postačující konstrukci \eqref{fan}.
+
+\section{Kapitálový účet a kompaktnost}
+\begin{lemma}[Automatický kapitálový účet]\label{capital}
+Pokud rodič v \eqref{fan} má konečný fázový kapitál, pak
+\begin{equation}\label{supermart}
+\sum_xP_xm(\nu_{hx})\le m(\nu_h).
+\end{equation}
+Zvláště pro $p(h)=\prod_iP_{h_i}$ platí
+$m(\nu_h)\le m(\nu_\varnothing)/p(h)$.
+\end{lemma}
+\begin{proof}
+Z \eqref{cdf} plyne
+\[
+\lim_{j\to\infty}j\Prb(R_\nu\ge j)=m(\nu).
+\]
+Pro konečné $m$ použijeme dominovanou konvergenci s majorantou
+$2a$ pro $j\ge2$. Pro nekonečné $m$ dává Fatouovo lemma nekonečný
+liminf, tedy tutéž identitu v rozšířeném smyslu.
+Konvoluce s mírou na $\{0,\ldots,4\}$ tento limit nemění.
+Použití limitu na ocasovou nerovnost \eqref{fan} dokazuje
+\eqref{supermart}, včetně konečnosti kapitálů všech dětí.
+Indukce dává odhad pro historii $h$.
+\end{proof}
+
+\begin{lemma}[Uzavřenost při omezeném kořenovém kapitálu]\label{closed}
+Nechť $\nu^{(i)}$ jsou kořeny nekonečných referenčních stromů
+a $m(\nu^{(i)})\le C<\infty$. Existuje podposloupnost celých stromů
+konvergující slabě v každém pevném uzlu k nekonečnému referenčnímu
+stromu. Jeho kořenový kapitál je nejvýše
+$\liminf_i m(\nu^{(i)})$, pokud podposloupnost vybíráme podél liminf.
+\end{lemma}
+\begin{proof}
+Pro každé pevné $h$ platí podle lemmatu \ref{capital}
+\[
+\nu_h^{(i)}([A,\infty))\le\frac{C}{p(h)A}.
+\]
+Fázové míry v tomto uzlu jsou tedy těsné. Slabou kompaktností
+pravděpodobnostních měr a diagonálním výběrem přes spočetně mnoho
+historií dostaneme slabé limity $\nu_h$ současně ve všech uzlech.
+První moment je zdola polospojitý, takže příslušné momentové meze
+zůstávají platné.
+
+Funkce $a\mapsto k/(a+k)$ je pro každé $k\ge1$ omezená a spojitá
+na $[0,\infty)$. Každá konkrétní CDF nerovnost v \eqref{fan} proto
+přejde do limity; pro $k\le0$ jsou CDF nulové.
+Všechny limitní míry jsou pravděpodobnostní. Tím je ověřen celý
+nekonečný strom.
+
+Konstanty $C/p(h)$ závisejí na historii. V tomto kroku se
+nepředpokládá jednotná těsnost přes všechny historie.
+\end{proof}
+
+\begin{lemma}[Minimální životaschopný kapitál]\label{minimum}
+Pokud existuje alespoň jeden nekonečný referenční strom s konečným
+kořenovým kapitálem, pak existuje takový strom a číslo $c<\infty$,
+pro něž
+\begin{equation}\label{constant}
+m(\nu_h)=c\quad\text{pro všechny historie }h.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Označme $\mathcal V$ množinu všech fázových měr, které jsou kořeny
+nekonečných referenčních stromů s konečným kapitálem. Z předpokladu
+je neprázdná. Položme
+\[
+c=\inf_{\nu\in\mathcal V}m(\nu)\in[0,\infty).
+\]
+Vybereme kořeny s kapitály klesajícími k $c$ a použijeme lemma
+\ref{closed}. Limitní kořen stále patří do $\mathcal V$ a má kapitál
+nejvýše $c$, tedy právě $c$.
+
+Každé jeho dítě je kořenem vlastního nekonečného podstromu, a proto
+má kapitál alespoň $c$. Nerovnost \eqref{supermart} a $P_x>0$ nutí
+všechny tyto kapitály být právě $c$. Stejný argument v každém
+potomku dokazuje \eqref{constant}.
+\end{proof}
+
+\section{Stacionární dominance nemůže ztrácet rezervu}
+\begin{lemma}[Nulový stacionární slack]\label{stationary}
+Nechť $J,Z$ jsou nezáporné celočíselné veličiny se stejným
+marginálním zákonem, $0\le X,Y\le4$, $\E X=\E Y$, a
+\[
+\Law(J+Y)\succeq_{\st}\Law(Z+X).
+\]
+Pak ve skutečnosti $\Law(J+Y)=\Law(Z+X)$.
+Nezávislost není potřebná a střední hodnoty $J,Z$ smějí být nekonečné.
+\end{lemma}
+\begin{proof}
+Položme $\sigma(k)=F_{Z+X}(k)-F_{J+Y}(k)\ge0$.
+Protože $\E\min(J,N)=\E\min(Z,N)$, máme
+\begin{align*}
+\sum_{k=0}^{N-1}\sigma(k)
+&=\E\min(J+Y,N)-\E\min(Z+X,N)\\
+&=\E[\min(J+Y,N)-\min(J,N)]\\
+&\quad-\E[\min(Z+X,N)-\min(Z,N)].
+\end{align*}
+Oba rozdíly v hranatých závorkách leží v $[0,4]$ a konvergují
+k $Y$, respektive $X$. Dominovanou konvergencí tedy pravá strana
+konverguje k nule. Levá strana je rostoucí součet nezáporných
+čísel, a proto každý člen $\sigma(k)$ musí být nulový.
+\end{proof}
+
+\section{Orbitální spor}
+\begin{theorem}[Nemožnost nekonečné Waringovy orbity]\label{main}
+Neexistuje nekonečný referenční strom \eqref{fan} s
+$m(\nu_\varnothing)<\infty$. Zejména neexistuje takový strom
+s kořenem $\nu_\varnothing=\delta_2$.
+\end{theorem}
+\begin{proof}
+Předpokládejme existenci. Podle lemmatu \ref{minimum} můžeme
+přejít k pomocnému nekonečnému stromu s konstantním kapitálem $c$.
+Množina
+\[
+K_c=\left\{\nu\in\mathcal P([0,\infty)):
+\int a\,\nu(da)\le c\right\}
+\]
+je slabě kompaktní: první moment dává těsnost a jeho dolní
+polospojitost dává uzavřenost. Všechny fáze pomocného stromu
+náležejí do $K_c$.
+
+Pro $t\ge0$ zaveďme pravděpodobnostní míru na $K_c^6$
+\[
+\rho_t=\sum_{|h|=t}p(h)
+\delta_{(\nu_h,\nu_{h0},\ldots,\nu_{h4})},\qquad
+\pi_N=\frac1N\sum_{t=0}^{N-1}\rho_t.
+\]
+Vybereme slabě konvergentní podposloupnost $\pi_N\to\pi$.
+Množina šestic splňujících \eqref{fan} je uzavřená, neboť každá
+CDF nerovnost je spojitá v těchto šesti fázových mírách. Proto je
+i $\pi$ nesena přípustnými fany.
+
+Označme $\eta$ rodičovský marginál $\pi$ a $\eta_x$ marginál
+dítěte $x$. Teleskopický součet přes hloubky dává
+\begin{equation}\label{balance}
+\boxed{\eta=\sum_xP_x\eta_x.}
+\end{equation}
+Přesněji, odpovídající rozdíl u $\pi_N$ je
+\[
+\frac1N\left(\delta_{\nu_\varnothing}
+-\sum_{|h|=N}p(h)\delta_{\nu_h}\right),
+\]
+jehož totální variace je nejvýše $2/N$.
+
+Položme $\overline R=\int R_\nu\,\eta(d\nu)$ a zprůměrujme
+dominance přes $\pi$. Levou stranu realizujeme jako $J+Y$, kde
+$J\sim\overline R$ a $Y\sim Q$ nezávisle. Pravou stranu
+realizujeme výběrem šestic podle $\pi$, dále $X\sim P$ nezávisle
+na šestici a $Z\sim R_{\nu_X}$. Z \eqref{balance} má $Z$ právě
+zákon $\overline R$, tedy stejný jako $J$.
+Protože $\E X=\E Y=2$, lemma \ref{stationary} ukazuje, že
+zprůměrovaná dominance je rovnost.
+
+Lokální CDF slack je nezáporný v každé šestici. Jeho integrál je
+v každém prahu nulový, takže slack je nulový $\pi$-skoro jistě.
+V prahu $k=1$ to znamená
+\begin{equation}\label{head}
+P_0r(\nu_0)=Q_0r(\nu),\qquad
+r(\nu_0)=\frac78r(\nu)
+\quad\pi\text{-skoro jistě}.
+\end{equation}
+Zde jsme použili, že všechny reference jsou podporovány na
+kladných celých číslech.
+
+Jensenova nerovnost na $K_c$ dává
+\[
+r(\nu)=\int\frac1{1+a}\,\nu(da)
+\ge\frac1{1+m(\nu)}\ge\frac1{1+c}>0.
+\]
+Nechť $\ell=\operatorname*{ess\,inf}_{\eta}r$; tedy
+$\ell\ge1/(1+c)>0$.
+Z \eqref{balance} a $P_0>0$ plyne $\eta_0\ll\eta$, a tudíž
+$r(\nu_0)\ge\ell$ pro $\pi$-skoro každou šestici.
+Rovnice \eqref{head} nyní nutí $r(\nu)\ge8\ell/7$ rodičovsky
+skoro jistě. Z definice esenciálního infima tedy
+\[
+\ell\ge\frac87\ell,
+\]
+což odporuje $\ell>0$.
+\end{proof}
+
+\begin{corollary}[Konečné horizonty nemohou přetrvat neomezeně]
+Existuje konečné $N$, pro které z $\nu_\varnothing=\delta_2$
+neexistuje referenční strom \eqref{fan} hloubky $N$.
+Tento důkaz nedává explicitní numerickou hodnotu $N$.
+\end{corollary}
+\begin{proof}
+Kdyby existovaly stromy pro neomezené horizonty, v každém pevném
+uzlu by jejich fázové první momenty byly nejvýše $2/p(h)$.
+Stejný diagonální argument jako v lemmatu \ref{closed} by dal
+nekonečný strom s kořenem $\delta_2$, ve sporu s větou \ref{main}.
+Kompatibilita původních konečných svědků není potřebná.
+\end{proof}
+
+\section{Co bylo odvozeno a co se nepředpokládalo}
+\begin{itemize}
+\item Žádná horní mez parametrů $a$, počtu fází ani podpory
+fázových měr není předpokládána.
+\item Ve výchozí hypotéze nejsou kapitály jednotlivých historií
+jednotně omezené. Automatický odhad $m_h\le m_\varnothing/p(h)$
+smí s hloubkou růst.
+\item Jednotná kompaktnost vzniká až v pomocném stromu dosažením
+minimálního životaschopného kapitálu. Je dokázaným důsledkem
+hypotetické existence, nikoli dodatečným požadavkem na konstrukci.
+\item Střední rezervy nejsou nikde prohlášeny za konečné.
+Stacionární argument používá výhradně ořezané rezervy a přírůstky
+omezené číslem $4$.
+\item Výsledek se týká dominancí mezi Waringovými referencemi.
+Neříká, že libovolný skutečný exactní strom musí mít takové reference.
+\end{itemize}
+
+\section{Stav potřebný pro další konstrukci}
+U čistých směsí platí pro $j\ge2$
+\[
+\Prb(R_\nu\ge j)\le\frac{m(\nu)}{j-1}.
+\]
+Tentýž skalární kapitál tedy omezuje ocasový koeficient i všechny
+kvantily. Tato vlastnost umožnila minimální kompaktní orbitu a spor.
+Samotné přesouvání parametrů $a$ do nekonečna ji neodstraní.
+
+Přirozené širší reference mají například tvar
+\[
+R_\lambda=\int\delta_r*W_a\,\lambda(dr,da),\qquad r\in\mathbb N_0.
+\]
+Již rodina $\delta_r*W_2$ má stále ocasový koeficient $2$, ale při
+$r\to\infty$ není těsná. Proto se na tuto širší rodinu uvedený
+argument minimálního kapitálu nepřenáší. Pro takový posunutý stav
+však zde není sestrojen orbitální splitting operator.
+
+\medskip
+\noindent\textbf{Závěr.}
+Čistá Waringova směs není dostatečný stav pro zamýšlené orbitální
+uzavření. Explicitní dva stupně byly korektní, ale tento konkrétní
+mechanismus logaritmus uzavřít nemůže. Obecná konstrukce
+$\mathcal B_n=O(\log n)$ zůstává tímto výsledkem nevyřešena.
+\end{document}
