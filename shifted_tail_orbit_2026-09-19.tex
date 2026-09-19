@@ -1,0 +1,273 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Věta}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Tvrzení}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\HH}{\mathsf H}
+\title{Posunuté Waringovy ocasy: přesná orbita a zbývající transport hlavy}
+\author{}
+\date{19. září 2026}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Rozsah výsledku.}
+Níže sestrojujeme explicitní přechod ocasů pro libovolnou historii,
+dokazujeme jejich dyadický hmotnostní odhad a přesně charakterizujeme
+nezáporné doplnění jednoho fanu. Neprokazujeme, že doplnění lze volit
+rekurzivně pro všechny historie. Proto nejde o důkaz
+$\mathcal B_n=O(\log n)$ ani o důkaz existence nekonečného exactního stromu.
+
+Položme
+\[
+ P=(8,16,16,16,8)/64,\qquad Q=(7,20,10,20,7)/64,
+ \qquad W_a(j)=\frac{a}{(a+j-1)(a+j)}\quad(j\ge1).
+\]
+Kořen je $H_2=W_2$. Píšeme $q_d=Q^{*d}$,
+$s(h)=\sum_{i=1}^{d}h_i$ pro $|h|=d$ a $\HH_m=\sum_{j=1}^m1/j$.
+
+\section*{1. Přesné rozbalení jedné fáze}
+Pro celá $L\ge0$ platí
+\begin{equation}\label{peel}
+ W_a=\sum_{j=1}^L\frac{a}{(a+j-1)(a+j)}\delta_j
+       +\frac{a}{a+L}\,\delta_L*W_{a+L}.
+\end{equation}
+Je to rovnost koeficientů: za řezem $L$ se čitatel
+$\frac{a}{a+L}(a+L)$ rovná $a$. Pro celé $a$ a $L=a$ má pokračující
+část hmotnost přesně $1/2$. Tato identita sama ještě neřeší veřejné větvení.
+
+U konečné směsi posunutých ocasů
+$\sum_i w_i\delta_{r_i}*W_{a_i}$ definujme kapitálovou míru fází
+\[
+ \Lambda=\sum_i w_i a_i\,\delta_{a_i-r_i}.
+\]
+Za všemi jejími řezy je pravděpodobnostní koeficient rezervy $j$ roven
+\[
+ \int\frac{\Lambda(db)}{(j+b-1)(j+b)}.
+\]
+Konečná část zákona do tohoto vyjádření nevstupuje.
+
+\begin{lemma}[Orbitální přechod ocasu]\label{phase}
+Konvolvujme zdroj s $Q$, zvolme společný řez $M$ nad konečnými částmi
+i nad posuny zdroje a rozdělme zdrojovou hmotu nad $M$ mezi veřejné
+symboly nezávisle v poměrech $P_x$. Pak kapitálová míra ocasu dítěte $x$ je
+\begin{equation}\label{orbit}
+ \boxed{\Lambda_x=\sum_{y=0}^4Q_y\,(b\mapsto b+x-y)_\#\Lambda.}
+\end{equation}
+Zejména $|\Lambda_x|=|\Lambda|$ pro každé dítě.
+\end{lemma}
+\begin{proof}
+Komponenta $w\delta_r*W_a$ po vstupu $y$ a rozbalení v $M$ přispěje
+ocasem
+\[
+ wQ_y\frac{a}{a+M-r-y}\,
+ \delta_M*W_{a+M-r-y}.
+\]
+Po přiřazení symbolu $x$ a podmínění na něj je posun $M-x$ a fáze
+$a'=a+M-r-y$. Součin hmotnosti a fáze je $wQ_ya$ a rozdíl fáze a posunu
+je $(a-r)+x-y$. To je \eqref{orbit}.
+\end{proof}
+
+Pro kořen $W_2$ tak dostáváme pro \emph{každou} konečnou historii
+explicitní, nezápornou míru
+\begin{equation}\label{lambda}
+ \boxed{\Lambda_h=2\,\Law\bigl(2+s(h)-Y_d\bigr),\qquad Y_d\sim q_d.}
+\end{equation}
+Její podpora může unikat oběma směry. Nejde o dvoufázový ani periodický
+model; \eqref{lambda} je přesná formule pro celou orbitální hloubku.
+Je to zatím orbita \emph{ocasů}, nikoli již hotových pravděpodobnostních fanů.
+
+\section*{2. Konkrétní řezy a dyadická hmotnost}
+Zvolme $K_d=8d$ a $L_h=8d-s(h)$. Hledaný konkrétní tvar zákonů je
+\begin{equation}\label{normal}
+ B_h=A_h+
+ \sum_{y=0}^{4d}\frac{2q_d(y)}{8d+2-y},
+       \delta_{8d-s(h)}*W_{8d+2-y},
+ \qquad \operatorname{supp} A_h\subseteq\{0,\ldots,L_h\}.
+\end{equation}
+Zde $A_h$ je nezáporná konečná míra, kterou je potřeba sestrojit.
+Ocas má ve všech uzlech stejné hloubky stejnou hmotnost
+\begin{equation}\label{T}
+ T_d=\E\frac{2}{8d+2-Y_d},\qquad |A_h|=1-T_d.
+\end{equation}
+Pro $d=0$ je $T_0=1$, $A_\varnothing=0$ a \eqref{normal} dává přesně $W_2$.
+
+\begin{theorem}[Skutečný skalární dyadický odhad]\label{dyadic}
+Pro všechna celá $d\ge1$ platí
+\begin{align}
+ \frac{2}{6d+2}\ \le\ T_d
+ &\le\frac{2}{6d+2}
+       +\frac{3d}{(6d+2)^2(4d+2)},\label{Tbounds}\\
+ \boxed{T_{2d}\le\tfrac12T_d+\tfrac{19}{36}T_d^2.}\label{Tdouble}
+\end{align}
+Zvláště $T_d=1/(3d)+O(d^{-2})$.
+\end{theorem}
+\begin{proof}
+Položme $Z=Y_d-2d$, $D=6d+2$. Máme
+$\E Z=0$, $\E Z^2=3d/2$, $|Z|\le2d$. Použijeme přesnou identitu
+\[
+ \frac{1}{D-Z}=\frac1D+\frac{Z}{D^2}
+                         +\frac{Z^2}{D^2(D-Z)}.
+\]
+Po zprůměrování a vynásobení dvěma vznikne \eqref{Tbounds}.
+Označme nezápornou chybu za $2/(6d+2)$ symbolem $e_d$.
+Pak $e_{2d}\le1/(192d^2)$ a
+\[
+ T_{2d}-\tfrac12T_d
+ =\frac{2}{(12d+2)(6d+2)}+e_{2d}-\tfrac12e_d
+ \le\frac{19}{576d^2}.
+\]
+Protože $T_d\ge2/(6d+2)\ge1/(4d)$, dostáváme \eqref{Tdouble}.
+\end{proof}
+
+Věta \ref{dyadic} nepostuluje půlení. Odvozuje je pro konkrétní ocasový
+účet z \eqref{normal}. Dosud však neříká, že $T_d$ je velikost
+\emph{veškerého} kritického defektu: část defektu může vzniknout v hlavě.
+
+\section*{3. Přesné nezáporné doplnění fanu}
+Nechť zákon $B_h$ již má tvar \eqref{normal}, $|h|=d$, a položme
+\[
+ \mu_h=Q*B_h,\qquad M=8(d+1)-s(h),\qquad t=T_{d+1}.
+\]
+Nad $M$ je zdrojový ocas explicitně znám. Jeho rozdělení v poměrech
+$P_x$ dává přesně ocasy dětí předepsané vzorcem \eqref{normal}.
+Zbývá matice $\pi_x(u)$ pro $0\le u\le M$, $0\le x\le4$:
+\begin{align}
+ &\pi_x(u)\ge0,\qquad \pi_x(u)=0\quad(u<x),\label{pos}\\
+ &\sum_x\pi_x(u)=\mu_h(u),\qquad
+   \sum_{u=0}^M\pi_x(u)=P_x(1-t).\label{rows}
+\end{align}
+Konečné hlavy potomků jsou pak přesně
+\begin{equation}\label{head}
+ A_{hx}(j)=\frac{\pi_x(j+x)}{P_x}\quad(0\le j\le M-x).
+\end{equation}
+
+Zdroj pro tuto konečnou matici lze navíc napsat zcela explicitně jako
+$Q*A_h+D_h$. Položíme-li $a_y=8d+2-y$, potom
+\begin{equation}\label{birth}
+ D_h(L_h+v)=
+ 2\sum_{y=0}^{4d}q_d(y)
+   \sum_{z=0}^{\min(4,v-1)}
+ \frac{Q_z}{(a_y+v-z-1)(a_y+v-z)},\qquad 1\le v\le8,
+\end{equation}
+a jinde $D_h=0$. Jsou to právě atomy uvolněné rozbalením jednotlivých
+zdrojových fází o $8-z$ míst. Tedy celý neznámý systém má konečnou
+afinní rekurzi
+\begin{equation}\label{affine}
+ \boxed{\sum_xP_x\delta_x*A_{hx}=Q*A_h+D_h,\qquad
+ |A_{hx}|=1-T_{d+1},\quad A_{hx}\ge0.}
+\end{equation}
+Ocasový zdroj $D_h$ je znám před volbou fanu a je společný všem jeho
+dětem; nevytváříme pro různé budoucí větve různé donory.
+
+\begin{theorem}[Jednokrokový orbitální fan]\label{fan}
+Pro daný $B_h$ existují nezáporné hlavy dětí tvaru \eqref{normal}
+splňující exactní identitu
+$Q*B_h=\sum_xP_x\delta_x*B_{hx}$ právě tehdy, když
+\begin{equation}\label{hall}
+ \boxed{F_{Q*B_h}(k)\le(1-T_{d+1})F_P(k),\qquad k=0,1,2,3.}
+\end{equation}
+Při platnosti \eqref{hall} lze hlavy explicitně sestrojit monotónním
+transportem konečných měr v \eqref{rows}.
+\end{theorem}
+\begin{proof}
+Zdroj nad $M$ má stejnou hmotnost $t$ jako předepsaný součet ocasů dětí.
+Konečný zdroj má hmotnost $1-t$. Podmínka $x\le u$ pro coupling konečného
+zdroje a řádkové míry $(1-t)P$ je ekvivalentní kumulativním nerovnostem.
+Pro $k=0,1,2,3$ jsou to přesně \eqref{hall}; pro $k\ge4$ je řádková
+kumulativní hmotnost již $1-t$, takže nerovnost platí automaticky.
+Monotónní kvantilový transport ji realizuje. Vzorec \eqref{head}
+a již pevně rozdělený ocas dávají exactnost koeficient po koeficientu.
+Vstup lze nejprve vylosovat čerstvě podle $Q$ a symbol vybrat podmíněně
+podle této transportní matice; proto jde o causal fan.
+\end{proof}
+
+Tato věta pokrývá libovolnou orbitální hloubku a nevyžaduje společný
+packet. Sama podmínka \eqref{hall} se ale zatím neukázala jako invariantní.
+
+\section*{4. První přesná nerovnost, kterou ještě neumíme iterovat}
+Při výběru současné matice lze bezpečnost všech dětí pro příští fan
+zapsat bez jejich nekonečných ocasů. Jejich ocas začíná až za indexem
+$M-x\ge4d+4$, takže pro $k\le3$ do něj konvoluce s $Q$ nevidí.
+Vedle \eqref{pos}--\eqref{rows} proto potřebujeme současně
+\begin{equation}\label{next}
+ \boxed{
+ \sum_{u=x}^{x+k}F_Q(k+x-u)\pi_x(u)
+ \le P_x(1-T_{d+2})F_P(k),
+ \quad x=0,\ldots,4,\quad k=0,\ldots,3.}
+\end{equation}
+Přesně tyto nerovnosti zajišťují \eqref{hall} ve všech pěti dětech.
+Jejich jednorázové splnění ještě nezajišťuje, že lze tentýž požadavek
+splnit také při výběru všech následujících matic.
+
+\noindent\textbf{Neprokázaný krok této konstrukce:}
+existence volby $\pi_h$ ze zdroje $W_2$, která splňuje
+\eqref{pos}--\eqref{rows} a \eqref{next} rekurzivně pro všechny historie.
+Ocasová část, její fázová orbita i skalární dyadický odhad jsou již
+explicitní. Rekurzivní pozitivita hlav není odvozena z půlení ocasové hmoty.
+Jde o konkrétní konstrukční ansatz; jeho případné selhání by nevyvracelo
+obecnou logaritmickou horní mez.
+
+\section*{5. Přesný účet konečných hlav, pokud orbitální fan existuje}
+Uvolněná hmotnost $\Delta_d=|D_h|=T_d-T_{d+1}$ nezávisí na historii.
+Z \eqref{peel} plyne
+\[
+ \Delta_d=\E\frac{2(8-Y)}{a(a+8-Y)},\qquad
+ a=8d+2-Y_d,\quad Y\sim Q\text{ nezávisle na }Y_d.
+\]
+Proto pro $d\ge1$
+\[
+ \frac{8}{(8d+2)(8d+10)}\le\Delta_d
+ \le\frac{16}{(4d+2)(4d+6)}.
+\]
+Hmotnost $\Theta(d^{-2})$ se tedy uvolňuje ve vzdálenosti
+$L_h+1,\ldots,L_h+8=\Theta(d)$ pro \emph{každou} historii.
+Její rezervní účet je $\Theta(1/d)$. To je explicitní harmonický
+zdroj; nevyvozuje se z požadovaného logaritmu.
+
+Z \eqref{affine}, rovnosti $\E P=\E Q=2$ a předepsaných hmotností hlav
+navíc přímo dostáváme
+\begin{equation}\label{headincrement}
+ \boxed{
+ \sum_xP_x\sum_j j A_{hx}(j)-\sum_j j A_h(j)
+ =\sum_u(u-2)D_h(u).}
+\end{equation}
+Pro $d\ge1$ je pravá strana kladná a nejvýše $16/d$.
+Pokud se podaří realizovat nezáporné fany do hloubky $n$, součet těchto
+přírůstků je tudíž $O(\log n)$. Tato část účtu je již vyřešena; podmínkou
+zůstává realizovatelnost nezáporných hlav.
+
+Lze také vyčíslit přesný průměrný účet. Pro celočíselné fáze máme
+\[
+ \E\min(r+W_a,N)=a\HH_N+r+1-a\HH_a+o(1).
+\]
+Každý zákon \eqref{normal} má tedy koeficient $2$ před $\HH_N$.
+Označme konstantní člen $c_h$. Z exactnosti fanu a rovnosti
+$\E P=\E Q=2$ plyne $c_h=\sum_xP_xc_{hx}$. V kořeni je $c_\varnothing=-2$.
+Po sečtení přes historie hloubky $d$ dostáváme přesný účet
+\begin{equation}\label{meanhead}
+ \boxed{
+ \sum_{|h|=d}p(h)\sum_j j A_h(j)
+ =2\E\HH_{8d+2-Y_d}-(6d+1)T_d-2
+ =2\log d+O(1).}
+\end{equation}
+Při odvození jsme použili $\sum_hp(h)s(h)=2d$ a explicitní ocas
+\eqref{normal}; pro každý pevný $d$ jde pouze o konečné součty.
+Vzorec \eqref{meanhead} je účetní důsledek existence příslušného konečného
+exactního stromu. Není důkazem existence takového stromu.
+
+\medskip
+\noindent\textbf{Závěr.}
+Orbitální ocasy \eqref{lambda}--\eqref{normal} jsou uzavřeny přesně a
+\eqref{Tdouble} je dokázaná all-scale nerovnost. Úplná orbitální
+konstrukce vyžaduje ještě rekurzivní pozitivní volbu hlav v
+\eqref{pos}--\eqref{next}. Tento dokument tento poslední krok neřeší.
+Žádná uniformní těsnost přes historie, omezený posun, omezená fáze ani
+kompatibilita nezávisle vybraných konečných svědků se nepředpokládá.
+\end{document}
