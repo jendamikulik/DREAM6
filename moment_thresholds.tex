@@ -1,0 +1,901 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,booktabs}
+\usepackage{graphicx,xcolor,fancyhdr,float}
+\definecolor{ink}{HTML}{193B50}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=4pt}
+\emergencystretch=1.5em
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\itshape Moment thresholds for exact causal randomness}
+\fancyhead[R]{\small Research manuscript}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\usepackage[margin=25mm]{geometry}
+\usepackage[colorlinks=true,linkcolor=ink,urlcolor=ink,citecolor=ink]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\numberwithin{equation}{section}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prb}{\mathbb P}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\ii}{\imath}
+\title{\bfseries Moment thresholds for exact causal randomness\\[6pt]
+\large Information spectra, adaptive envelopes, and a logarithmic coefficient}
+\author{}
+\date{26 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Consider exact simulation of two finite output laws, selected adaptively
+for $n$ rounds, using a single initial discrete seed. For equal-entropy
+pure dyadic laws, we prove that the minimum seed entropy is $nh$ plus
+an excess of order $\sqrt n$ when information variances differ, of order
+$\log n$ when only the third centered information moments first differ,
+and bounded when both moments agree. The result follows from exact
+attainment of a recursive information-spectrum bound and a moment
+classification of controlled random-walk envelopes. The latter
+classification holds for arbitrary finite centered increment laws.
+The proof uses an exact $L^1$ entropy-increment identity, a Fourier lower
+bound, and an integrated envelope contraction with compact smoothing.
+We also formulate a sharp logarithmic-coefficient conjecture, isolate a
+sufficient $L^1$ remainder estimate, and report reproducible computations
+for seven dyadic families. The coefficient remains unproved.
+\end{abstract}
+\noindent\textbf{Keywords.} Exact simulation; minimum-entropy coupling;
+information spectrum; controlled random walk; moment matching.
+
+\section{Introduction}
+The entropy needed to supply independent outputs of one prescribed law
+is additive. A different question arises when the law can be selected
+after observing earlier outputs, while all randomness must be supplied
+at time zero. Equal output entropies remove the first-order distinction
+between the actions. They do not remove the cost of supporting both
+choices at every observable history.
+
+This paper studies that excess cost in a history-indexed model. Its main
+result identifies a finite moment threshold: for pure dyadic action laws,
+matching information variance and the third centered information moment
+is necessary and sufficient for uniformly bounded excess. A third-moment
+defect produces a logarithm; a variance defect produces a square root.
+The theorem classifies every finite pure dyadic pair of equal entropy,
+without symmetry assumptions. It does not provide a uniform constant as
+the pair varies.
+
+The proof separates two questions. First, a recursive spectral bound is
+exactly realizable by a seed in the pure dyadic class. Second, the mean
+of that spectral envelope can be classified analytically. The analytic
+part does not require a lattice or dyadic probabilities. This distinction
+also identifies the obstruction to extending the causal upper bounds:
+for general action laws, an envelope need not be the information spectrum
+of an exactly realizable seed.
+
+\paragraph{Relation to existing work.}
+Minimum-entropy coupling and functional representation provide the
+one-round setting. Majorization-based constructions and approximation
+bounds were developed by Cicalese, Gargano, and Vaccaro~\cite{CGV19}
+and Li~\cite{Li21}. Information-spectrum converses for coupling and
+functional representation were established by Shkel and
+Yadav~\cite{SY23}; Compton et al.~\cite{CKQGK23} developed a profile
+lower bound beyond the majorization bound. The spectral ordering used
+below belongs to this established framework. Our argument applies it
+recursively under conditional, history-by-history constraints.
+
+The approximation landscape has also changed recently. Compton's
+additive-$\varepsilon$ scheme~\cite{Compton26} is polynomial in support
+size for a fixed number of marginals and fixed $\varepsilon$.
+Minimum-R\'enyi entropy coupling~\cite{Ma25} and the geometry of R\'enyi
+entropy on the majorization lattice~\cite{YS26} address related static
+questions. These results do not, as stated, give a horizon-uniform error
+bound for the repeated conditional construction considered here. The
+claims proved in this paper concern exact recursive attainment and the
+asymptotics of its adaptive envelope; they are not claims to originate
+majorization or information-spectrum lower bounds.
+
+\paragraph{Martingale and nonlinear limit theory.}
+There is a second relevant literature. The controlled sums below are
+martingales, and logarithmic losses in martingale normal approximation
+are well established; Guo~\cite{Guo24} gives recent Wasserstein bounds
+and a detailed account of earlier results, including Bolthausen's sharp
+Kolmogorov rate. Fang, Peng, Shao, and Song~\cite{FPSS19} obtain
+$(1+\log n)/\sqrt n$ bounds for Lipschitz tests under sublinear
+expectations. Thus a logarithm arising from adaptive increments is not
+by itself an unfamiliar phenomenon. Our quantity is the integral of a
+pointwise envelope over policies. The optimizing policy can vary with
+the integration threshold, so a bound on the Wasserstein distance of
+each individual controlled law does not directly bound this quantity.
+The integrated contraction below deals with that order of optimization
+and integration explicitly.
+
+\paragraph{Organization and status.}
+Sections~\ref{sec:main}--\ref{sec:closing} give the classification and its
+proof. Section~\ref{sec:explicit} gives an explicit logarithmic pair with
+all-horizon numerical constants. Section~\ref{sec:coefficient} separates
+a conjectured coefficient from a proved conditional criterion, and
+Section~\ref{sec:numerics} reports finite computations. The manuscript
+makes no claim of established literature priority. In particular, the
+sharp coefficient is not included in the classification theorem.
+
+\section{Model and main results}\label{sec:main}
+
+All information quantities use base-two logarithms. For a finite law $A$,
+write $\ii_A(x)=-\log_2 A(x)$ on its positive support. Define
+\[
+h_A=\E\ii_A(X),\quad
+v_A=\E(\ii_A(X)-h_A)^2,\quad
+\kappa_A=\E(\ii_A(X)-h_A)^3,\qquad X\sim A.
+\]
+A \emph{pure dyadic law} has each positive atom equal to $2^{-k}$ for an
+integer $k\ge0$. The restriction is to individual powers of two, not to
+arbitrary rational numbers with a power-of-two denominator.
+
+A horizon-$n$ simulator consists of one discrete seed $S$, independent
+of any policy randomization, and deterministic maps
+\[
+Y_t=f_t(S,A_1,Y_1,\ldots,A_{t-1},Y_{t-1},A_t),\qquad 1\le t\le n,
+\]
+where $A_t\in\{P,Q\}$. A policy selects $A_t$ using the observed
+history (and, if desired, independent private randomness). Admissibility
+means
+\[
+\Law(Y_t\mid A_1,Y_1,\ldots,A_{t-1},Y_{t-1},A_t)=A_t
+\]
+at every positive-probability conditioning event, for every such policy.
+There is no fresh simulator randomness after time zero. It suffices to
+check deterministic policies: conditioning on a policy's private
+randomness gives the general case. The policy observes past actions and outputs, not the seed.
+Let $C_n^{\mathrm{causal}}(P,Q)$ be the infimum seed entropy at horizon $n$.
+The seed is allowed to depend on $n$.
+No identification of responses at different histories is imposed merely
+because the same action appears there. All positive atom probabilities
+are included and zero-probability symbols are omitted. We use $\ln$ for
+the natural logarithm, including in the sharp coefficient below.
+
+\begin{theorem}[Complete equal-entropy classification for pure dyadic laws]
+\label{thm:classification}
+Let $P,Q$ be finite pure dyadic laws with $h_P=h_Q=h$, and set
+$\Delta_n=C_n^{\mathrm{causal}}(P,Q)-nh$.
+The optimum is attained by an explicit finite seed. The following cases
+are exhaustive:
+\[
+\boxed{
+\begin{array}{ll}
+v_P\ne v_Q &: \Delta_n=\Theta(\sqrt n),\\[2pt]
+v_P=v_Q,\ \kappa_P\ne\kappa_Q &: \Delta_n=\Theta(\log(n+1)),\\[2pt]
+v_P=v_Q,\ \kappa_P=\kappa_Q &: \Delta_n=O(1).
+\end{array}}
+\]
+In the bounded case, $\Delta_n$ is nondecreasing and converges to a finite
+limit. This limit is positive unless $P,Q$ are permutations of one another;
+in that exceptional case $\Delta_n=0$ for all $n$.
+All asymptotic constants may depend on the fixed pair.
+\end{theorem}
+Thus, within this class, the second and third centered information
+moments completely determine the growth order. Higher moments may affect
+the bounded limit but do not create further unbounded orders.
+
+\begin{corollary}[Necessary conditions without dyadic assumptions]
+\label{cor:general}
+For arbitrary finite action laws of equal entropy, unequal information
+variances imply $\Delta_n=\Omega(\sqrt n)$. Equal variances and unequal
+third centered information moments imply $\Delta_n=\Omega(\log(n+1))$.
+In particular, bounded overhead requires matching both moments.
+\end{corollary}
+
+\begin{theorem}[Moment classification of adaptive envelopes]\label{thm:analytic}
+Let $\alpha,\beta$ be any finite centered probability laws on $\mathbb R$.
+Define
+\[
+G_0=\mathbf1_{[0,\infty)},\qquad
+G_{n+1}=\min\{\alpha*G_n,\beta*G_n\},
+\]
+and let $e_n$ be the mean of the probability law with CDF $G_n$.
+Then $e_n$ is nonnegative and nondecreasing, and
+\[
+e_n=\begin{cases}
+\Theta(\sqrt n),& \int x^2\alpha(dx)\ne\int x^2\beta(dx),\\
+\Theta(\log(n+1)),& \int x^2\alpha(dx)=\int x^2\beta(dx),\quad
+                    \int x^3\alpha(dx)\ne\int x^3\beta(dx),\\
+O(1),& \int x^j\alpha(dx)=\int x^j\beta(dx),\quad j=2,3.
+\end{cases}
+\]
+In the last case, the limiting mean is positive if $\alpha\ne\beta$,
+and zero otherwise. The theorem imposes no arithmetic restriction on
+supports or probabilities.
+\end{theorem}
+For general finite equal-entropy action laws, this theorem classifies a
+lower bound on causal seed entropy. Exact causal attainment is the
+additional dyadic statement in Lemma~\ref{lem:optimal}.
+
+\section{Exact profile recursion and dyadic realization}
+For any discrete law $A$, let $F_A(t)=\Prb\{\ii_A(X)\le t\}$, and let
+$\mu_A=\Law(\ii_A(X))$. Define CDFs recursively by
+\begin{equation}\label{eq:F}
+F_0(t)=\mathbf1_{\{t\ge0\}},\qquad
+F_n(t)=\min\{(\mu_P*F_{n-1})(t),(\mu_Q*F_{n-1})(t)\}.
+\end{equation}
+Convolution means $(\mu*F)(t)=\int F(t-x)\,\mu(dx)$.
+The minimum of two finite-support CDFs is again a finite-support CDF.
+
+\begin{lemma}[Profile lower bound and exact dyadic attainment]\label{lem:optimal}
+For any finite $P,Q$, every admissible discrete horizon-$n$ seed $S$
+satisfies $F_S(t)\le F_n(t)$ for all real $t$.
+For pure dyadic $P,Q$, $F_n$ is the information CDF of a constructible
+finite pure dyadic seed $R_n$ and
+$C_n^{\mathrm{causal}}=H(R_n)$.
+\end{lemma}
+\begin{proof}
+At horizon zero every seed has nonnegative information. Suppose the
+profile bound holds for $n-1$ and fix the first action $a$ with output $Y$.
+For every $y$ of positive probability, $S\mid Y=y$ is an admissible seed
+for the remaining horizon. On that fiber,
+\[
+-\log_2\Prb\{S=s\}=
+\ii_a(y)-\log_2\Prb\{S=s\mid Y=y\}.
+\]
+Induction gives $F_S(t)\le(\mu_a*F_{n-1})(t)$ for both first actions,
+proving the lower bound. Integrating survival functions bounds seed
+entropy below by the mean of $F_n$.
+
+For finite pure dyadic laws $R,A$, a deterministic map from $R$ to $A$
+exists if and only if $F_R(k)\le F_A(k)$ for all integers $k$.
+Necessity follows because a source atom must fit inside its target atom.
+For sufficiency, assign source atoms in decreasing order of size. At
+mass $2^{-k}$, all eligible remaining target capacities are integer
+multiples of $2^{-k}$ and total $F_A(k)-F_R(k-1)$, enough for the current
+level. Thus all bins can be filled exactly.
+
+For $F(k)=\min(F_A(k),F_B(k))$, the counts
+$N_k=2^k(F(k)-F(k-1))$ are nonnegative integers. Taking $N_k$ atoms of
+mass $2^{-k}$ realizes $F$ and refines both $A,B$.
+Apply this recursively to $P\otimes R_{n-1}$ and $Q\otimes R_{n-1}$,
+starting at a point mass $R_0$. The refinement maps send the current
+state to an output and a new state. Conditional on that output, the new
+state has exactly law $R_{n-1}$. Induction proves correctness after every
+history and for every adaptive policy. The profile lower bound proves
+optimality, even against non-dyadic seeds.
+\end{proof}
+
+\section{The envelope and its exact entropy increments}
+Assume henceforth that both entropies equal $h$. Put
+$\alpha=\Law(\ii_P-h)$ and $\beta=\Law(\ii_Q-h)$.
+Both laws are centered. Let a controller choose either increment law
+predictably, and let $S_j^\pi$ be its sum after $j$ steps. Define
+\[
+G_j(x)=\inf_\pi\Prb\{S_j^\pi\le x\},\qquad
+U_j(x)=\sup_\pi\Prb\{S_j^\pi\le x\}.
+\]
+Dynamic programming, conditioning on the first increment, gives
+\[
+G_j=\min(\alpha*G_{j-1},\beta*G_{j-1}),\qquad
+G_0=\mathbf1_{[0,\infty)}.
+\]
+The optimizing policy may depend on the threshold $x$; the envelope
+need not be the CDF of any single controlled walk.
+Consequently $G_j(x)=F_j(jh+x)$.
+Let $Z_j$ have CDF $G_j$ and put $e_j=\E Z_j$.
+For all finite action laws $\Delta_j\ge e_j$; for pure dyadic laws,
+Lemma~\ref{lem:optimal} gives equality.
+The two CDFs in the minimum have the same mean $e_{j-1}$. Therefore
+\begin{equation}\label{eq:increments}
+e_{j+1}-e_j=\frac12\| (\alpha-\beta)*G_j\|_1\ge0.
+\end{equation}
+Indeed, use $\min(A,B)=(A+B-|A-B|)/2$ and the CDF formula for differences
+of means. This identity charges a nonnegative cost at every horizon.
+
+Write $B=\max\{|x|:x\in\operatorname{supp}\alpha\cup
+\operatorname{supp}\beta\}$. If $B=0$, both information laws coincide
+and the problem is trivial. Assume $B>0$. For every policy, conditional
+centering and $|D_i|\le B$ imply
+\[
+\Prb\{S_j^\pi\ge t\},\ \Prb\{S_j^\pi\le-t\}
+\le\exp\left(-\frac{t^2}{2jB^2}\right),\qquad t>0.
+\]
+For completeness, convexity gives
+$\E[e^{sD_i}\mid\mathcal F_{i-1}]\le\cosh(sB)\le e^{s^2B^2/2}$;
+iterate and optimize the exponential Markov bound.
+The estimate is uniform over policies, hence also bounds both tails of
+$Z_j$. Integrating the tails yields
+\begin{equation}\label{eq:second}
+\E Z_j^2\le4B^2j,\qquad 0\le e_j\le2B\sqrt j.
+\end{equation}
+
+\section{A Fourier lower bound: why a logarithm is unavoidable}
+Let $D=\alpha-\beta$, and use the Fourier convention
+$\widehat\nu(t)=\int e^{itx}\nu(dx)$.
+Suppose $d\ge2$ is the first order at which the moments of $\alpha,\beta$
+differ. Finite support and Taylor expansion imply that for some
+$c_0,t_0>0$,
+\begin{equation}\label{eq:fourierD}
+|\widehat D(t)|\ge c_0|t|^d\qquad(0<|t|\le t_0).
+\end{equation}
+Choose $c=\min(t_0,1/(2B))$ and $t_j=c/\sqrt{j+1}$.
+Equation~\eqref{eq:second} and $\cos u\ge1-u^2/2$ show
+\[
+|\widehat{\Law(Z_j)}(t_j)|\ge
+\Re\widehat{\Law(Z_j)}(t_j)
+\ge1-\tfrac12t_j^2\E Z_j^2\ge\tfrac12.
+\]
+The function $R_j=D*G_j$ is compactly supported, and its distributional
+derivative is $D*\Law(Z_j)$. Integration by parts therefore gives
+\[
+\|R_j\|_1\ge|\widehat R_j(t_j)|
+=\frac{|\widehat D(t_j)|\,
+|\widehat{\Law(Z_j)}(t_j)|}{|t_j|}
+\ge\frac{c_0c^{d-1}}2(j+1)^{-(d-1)/2}.
+\]
+Together with \eqref{eq:increments}, this proves
+\begin{equation}\label{eq:lower}
+e_n\ge\frac{c_0c^{d-1}}4
+\sum_{j=0}^{n-1}(j+1)^{-(d-1)/2}.
+\end{equation}
+For $d=2$ this is $\Omega(\sqrt n)$; for $d=3$ it is
+$\Omega(\log(n+1))$. Since $\Delta_n\ge e_n$ without a dyadic
+assumption, Corollary~\ref{cor:general} follows already.
+The upper estimate in \eqref{eq:second} proves the matching square-root
+upper bound for the envelope, and hence for the causal excess in the
+pure dyadic class.
+
+\section{An integrated envelope contraction}
+For the remaining upper bounds, put
+\[
+W_j=\int_{\mathbb R}(U_j-G_j)(x)\,dx.
+\]
+The all-$\beta$ walk has mean zero and its CDF lies between the envelopes.
+Thus $0\le e_j\le W_j$. No reflection symmetry is assumed here.
+To distinguish this width from an ordinary Wasserstein bound, for any
+reference CDF $B_j$ lying between the envelopes one has
+\[
+\sup_\pi\int|F_j^\pi-B_j|\,dx
+\;\le\;\int\sup_\pi|F_j^\pi-B_j|\,dx
+\;\le\;W_j.
+\]
+In general the first inequality cannot be reversed. In particular,
+a lower bound on $e_j$ does not establish the same lower bound on the
+Wasserstein error of one controlled walk.
+
+Let $V$ be independent smoothing noise supported in $[-A,A]$, let $T_r$
+be the all-$\beta$ walk, and define
+\[
+h_r(x)=\Prb\{T_r+V\le x\},\quad
+R_r=D*h_r,\quad K_r=|R_r|,\quad
+ a_r=\|K_r\|_1,\quad b_r=\|K_r'\|_1.
+\]
+The noise chosen below ensures that these functions are absolutely
+continuous and compactly supported where needed.
+
+\begin{lemma}[Contraction]\label{lem:contraction}
+For every $n\ge1$,
+\begin{equation}\label{eq:contract}
+W_n\le2A+2\sum_{r=0}^{n-1}(a_r+b_rW_{n-1-r}).
+\end{equation}
+If $b_*:=\sum_{r\ge0}b_r<1/2$, then for every $N\ge1$,
+\begin{equation}\label{eq:maxW}
+\max_{0\le n\le N}W_n
+\le\frac{2A+2\sum_{r=0}^{N-1}a_r}{1-2b_*}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Write $G_n^V,U_n^V$ for the smoothed policy envelopes and $W_n^V$ for
+their integrated width. Bounded support of $V$ gives
+$U_n(x)\le U_n^V(x+A)$ and $G_n(x)\ge G_n^V(x-A)$.
+Every CDF $F$ satisfies $\int(F(x+A)-F(x-A))dx=2A$ by Tonelli, so
+$W_n\le W_n^V+2A$.
+
+For each policy, telescope $\E h_{n-i}(x-S_i^\pi)$ over $i$.
+Since $h_{r+1}=\beta*h_r$, conditioning on the past gives
+\[
+\Prb\{S_n^\pi+V\le x\}-h_n(x)
+=\sum_{i=1}^n\E\left[
+\mathbf1_{\{\text{action }i\text{ uses }\alpha\}}
+R_{n-i}(x-S_{i-1}^\pi)\right].
+\]
+Its absolute value is at most
+$\sum_i\E K_{n-i}(x-S_{i-1}^\pi)$.
+Let $B_j$ be the CDF of $T_j$. For every controlled prefix CDF $F_j^\pi$,
+$|F_j^\pi-B_j|\le U_j-G_j$. Stieltjes integration by parts gives
+\[
+\E K_r(x-S_j^\pi)\le\E K_r(x-T_j)
++\int|K_r'(x-y)|(U_j(y)-G_j(y))\,dy.
+\]
+The right side is independent of $\pi$, so taking the supremum first
+and then integrating in $x$ proves
+\[
+\int\sup_\pi\E K_r(x-S_j^\pi)dx\le a_r+b_rW_j.
+\]
+The smoothed envelope width is at most twice the largest absolute
+deviation from $h_n$ at each threshold. Summing proves
+\eqref{eq:contract}. Taking a maximum over $n\le N$, with $W_0=0$,
+and moving $2b_*$ times that finite maximum to the left proves
+\eqref{eq:maxW}.
+\end{proof}
+
+\section{Derivative estimates for an arbitrary finite reference law}
+Assume $\beta$ is nondegenerate. Choose two of its support points
+$x<y$, put $b=(y-x)/2>0$ and
+$\rho=2\min(\beta\{x\},\beta\{y\})>0$.
+Then $\beta=\rho\eta+(1-\rho)\zeta$, where
+$\eta=(\delta_x+\delta_y)/2$ and $\zeta$ is a probability law when
+$\rho<1$. The case $\rho=1$ needs no residual law.
+Let $v_a$ denote the uniform density on $[-a,a]$, choose
+$a=Lb$ with a positive integer $L$, and take $V$ to be the sum of
+four independent variables with density $v_a$. Then $A=4a$ and, in
+weak-derivative notation,
+\begin{equation}\label{eq:derivative}
+h_r^{(q+1)}=(v_a')^{*q}*v_a^{*(4-q)}*\beta^{*r},
+\qquad q=2,3,4.
+\end{equation}
+Here $v_a'=(\delta_{-a}-\delta_a)/(2a)$, and exponent zero means
+$\delta_0$. In particular $\|h_r^{(q+1)}\|_{\TV}\le a^{-q}$.
+The fourth case can be a signed measure; for densities the total
+variation norm agrees with the $L^1$ norm.
+
+\begin{lemma}\label{lem:decay}
+There are constants $C_q<\infty$ depending on $\beta,q$, but independent
+of $a=Lb$ and $r$, such that
+\begin{equation}\label{eq:decay}
+\|h_r^{(q+1)}\|_{\TV}
+\le\min\{a^{-q},C_q(r+1)^{-q/2}\},\qquad q=2,3,4.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Telescoping point masses shows
+$v_a'=\nu_L*v_b'$, where $\nu_L$ is uniform on
+$\{-a+b,-a+3b,\ldots,a-b\}$.
+Convolution with probability measures cannot increase total variation.
+In the binomial mixture expansion of $\beta^{*r}$, the number $K$ of
+$\eta$ increments has law $\operatorname{Bin}(r,\rho)$.
+For a fixed $K=k$, translation and scaling of symmetric signs give
+\[
+\|(v_b')^{*q}*\eta^{*k}\|_{\TV}
+\le b^{-q}\binom{k+q}{q}^{-1/2}.
+\]
+To verify this inequality, let $N=k+q$ independent symmetric signs be
+$\varepsilon_i$. Up to sign and the factor $b^{-q}$, the signed measure
+is the law of their sum weighted by $\prod_{i=1}^q\varepsilon_i$.
+Given the sum, the conditional product equals the average of
+$\prod_{i\in I}\varepsilon_i$ over all $q$-element subsets $I$.
+These products are orthonormal, so that average has squared $L^2$ norm
+$\binom Nq^{-1}$. Cauchy--Schwarz proves the asserted variation bound.
+
+It remains to average over $K$. Using
+$\binom{k+q}{q}\ge(k+1)^q/q!$ and splitting at $K=\rho r/2$ gives
+\[
+\E\binom{K+q}{q}^{-1/2}
+\le\sqrt{q!}(1+\rho r/2)^{-q/2}+e^{-\rho r/8}
+\le C'_q(r+1)^{-q/2}.
+\]
+For the exponential term, apply Markov to $e^{-(\ln2)K}$ and use
+$1-\rho/2\le e^{-\rho/2}$ and $\ln2<3/4$.
+This proves the decay estimate; combine it with the direct bound
+$a^{-q}$ from \eqref{eq:derivative}.
+\end{proof}
+
+\section{Closing the classification}\label{sec:closing}
+The remaining step is a cancellation estimate that does not use a
+lattice. Suppose the moments of $D=\alpha-\beta$ vanish through order
+$m-1$. Taylor's formula with integral remainder gives
+\begin{equation}\label{eq:factor}
+D*f=\Gamma_m*f^{(m)},\qquad
+\Gamma_m=\int \frac{(-y)^m}{(m-1)!}
+                 \int_0^1(1-t)^{m-1}\delta_{ty}\,dt\,D(dy).
+\end{equation}
+The terms of degrees below $m$ vanish after integration against $D$.
+The signed measure $\Gamma_m$ is finite and compactly supported, with
+\[
+\|\Gamma_m\|_{\TV}\le M_m:=\frac1{m!}\int |y|^m\,|D|(dy).
+\]
+The identity first holds for smooth $f$; convolution with a smooth
+approximate identity extends it to the weak derivatives used here.
+For the smoothing of Lemma~\ref{lem:decay}, $R_r=D*h_r$ is absolutely
+continuous and its derivative is integrable. Since
+$\|(|R_r|)'\|_1\le\|R_r'\|_1$, we obtain
+\begin{equation}\label{eq:ab}
+a_r\le M_m\|h_r^{(m)}\|_{\TV},\qquad
+b_r\le M_m\|h_r^{(m+1)}\|_{\TV}.
+\end{equation}
+If the common variance is positive, the reference law is nondegenerate and
+Lemma~\ref{lem:decay} applies.
+For $m=3$ or $4$, the summable sequence
+$M_mC_m(r+1)^{-m/2}$ dominates the bounds on $b_r$.
+As $a=Lb\to\infty$, their pointwise upper bound $M_ma^{-m}$ tends to
+zero. Dominated convergence lets us fix a finite $a$ with
+$\sum b_r<1/2$.
+
+If variances match but third moments differ, use $m=3$.
+Then $a_r\le M_3C_2/(r+1)$, and \eqref{eq:maxW} gives
+$W_n=O(\log(n+1))$. Since $e_n\le W_n$, the Fourier lower bound proves the logarithmic case
+of Theorem~\ref{thm:analytic}.
+
+If variances and third moments both match, use $m=4$.
+Then $a_r\le M_4C_3(r+1)^{-3/2}$ is summable, so
+\eqref{eq:maxW} gives $W_n=O(1)$ and $e_n=O(1)$.
+If the common variance is zero, both centered increment laws are $\delta_0$ and this conclusion holds trivially.
+Finally \eqref{eq:increments} proves monotonicity. When
+$\alpha\ne\beta$, it also gives
+$e_1=\tfrac12\int|F_\alpha-F_\beta|>0$.
+This completes Theorem~\ref{thm:analytic}.
+For pure dyadic action laws, $\Delta_n=e_n$ by Lemma~\ref{lem:optimal}.
+Equality of the information laws is equivalent to
+equality of all atom multiplicities, hence to being permutations of one
+another. In that case the recursion is the ordinary product profile and
+$\Delta_n=0$. This completes Theorem~\ref{thm:classification}.
+
+\section{An explicit logarithmic pair}\label{sec:explicit}
+Take
+\begin{align*}
+P&=\bigl(1/16,(1/32)^{\times10},(1/64)^{\times12},
+                       (1/128)^{\times56}\bigr),\\
+Q&=\bigl((1/32)^{\times16},(1/128)^{\times64}\bigr).
+\end{align*}
+Their support sizes are $79$ and $80$. Their centered information laws are
+\[
+\alpha=\tfrac1{16}\delta_{-2}+\tfrac5{16}\delta_{-1}
+       +\tfrac3{16}\delta_0+\tfrac7{16}\delta_1,
+\qquad \beta=\tfrac12\delta_{-1}+\tfrac12\delta_1.
+\]
+Direct calculation gives
+\[
+h_P=h_Q=6,\qquad v_P=v_Q=1,\qquad
+\kappa_P=-\tfrac38,\quad\kappa_Q=0,\qquad
+D=\tfrac1{16}\delta_{-2}*(\delta_0-\delta_1)^{*3}.
+\]
+Let $\mathsf H_n=\sum_{k=1}^n1/k$ be the harmonic number.
+
+\begin{theorem}[A genuine logarithmic overhead]\label{thm:explicit}
+For the displayed fixed pair and every $n\ge1$,
+\begin{equation}\label{eq:explicit}
+\boxed{\frac{\mathsf H_n}{2048}
+\le C_n^{\mathrm{causal}}(P,Q)-6n
+<\frac{128}{5}+\frac3{10}\mathsf H_n.}
+\end{equation}
+In particular, the overhead is $\Theta(\log n)$ and is unbounded.
+The exact one-step excess is $\Delta_1=1/8$.
+\end{theorem}
+\begin{proof}
+For the lower bound, $B=2$ in \eqref{eq:second}. Choose
+$t_j=1/(4\sqrt{j+1})$, so $|\widehat{\Law(Z_j)}(t_j)|\ge1/2$.
+For $0\le t\le1/4$, the inequality
+$2\sin(t/2)\ge t-t^3/24$ implies
+$|1-e^{it}|^3\ge t^3/2$. Thus
+$|\widehat D(t_j)|\ge t_j^3/32$, and
+\eqref{eq:increments} gives
+\[
+e_{j+1}-e_j\ge\tfrac12\frac{t_j^3/32}{t_j}\cdot\tfrac12
+=\frac1{2048(j+1)}.
+\]
+Summation proves the lower bound.
+
+For the upper bound use four uniform smoothing variables on $[-2,2]$,
+so $a=2$ and $A=8$. For the Rademacher reference, the derivative estimate
+has the explicit form
+\[
+\|h_r^{(q+1)}\|_{\TV}
+\le\min\{2^{-q},\binom{r+q}{q}^{-1/2}\}.
+\]
+Here the cubic finite-difference factorization of $D$ is sharper than
+the general Taylor bound: the third unit difference is the third weak
+derivative convolved, up to sign, with $\mathbf1_{[0,1]}^{*3}$.
+Its convolution factor has $L^1$ norm one. Thus
+$a_r\le\|h_r^{(3)}\|_{\TV}/16$ and
+$b_r\le\|h_r^{(4)}\|_{\TV}/16$, giving
+\[
+\sum_{r=0}^{n-1}a_r\le\frac{\sqrt2}{16}\mathsf H_n,
+\qquad
+b_*\le\frac1{16}\sum_{r\ge0}
+\min\{2^{-3},\sqrt6(r+1)^{-3/2}\}
+\le\frac{3\sqrt[3]6}{32}.
+\]
+For the last sum, bound it by
+$\int_0^\infty\min(2^{-3},\sqrt6 x^{-3/2})dx
+=3\sqrt[3]6/2$.
+Therefore \eqref{eq:maxW} and $e_n\le W_n$ give
+\[
+\Delta_n\le
+\frac{16+\frac{\sqrt2}{8}\mathsf H_n}
+     {1-\frac{3\sqrt[3]6}{16}}
+<\frac{128}{5}+\frac3{10}\mathsf H_n,
+\]
+using $\sqrt2<3/2$ and $\sqrt[3]6<2$.
+Finally the CDF of $\alpha-\beta$ is $1/16,-2/16,1/16$ on the unit
+intervals starting at $-2,-1,0$. Equation~\eqref{eq:increments} gives
+$\Delta_1=(1+2+1)/32=1/8$.
+\end{proof}
+
+\section{A conjectured universal logarithmic coefficient}\label{sec:coefficient}
+The classification determines growth order, not the leading constant.
+The increment identity suggests a stronger law. Write
+$\delta\kappa=\int x^3D(dx)$ and suppose the common variance is $v>0$.
+Let $\Phi$ and $\phi$ be the standard normal CDF and density, and set
+\[
+\Psi_n(x)=\Phi\!\left(\frac{x}{\sqrt{nv}}\right),\qquad
+c(\alpha,\beta)=\frac{|\delta\kappa|}{3v\sqrt{2\pi e}}.
+\]
+\begin{conjecture}[Sharp logarithmic coefficient]\label{conj:sharp}
+For finite pure dyadic action laws with common entropy $h$, common
+information variance $v>0$, and $\kappa_P\ne\kappa_Q$,
+\begin{equation}\label{eq:conjecture}
+C_n^{\mathrm{causal}}(P,Q)
+=nh+\frac{|\kappa_P-\kappa_Q|}{3v\sqrt{2\pi e}}\ln n+O(1).
+\end{equation}
+The remainder may depend on the pair.
+\end{conjecture}
+The coefficient is in bits per unit of $\ln n$. If the logarithm in
+\eqref{eq:conjecture} is written as $\log_2 n$, the displayed coefficient
+must be multiplied by $\ln 2$.
+
+\paragraph{Formal origin of the constant.}
+Since the first three moment cancellations include orders $0,1,2$,
+Taylor expansion against a smooth profile gives
+\[
+D*\Psi_n=-\frac{\delta\kappa}{6}\Psi_n'''
+             +\text{higher-order terms}.
+\]
+Moreover,
+\[
+\Psi_n'''(x)=\frac{1}{(nv)^{3/2}}
+ \left(\frac{x^2}{nv}-1\right)\phi\!\left(\frac{x}{\sqrt{nv}}\right),
+\qquad
+\|\Psi_n'''\|_1=\frac{4\phi(1)}{nv}.
+\]
+For the last equality, integrate $(1-z^2)\phi(z)$ on $[-1,1]$,
+using $(z\phi(z))'=(1-z^2)\phi(z)$, and use the zero integral of
+$(z^2-1)\phi(z)$ on $\mathbb R$. Substitution into the exact increment
+identity predicts $e_{n+1}-e_n\sim c(\alpha,\beta)/n$.
+The missing step is control of the actual nonlinear envelope at the
+scale of this differentiated $L^1$ expression. A central limit theorem
+for the undifferentiated CDF alone would not justify that substitution.
+
+\begin{proposition}[A sufficient remainder estimate]\label{prop:criterion}
+Let $\alpha,\beta$ be finite centered laws of common variance $v>0$,
+with $\delta\kappa\ne0$. Define
+\[
+\varepsilon_n=\left\|D*G_n+\frac{\delta\kappa}{6}\Psi_n'''\right\|_1,
+\qquad n\ge1.
+\]
+Then
+\begin{equation}\label{eq:conditional}
+\left|(e_{n+1}-e_n)-\frac{c(\alpha,\beta)}n\right|
+\le\frac{\varepsilon_n}{2}.
+\end{equation}
+If $\varepsilon_n=o(n^{-1})$, then
+$e_n=c(\alpha,\beta)\ln n+o(\ln n)$.
+If $\sum_{n\ge1}\varepsilon_n<\infty$, then
+$e_n-c(\alpha,\beta)\ln n$ converges to a finite limit.
+\end{proposition}
+\begin{proof}
+The reverse triangle inequality, \eqref{eq:increments}, and the computed
+norm of $\Psi_n'''$ give \eqref{eq:conditional}. Sum over $n$.
+An $o(1/n)$ sequence has partial sums $o(\ln n)$; absolute summability
+gives convergence after subtracting the harmonic sum. Finally
+$\mathsf H_n-\ln n$ converges.
+\end{proof}
+The proposition is conditional: neither of its remainder hypotheses is
+proved here for the full class in Conjecture~\ref{conj:sharp}.
+The summable estimate is stronger than what is needed for an $O(1)$
+remainder, but it specifies one concrete sufficient analytic target.
+
+\paragraph{Consistency checks.}
+Several transformations constrain a proposed coefficient. Reflection
+changes the sign of $\delta\kappa$ but not the growth cost. Dilation of
+both centered increment laws by $a>0$ gives exactly
+$G_n^{(a)}(x)=G_n(x/a)$ and $e_n^{(a)}=ae_n$; the proposed coefficient
+has the same scaling since $v\mapsto a^2v$ and
+$\delta\kappa\mapsto a^3\delta\kappa$.
+Adding the same independent centered noise to each increment leaves
+$\delta\kappa$ unchanged and raises $v$. The formula therefore predicts
+a smaller logarithmic coefficient. This last prediction is a consequence
+of the conjecture, not an additional theorem.
+
+\section{Numerical evidence and exact finite certificates}\label{sec:numerics}
+We evaluate the CDF recursion deterministically on its complete integer
+grid; there is no sampling, fitted coefficient, or tail truncation.
+Let $\alpha,\beta$ be the centered laws in Section~\ref{sec:explicit}, and
+put
+\[
+\gamma=\tfrac18\delta_{-2}+\tfrac34\delta_0+\tfrac18\delta_2,
+\qquad \check\alpha=\Law(-X),\quad X\sim\alpha.
+\]
+In Table~\ref{tab:coefficient}, $2\alpha$ denotes the pushforward under
+$x\mapsto2x$, not multiplication of total mass. All listed laws are
+centered with dyadic rational weights. Each pair therefore admits an
+exact realization as centered information laws of finite pure dyadic
+action laws: if all weights have denominator dividing $2^s$ and the
+support lies in $[-K,K]\cap\mathbb Z$, choose $h=s+K$ and replace mass
+$p_k$ at $k$ by $p_k2^{h+k}$ atoms of probability $2^{-(h+k)}$.
+These are integer multiplicities, the total mass is one, and the entropy
+is $h$.
+
+\begin{table}[H]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Increment laws & $v$ & $|\delta\kappa|$ & $c$ & $n(e_n-e_{n-1})$ & $10^4(r_n-1)$\\
+\midrule
+$\alpha,\beta$ & 1 & 0.375 & 0.03024634 & 0.03025164 & 1.752 \\
+$(\alpha+\beta)/2,\beta$ & 1 & 0.1875 & 0.01512317 & 0.01512696 & 2.506 \\
+$\alpha,\gamma$ & 1 & 0.375 & 0.03024634 & 0.03025556 & 3.047 \\
+$\alpha,\check\alpha$ & 1 & 0.75 & 0.06049268 & 0.06049348 & 0.132 \\
+$\alpha*\beta,\beta*\beta$ & 2 & 0.375 & 0.01512317 & 0.01512514 & 1.305 \\
+$(\alpha+3\beta)/4,(3\alpha+\beta)/4$ & 1 & 0.1875 & 0.01512317 & 0.01512413 & 0.632 \\
+$2\alpha,2\beta$ & 4 & 3 & 0.06049268 & 0.06050328 & 1.752 \\
+\bottomrule
+\end{tabular}
+\caption{Deterministic floating-point recursion at $n=10\,000$.
+Here $c=|\delta\kappa|/(3v\sqrt{2\pi e})$ is specified in advance and
+$r_n=n(e_n-e_{n-1})/c$. The last row is an exact scaling consistency
+check, not an independent family. Finite agreement does not establish
+the asymptotic formula.}\label{tab:coefficient}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{coefficient_evidence.pdf}
+\caption{Left: normalized entropy increments approach the predicted
+coefficient over the displayed range. The cubic and dilation curves
+coincide by exact scaling. Right: centered excess for three selected
+families. Apparent stabilization over a finite range does not prove a
+bounded remainder. Full parameters and numerical rows are supplied in
+\texttt{numerical\_results.json} and \texttt{numerical\_results.csv}.}
+\label{fig:evidence}
+\end{figure}
+
+For each of the seven pairs, integer arithmetic verifies normalization,
+nonnegative profile masses, integer dyadic seed multiplicities, and the
+entropy-increment identity through horizon $128$. Floating-point values
+at that horizon are compared with the exact rational result.
+For the cubic pair, a second run at $n=10\,000$ using the platform's
+extended-precision \texttt{longdouble} changes $n(e_n-e_{n-1})$ by
+approximately $2.1\times10^{-11}$ and $e_n$ by approximately
+$1.1\times10^{-11}$. These comparisons check arithmetic sensitivity;
+they do not bound the asymptotic remainder.
+
+A separate exact program constructs the full dyadic seed partitions
+through horizon two for the explicit action pair, and verifies the
+conditional product law of every decoder branch. Its seed sizes are
+$84$ and $6984$. At longer horizons it keeps atom multiplicities instead
+of expanding all seed states. In particular, it verifies
+\[
+\Delta_1=\frac18,\qquad \Delta_2=\frac7{32},
+\]
+and the inequalities of Theorem~\ref{thm:explicit} at each of the $128$
+checked horizons. The all-horizon claims follow from the proofs above,
+not from these finite certificates.
+
+\section{Scope and remaining questions}
+The analytic envelope classification and the exact pure dyadic causal
+classification are proved separately. Outside the pure dyadic class,
+the present argument supplies necessary moment conditions for bounded
+causal excess but no general matching seed construction. Even when the
+analytic envelope has bounded mean, realization may introduce additional
+cost. This realization question is distinct from the sharp-coefficient
+question, which already arises within the class where attainment is exact.
+
+The logarithmic regime is critical for the method: cancellation through
+order two produces an $r^{-1}$ smoothing cost, while one further moment
+cancellation makes that cost summable. The Fourier argument proves that
+a genuine third-moment defect cannot be removed by a different seed
+construction in the dyadic class. Higher moments can change the bounded
+limit, but cannot create another divergent order in that class.
+
+The numerical study tests a specific coefficient and its transformation
+rules. A proof would require finer control of the nonsmooth nonlinear
+recursion than the integrated contraction used for growth orders.
+Proposition~\ref{prop:criterion} states one such target explicitly.
+No conclusion about a common infinite source is implied: a different
+finite seed is allowed at each horizon, and the expanded decoders can
+have exponential size.
+
+\appendix
+\section{Constructing and checking a finite decoder}\label{app:decoder}
+For a pure dyadic information profile $F_n$, let
+\[
+N_{n,k}=2^k\bigl(F_n(k)-F_n(k-1)\bigr).
+\]
+Create $N_{n,k}$ labeled seed atoms of mass $2^{-k}$ and sort them from
+largest to smallest. For action $a$, the target bins are labeled pairs
+$(y,z)$, with capacities $a(y)R_{n-1}(z)$. Fill these bins with the sorted
+source atoms by the packing argument of Lemma~\ref{lem:optimal}. A seed
+atom's bin label determines both the output $y$ and the next state $z$.
+The exact identity
+\[
+\Prb\{Y=y,Z=z\mid A=a\}=a(y)R_{n-1}(z)
+\]
+proves that the next state has the required law conditional on the
+observed output. Iterating gives the history-indexed simulator.
+
+For the explicit pair, the certificate stores every source atom's
+information length and its target-bin index for both actions at horizons
+one and two. If the previous seed has $M$ atoms and the target index is
+$t$, the output index and next-state index are respectively
+$\lfloor t/M\rfloor$ and $t\bmod M$. All partition checks use integer
+masses on a common dyadic grid.
+
+For fixed finite dyadic action laws, the information support has width
+$O(n)$. Thus the profile can be updated in $O(n)$ arithmetic operations
+per horizon, using $O(n)$ stored profile values, without expanding the
+seed. These are arithmetic-operation counts: exact numerator bit lengths
+also grow with $n$. No polynomial bound on the expanded decoder size is
+asserted.
+
+\section{Reproduction}
+The accompanying package includes the manuscript source, figure, exact
+finite certificates, complete numerical tables, and two Python programs.
+From the package directory, run
+\begin{verbatim}
+python3 experiments.py --n 10000 --exact-n 128
+python3 logarithmic_seed.py --exact-n 128 --float-n 0
+pdflatex -interaction=nonstopmode -halt-on-error moment_thresholds.tex
+pdflatex -interaction=nonstopmode -halt-on-error moment_thresholds.tex
+\end{verbatim}
+The first program uses NumPy and Matplotlib; the second uses only the
+Python standard library when \texttt{--float-n 0} is selected. The JSON
+report records Python and NumPy versions and the available extended
+precision. All probability parameters in the exact computations are
+rational numbers. The predicted coefficient is computed directly from
+those parameters, without regression.
+
+\begin{thebibliography}{9}\small\raggedright\setlength{\itemsep}{4pt}
+\bibitem{CGV19}
+F. Cicalese, L. Gargano, and U. Vaccaro.
+Minimum-entropy couplings and their applications.
+\emph{IEEE Transactions on Information Theory}, 65:3436--3451, 2019.
+\href{https://doi.org/10.1109/TIT.2019.2894519}{doi:10.1109/TIT.2019.2894519}.
+
+\bibitem{Li21}
+C. T. Li.
+Efficient approximate minimum entropy coupling of multiple probability
+distributions.
+\emph{IEEE Transactions on Information Theory}, 67(8):5259--5268, 2021.
+\href{https://doi.org/10.1109/TIT.2021.3076986}{doi:10.1109/TIT.2021.3076986}.
+
+\bibitem{SY23}
+Y. Y. Shkel and A. K. Yadav.
+Information spectrum converse for minimum entropy couplings and functional
+representations.
+\emph{IEEE International Symposium on Information Theory}, 2023.
+\href{https://arxiv.org/abs/2305.05745}{arXiv:2305.05745}.
+
+\bibitem{CKQGK23}
+S. Compton, D. Katz, B. Qi, K. Greenewald, and M. Kocaoglu.
+Minimum-entropy coupling approximation guarantees beyond the majorization
+barrier.
+\emph{Proceedings of Machine Learning Research}, 206:10445--10469, 2023.
+\href{https://proceedings.mlr.press/v206/compton23a.html}{PMLR paper and supplementary material}.
+
+\bibitem{Compton26}
+S. Compton.
+Efficient $\varepsilon$-approximate minimum-entropy couplings.
+\href{https://arxiv.org/abs/2509.19598v3}{arXiv:2509.19598v3},
+18 June 2026.
+
+\bibitem{Ma25}
+Y.-J. Ma, F. Wang, and X.-Y. Wu.
+Efficient approximate Minimum-R\'enyi entropy couplings.
+\emph{Discrete and Continuous Dynamical Systems--S}, 18(10):2924--2936, 2025.
+\href{https://doi.org/10.3934/dcdss.2025098}{doi:10.3934/dcdss.2025098}.
+
+\bibitem{YS26}
+A. K. Yadav and Y. Y. Shkel.
+Geometry of R\'enyi entropy on the majorization lattice.
+\href{https://arxiv.org/abs/2605.09655v2}{arXiv:2605.09655v2},
+22 May 2026.
+
+\bibitem{Guo24}
+X. Guo.
+On the rate of convergence of the martingale central limit theorem in
+Wasserstein distances.
+\href{https://arxiv.org/abs/2407.16980}{arXiv:2407.16980}, 2024.
+
+\bibitem{FPSS19}
+X. Fang, S. Peng, Q.-M. Shao, and Y. Song.
+Limit theorems with rate of convergence under sublinear expectations.
+\href{https://arxiv.org/abs/1711.10649v2}{arXiv:1711.10649v2}, 2018.
+\end{thebibliography}
+\end{document}
