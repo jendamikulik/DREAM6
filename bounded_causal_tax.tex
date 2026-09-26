@@ -1,0 +1,301 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,booktabs}
+\usepackage[margin=25mm]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\cc}{C^{\mathrm{causal}}}
+\title{A Bounded Causal Entropy Tax\\\large Unequal block lengths remove the growing boundary cost}
+\author{Mathematical construction for the C3-C model}
+\date{26 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+For any two finite output laws with strictly different Shannon entropies,
+we construct exact finite-horizon causal realizations whose seed entropy is
+$n\max\{H(P),H(Q)\}+O(1)$. The constant is independent of the horizon and
+the construction is valid for every adaptive action policy. An explicit
+example has a strictly positive residual bounded by $14$ bits for every
+$n$. The construction uses geometrically increasing and decreasing block
+lengths in the anti-diagonal arrangement. This result concerns a strict
+entropy gap; it does not resolve the equal-entropy logarithmic problem.
+\end{abstract}
+
+\section{Statement and model}
+All logarithms and entropies are base two. A discrete seed fixes a
+history-indexed deterministic response tree. At each step an action selects
+one of two finite laws $P,Q$. Under every adaptive policy the outputs must
+have exactly the prescribed conditional laws. Let $\cc_n(P,Q)$ be the
+infimum of the seed entropy. This is the C3-C model of the supplied
+\emph{Who Pays the Bill?}, Version 4; no synchronous cross-history identity
+is assumed. Zero-probability symbols may be discarded.
+
+\begin{theorem}[Bounded tax under a strict entropy gap]\label{thm:general}
+If $H(P)>H(Q)$, there is a finite constant $K(P,Q)$ such that, for all $n$,
+\[
+\boxed{nH(P)\le\cc_n(P,Q)\le nH(P)+K(P,Q).}
+\]
+Moreover, $\cc_n-nH(P)$ is nondecreasing and has a finite limit.
+The same assertion holds after exchanging $P,Q$.
+\end{theorem}
+
+\begin{theorem}[An explicit nonzero bounded residual]\label{thm:explicit}
+Let $P$ be uniform on eight symbols and let $Q=(1/3,2/3)$. For every
+positive integer $n$,
+\[
+\boxed{\frac{h_2(1/3)}8\le\cc_n(P,Q)-3n<14,}
+\qquad \frac{h_2(1/3)}8=0.1147869792568\ldots,
+\]
+where $h_2$ is binary entropy. Thus the residual has order $\Theta(1)$,
+with a strictly positive finite limiting value.
+\end{theorem}
+
+The exact value of that limit is not determined here. The upper constant
+$14$ is deliberately loose. Different action alphabets cause no difficulty;
+one may pad $Q$ with zeros if a common alphabet is required.
+
+\section{The construction: variable-length anti-diagonal blocks}
+Choose positive integers $s_1,\ldots,s_m$ with sum $n$. Partition both
+length-$n$ streams $X,W$ into consecutive blocks of these lengths. Draw
+the following components independently:
+\[
+X^{(1)}\sim P^{\otimes s_1},\qquad
+W^{(m)}\sim Q^{\otimes s_m},\qquad
+(W^{(j)},X^{(j+1)})\sim J_j\quad(1\le j<m),
+\]
+where $J_j$ is any coupling of
+$Q^{\otimes s_j}$ and $P^{\otimes s_{j+1}}$.
+On the $a$th occurrence of action $P$, output $X_a$; on the $b$th
+occurrence of action $Q$, output $W_{n+1-b}$.
+
+\begin{lemma}[Causal validity and entropy accounting]\label{lem:anti}
+This construction is exact under every adaptive policy. If
+$H(J_j)\le s_{j+1}H(P)+d_j$, then its seed satisfies
+\begin{equation}\label{eq:account}
+H(S)\le nH(P)+s_mH(Q)+\sum_{j=1}^{m-1}d_j.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Put $T_j=s_1+\cdots+s_j$. Seeing any coordinate of $X^{(j+1)}$
+requires at least $T_j+1$ occurrences of $P$. Seeing any coordinate of
+$W^{(j)}$ in reverse order requires at least $n-T_j+1$ occurrences of
+$Q$. Seeing both therefore requires $n+2$ actions, which is impossible.
+For a fixed action word, each independent seed component contributes
+coordinates from at most one of its marginal product blocks. The observed
+outputs consequently have the required product law. An output branch of
+an adaptive deterministic policy fixes one such action word; applying the
+same statement to that branch proves exactness. Randomized policies follow
+by conditioning on their independent randomness.
+
+Independence of the seed components gives
+$H(S)=s_1H(P)+s_mH(Q)+\sum_j H(J_j)$, proving \eqref{eq:account}.
+\end{proof}
+
+Unlike equal-length blocking, this formula only pays for the \emph{last}
+$Q$-block as an uncovered boundary. Both boundary blocks can remain small
+while the interior block lengths become large. A strict entropy gap permits
+the necessary decrease of block lengths on the far side of the construction.
+
+\section{A complete elementary proof of the explicit example}
+\begin{lemma}[Uniform fine grid]\label{lem:grid}
+If $A$ is uniform on $M$ symbols and $B$ has $K\ge2$ symbols, there is
+an exact coupling with
+\[
+H(A,B)\le\log_2 M+\frac{K-1}{M}\log_2 K.
+\]
+\end{lemma}
+\begin{proof}
+Use the common-uniform interval coupling on $[0,1)$. The $A$-intervals
+all have length $1/M$. Only cells containing an internal endpoint of a
+$B$-interval can have positive conditional entropy $H(B\mid A=a)$.
+There are at most $K-1$ such cells, and each contributes at most
+$(1/M)\log_2 K$. Endpoints on grid boundaries do not split cells.
+\end{proof}
+
+Apply the lemma to $A=P^{\otimes p}$, $B=Q^{\otimes q}$. If $p\ge q/2$,
+\begin{equation}\label{eq:explicit-block}
+H(A,B)-3p\le q\,2^{q-3p}\le f(q),
+\qquad f(q)=q\,2^{-q/2}.
+\end{equation}
+No approximation of either marginal is involved.
+
+\paragraph{An integer mountain for every horizon.}
+For $n\ge2$, choose the unique $k\ge0$ such that
+$4\cdot2^k\le n+2<8\cdot2^k$, and put $s=2^k$.
+Use the left tail $(1,2,\ldots,2^{k-1})$ and its reverse as the right
+tail; for $k=0$ the tails are empty. The remaining length is
+\[
+R=n-2(s-1),\qquad 2s\le R<6s.
+\]
+Set $t=\lceil R/s\rceil$, and divide $R$ as evenly as possible into $t$
+integer central blocks. There are at most six central blocks. Each has
+length between $s/2$ and $s$ (and length $1$ if $s=1$).
+The resulting sequence sums to $n$, begins and ends at $1$, and satisfies
+\[
+s_{j+1}\ge s_j/2\quad\hbox{for every adjacent pair.}
+\]
+Thus \eqref{eq:explicit-block} applies to every coupling in
+Lemma~\ref{lem:anti}. Each dyadic tail length appears at most twice, so
+\begin{equation}\label{eq:14}
+\cc_n-3n\le H(Q)+2\sum_{j=0}^\infty f(2^j)
+                        +6\max_{q\in\mathbb N}f(q)<14.
+\end{equation}
+Here are elementary certificates for the last inequality. The sequence
+$f(q)$ is maximized at $q=3$, since
+$f(q+1)/f(q)=(1+1/q)/\sqrt2$. Hence
+\[
+\max_q f(q)=\frac{3}{2\sqrt2}<\frac{16}{15}.
+\]
+The first five terms of the dyadic series are
+$1/\sqrt2,1,1,1/2,1/16$. The remaining tail is smaller than $1/1024$
+(its first term is $1/2048$, with subsequent ratios below $1/2$). Therefore
+\[
+\sum_{j\ge0}f(2^j)
+<\frac{71}{100}+1+1+\frac12+\frac1{16}+\frac1{1024}
+<\frac{33}{10}.
+\]
+Since $H(Q)<1$, the right side of \eqref{eq:14} is strictly below
+$1+2(33/10)+6(16/15)=14$. The unrounded expression in
+\eqref{eq:14} is approximately $13.82244702$.
+
+\paragraph{Strict positivity, not a relabeling trick.}
+At horizon one, a seed can be replaced by its pair of action outputs
+without increasing entropy. Write $x_i$ for the joint probability of
+the $i$th $P$-symbol and the first $Q$-symbol. Then
+\[
+0\le x_i\le1/8,\qquad \sum_{i=1}^8x_i=1/3,\qquad
+H(P,Q)=3+\frac18\sum_{i=1}^8h_2(8x_i).
+\]
+A concave function on this polytope has a minimizer at an extreme point.
+There, at most one $x_i$ is strictly between $0$ and $1/8$.
+Since $8/3=2+2/3$, the unique fractional row has conditional probability
+$2/3$. Consequently
+\[
+\cc_1=3+\frac18h_2(1/3).
+\]
+For any realization of horizon $n+1$, first choose action $P$. Conditional
+on that first output, the remaining seed is an admissible horizon-$n$
+seed. The chain rule gives
+\begin{equation}\label{eq:monotone}
+\cc_{n+1}\ge H(P)+\cc_n.
+\end{equation}
+This proves the lower bound in Theorem~\ref{thm:explicit}, and also handles
+$n=1$ in the upper bound. A positive, nondecreasing, bounded residual has
+a positive finite limit. This completes the explicit example.
+
+\section{Why every strict entropy gap suffices}
+Write $h_P=H(P)>h_Q=H(Q)>0$. Choose a constant
+$1<\Lambda<h_P/h_Q$. The case $h_Q=0$ is simpler: $Q$ is deterministic,
+and a length-$n$ iid $P$ stream gives exactly $\cc_n=nh_P$.
+
+\begin{lemma}[Exponentially small block excess]\label{lem:exp}
+There are constants $C,c>0$, depending only on $P,Q,\Lambda$, such that
+for all positive integers $p,q$ with $1/\Lambda\le p/q\le\Lambda$,
+an exact coupling satisfies
+\[
+H(P^{\otimes p},Q^{\otimes q})\le ph_P+F(q),
+\qquad F(q)=C(q+1)e^{-cq}.
+\]
+\end{lemma}
+\begin{proof}
+Choose $\varepsilon>0$ with
+$(h_P-\varepsilon)/\Lambda>h_Q+\varepsilon$.
+Except on an event exponentially small in $p$, a $P$-word has
+probability at most $u=2^{-p(h_P-\varepsilon)}$.
+Except on an event exponentially small in $q$, a $Q$-word belongs to a
+set of at most $K=2^{q(h_Q+\varepsilon)}$ words.
+These exponential estimates follow directly from the exponential Markov
+inequality for sums of bounded independent information contents: the
+centered log moment-generating function has derivative zero at the origin,
+so any fixed nonzero deviation has a strictly positive exponential rate.
+If an information content is constant, its exceptional event is empty.
+
+Arrange the typical $Q$-words consecutively in the common-uniform interval
+coupling. Decode a $Q$-word from a $P$-word whenever the latter's interval
+is contained in a typical $Q$-interval; otherwise choose an arbitrary
+decoder output. Decoder error can occur only on an atypical $P$-word,
+an atypical $Q$-word, or a typical $P$-interval crossing one of the at
+most $K+1$ typical-region boundaries. Thus its probability is at most
+\[
+\delta\le e^{-c_1p}+e^{-c_2q}+(K+1)u\le C_1e^{-c_3q},
+\]
+with constants adjusted if an exceptional event is empty.
+For the actual error probability $e\le\delta$, the elementary decoding
+entropy bound gives
+\[
+H(Q^{\otimes q}\mid P^{\otimes p})
+\le h_2(e)+e\,q\log_2|\operatorname{supp}Q|.
+\]
+This is bounded by $C(q+1)e^{-cq}$ for all sufficiently large $q$.
+Increase $C$ to cover the finitely many smaller integer pairs. The coupling
+itself has exact marginals throughout; typical sets are used only to
+estimate its entropy.
+\end{proof}
+
+\paragraph{A mountain with arbitrarily gentle slopes.}
+Choose $1<\lambda<\Lambda$. Pick positive integers $M,b$ so large that
+\[
+\lambda+1/b\le\Lambda,\qquad
+\frac{M}{M+1}-\frac1b\ge\frac1\Lambda,
+\]
+and put $a_j=\lceil b\lambda^j\rceil$. Then
+$a_{j+1}/a_j\le\Lambda$ and $a_j\ge b\lambda^j$.
+For $n\ge Mb$, choose the largest integer $k\ge0$ with
+\[
+n\ge2\sum_{j<k}a_j+Ma_k.
+\]
+Use the two tails $(a_0,\ldots,a_{k-1})$ and its reverse.
+For the remaining length $R$, maximality gives
+\[
+Ma_k\le R<2a_k+Ma_{k+1}\le(2+M\Lambda)a_k.
+\]
+Divide $R$ evenly into $t=\lceil R/a_k\rceil$ integer central blocks.
+Each central length $\ell$ satisfies
+\[
+\frac{a_k}{\Lambda}\le
+a_k\frac{M}{M+1}-1\le\ell\le a_k.
+\]
+There are at most $T=\lceil2+M\Lambda\rceil$ such blocks.
+All successive ratios of the entire sequence lie in
+$[1/\Lambda,\Lambda]$. Its last block is $b$ if $k\ge1$, and at most
+$b$ if $k=0$.
+
+Apply Lemmas~\ref{lem:anti} and~\ref{lem:exp}. Uniformly in $n\ge Mb$,
+\begin{equation}\label{eq:generalK}
+\cc_n-nh_P\le
+bh_Q+2\sum_{j=0}^\infty F(a_j)+T\sup_{q\ge1}F(q)<\infty.
+\end{equation}
+The series converges because $a_j$ grows geometrically and $F$ decreases
+exponentially at infinity. For the finitely many horizons $n<Mb$, use
+independent iid streams and enlarge the constant by at most $Mb h_Q$.
+The constant-action $P$ path supplies the lower bound $nh_P$.
+Equation~\eqref{eq:monotone} gives monotonicity, completing the proof of
+Theorem~\ref{thm:general}.
+
+\section{What this does and does not settle}
+The strict entropy gap supplies enough excess information inside a long
+$P$-block to absorb a somewhat longer $Q$-block at exponentially small
+additional entropy cost. Growing and then shrinking the blocks leaves
+bounded endpoint lengths and a summable sequence of coupling costs.
+This is the step that equal-size blocks miss.
+
+When $H(P)=H(Q)$, the interval $(1,H(P)/H(Q))$ is empty and the argument
+cannot be used. In particular, it does not override the square-root
+lower bound for the equal-entropy, unequal-varentropy crash-test pair,
+nor prove a logarithmic bound for a variance-matched equal-entropy pair.
+The constant in \eqref{eq:generalK} need not remain bounded as the entropy
+gap tends to zero. The constructed seed may depend on $n$; no single
+projectively consistent infinite seed is asserted.
+
+The anti-diagonal mechanism is inherited from Section 18 of the
+user-supplied manuscript by J. Mikul\'ik, \emph{Who Pays the Bill?},
+Version 4 (19 August 2026). This note supplies the variable-length
+construction and its entropy estimates with complete proofs. No claim
+of historical priority is made. The accompanying Python script verifies
+integer mountain partitions, exact rational block marginals, and the
+rational certificates for the explicit bound; the all-horizon and adaptive
+claims are proved above rather than inferred from those tests.
+\end{document}
