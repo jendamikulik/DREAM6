@@ -1,0 +1,396 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,booktabs}
+\usepackage[margin=27mm]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=MidnightBlue,urlcolor=MidnightBlue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\MEC}{\operatorname{MEC}}
+\newcommand{\causal}{\mathrm{causal}}
+\newcommand{\ii}{\imath}
+\newcommand{\N}{\mathcal N}
+\newcommand{\cst}{c_0}
+\title{The Square-Root Barrier for Causal Entropy\\[3pt]
+\large A converse for the crash-test pair, and a constructive route beyond it}
+\author{Technical addendum to \emph{Who Pays the Bill?}, Version 4}
+\date{26 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Two constant action policies already impose a finite-horizon entropy penalty.
+For two finite distributions of equal entropy $h$, we prove
+\[
+\liminf_{n\to\infty}\frac{C_n^{\causal}-nh}{\sqrt n}
+\ge \frac{|\sqrt{V_P}-\sqrt{V_Q}|}{\sqrt{2\pi}},
+\]
+where $V_P,V_Q$ are their varentropies. For the crash-test pair in Version 4,
+the coefficient is approximately $0.0173736270$; logarithmic and bounded
+residuals are therefore impossible for that pair. We also sharpen the
+anti-diagonal construction to $O(\sqrt n)$ whenever entropy and varentropy
+match, and give an explicit nonpermutation dyadic pair satisfying these
+conditions. No logarithmic upper bound is claimed.
+\end{abstract}
+
+\section{The precise causal problem}
+All logarithms are base two and entropies are in bits. Let $P,Q$ be finite
+probability vectors; zero-probability symbols can be discarded. At each time,
+an action selects the output law $P$ or $Q$. A discrete seed $S$, drawn before
+the interaction, determines all responses as functions of the action and
+the preceding history. For every adaptive policy, the resulting conditional
+output laws must agree exactly with this memoryless channel.
+
+Let $C_n^{\causal}(P,Q)$ be the infimum of $H(S)$ over such horizon-$n$
+realizations. This is the history-indexed contract C3-C of \cite{mikulik};
+no equality of responses across distinct histories is imposed.
+When $H(P)=H(Q)=h$, write
+\[
+E_n(P,Q)=C_n^{\causal}(P,Q)-nh.
+\]
+For a finite law $A$, set
+\[
+\ii_A(x)=-\log_2 A(x),\qquad
+\mu_A=\Law(\ii_A(X)),\quad X\sim A,
+\]
+and $V_A=\Var(\ii_A(X))$, $\sigma_A=\sqrt{V_A}$.
+For probability laws on the real line, $W_1$ denotes the infimum of
+$\E|U-V|$ over their couplings. Notice that
+$\mu_{P^{\otimes n}}$ is the law of a sum of $n$ independent copies of
+$\ii_P(X)$.
+
+The point of the argument is that a causal seed must support both complete
+constant-action paths. Those paths may be correlated, but neither can be
+deleted from the counterfactual tree.
+
+\section{A converse from two paths}
+\begin{theorem}[Product information-spectrum converse]\label{thm:endpoint}
+For every finite $P,Q$ and every positive integer $n$,
+\begin{equation}\label{eq:endpoint}
+C_n^{\causal}(P,Q)\ge
+\frac{nH(P)+nH(Q)+W_1(\mu_{P^{\otimes n}},\mu_{Q^{\otimes n}})}{2}.
+\end{equation}
+In particular, when $H(P)=H(Q)=h$,
+\begin{equation}\label{eq:residual}
+E_n(P,Q)\ge \tfrac12 W_1(\mu_{P^{\otimes n}},\mu_{Q^{\otimes n}}).
+\end{equation}
+\end{theorem}
+\begin{proof}
+Fix an admissible seed. Running the policy that always chooses $P$ gives a
+deterministic function $U^n(S)$ with law $P^{\otimes n}$. Running the policy
+that always chooses $Q$ gives $V^n(S)$ with law $Q^{\otimes n}$.
+For each seed atom $s$ of positive probability $r_s$,
+\[
+r_s\le P^{\otimes n}(U^n(s)),\qquad
+r_s\le Q^{\otimes n}(V^n(s)).
+\]
+Consequently, with $A=\ii_{P^{\otimes n}}(U^n)$ and
+$B=\ii_{Q^{\otimes n}}(V^n)$,
+\begin{align*}
+H(S)&\ge\E\max\{A,B\}\\
+&=\tfrac12\bigl(nH(P)+nH(Q)+\E|A-B|\bigr)\\
+&\ge\tfrac12\bigl(nH(P)+nH(Q)
+  +W_1(\mu_{P^{\otimes n}},\mu_{Q^{\otimes n}})\bigr).
+\end{align*}
+Take the infimum over all admissible seeds. Infinite seed entropy causes
+no difficulty, since the desired lower bound is then automatic.
+\end{proof}
+
+This is a block-level converse for C3-C. It does not assert the stronger
+linear, single-letter lower bound available under the synchronous contract
+C3-S. Information-spectrum converses for minimum-entropy couplings are an
+established method; see \cite{shkel}. The proof above is included to make
+the application to the causal contract explicit.
+
+\begin{theorem}[Varentropy obstruction]\label{thm:variance}
+Suppose $H(P)=H(Q)=h$. Then
+\begin{equation}\label{eq:limit}
+\lim_{n\to\infty}
+\frac{W_1(\mu_{P^{\otimes n}},\mu_{Q^{\otimes n}})}{\sqrt n}
+=\sqrt{\frac2\pi}\,|\sigma_P-\sigma_Q|.
+\end{equation}
+Hence
+\begin{equation}\label{eq:main}
+\boxed{\displaystyle
+\liminf_{n\to\infty}\frac{E_n(P,Q)}{\sqrt n}
+\ge \frac{|\sigma_P-\sigma_Q|}{\sqrt{2\pi}}.}
+\end{equation}
+In particular, $E_n=o(\sqrt n)$ requires $V_P=V_Q$.
+\end{theorem}
+\begin{proof}
+Let $A_n=(\ii_{P^{\otimes n}}-nh)/\sqrt n$ denote the centered,
+normalized random information content, and define $B_n$ similarly.
+The central limit theorem gives weak convergence to
+$\N(0,\sigma_P^2)$ and $\N(0,\sigma_Q^2)$. Their second moments are
+the fixed constants $V_P,V_Q$, so their absolute first moments are uniformly
+integrable. The convergences therefore hold in $W_1$ as well.
+The triangle inequality implies convergence of $W_1(\Law(A_n),\Law(B_n))$
+to the distance between these normal laws. In one dimension the quantile
+coupling is optimal; coupling $\sigma_P Z$ and $\sigma_Q Z$, with
+$Z\sim\N(0,1)$, gives distance
+$|\sigma_P-\sigma_Q|\E|Z|=\sqrt{2/\pi}|\sigma_P-\sigma_Q|$.
+Translation invariance and scaling of $W_1$ prove \eqref{eq:limit};
+\eqref{eq:residual} proves \eqref{eq:main}. Degenerate normals are allowed.
+\end{proof}
+
+\paragraph{An explicit finite-$n$ version.}
+If both variances are positive, put
+\[
+\rho_A=\E|\ii_A(X)-H(A)|^3,\qquad
+B_{P,Q}=\frac12\left(\frac{\rho_P}{V_P}+\frac{\rho_Q}{V_Q}\right).
+\]
+Goldstein's mean central limit theorem bound \cite{goldstein} gives
+\begin{equation}\label{eq:goldstein}
+W_1\bigl(\Law(\ii_{A^{\otimes n}}-nH(A)),\N(0,nV_A)\bigr)
+\le \frac{\rho_A}{V_A}.
+\end{equation}
+The reverse triangle inequality and Theorem~\ref{thm:endpoint} yield, for
+every $n\ge1$,
+\begin{equation}\label{eq:finite}
+E_n(P,Q)\ge
+\max\left\{0,\frac{|\sigma_P-\sigma_Q|}{\sqrt{2\pi}}\sqrt n-B_{P,Q}\right\}.
+\end{equation}
+The square-root obstruction itself does not depend on this quantitative
+normal-approximation theorem.
+
+\section{The crash-test pair: logarithmic growth is excluded}
+Take the pair from \cite{mikulik},
+\[
+P=(1/2,1/4,1/4),\qquad Q=(q,q,1-2q),
+\quad H(Q)=3/2,\quad q\in(1/3,1/2).
+\]
+Its entropies agree. Under $P$, the information content equals $1$ or $2$,
+each with probability $1/2$, so $V_P=1/4$.
+Write $r=1-2q$. Under $Q$ there are two information levels, hence
+\begin{equation}\label{eq:vq}
+V_Q=r(1-r)\left(\log_2\frac qr\right)^2.
+\end{equation}
+
+\paragraph{An exact certificate that $V_Q<1/4$.}
+The function $H(q,q,1-2q)$ has derivative
+$2\log_2((1-2q)/q)<0$ on $(1/3,1/2)$.
+For $q=a/b$ with $0<2a<b$, an exact integer comparison gives
+\[
+H(q,q,1-2q)>\tfrac32
+\quad\Longleftrightarrow\quad
+b^{2b}>2^{3b}a^{4a}(b-2a)^{2(b-2a)}.
+\]
+The sign is positive for $(a,b)=(41,100)$ and negative for
+$(a,b)=(411,1000)$. Thus $0.410<q<0.411$ and $0.178<r<0.180$.
+It follows that
+\[
+r(1-r)<\frac{369}{2500},\qquad
+\frac qr<\frac{411}{178},\qquad
+411^4<32\cdot178^4.
+\]
+The last inequality gives $\log_2(q/r)<5/4$, and therefore
+\[
+\boxed{V_Q<\frac{369}{1600}<\frac14=V_P.}
+\]
+All the displayed integer comparisons are reproduced by the accompanying
+Python script. The proof of the strict variance gap uses no rounded
+logarithm or numerically located root.
+
+\begin{corollary}[Resolution of the bounded/logarithmic alternatives]
+For this crash-test pair,
+\[
+\liminf_{n\to\infty}\frac{E_n}{\sqrt n}\ge c,
+\qquad
+c=\frac{1/2-\sqrt{V_Q}}{\sqrt{2\pi}}>0.
+\]
+In particular $E_n\ne O(\log n)$ and $E_n\ne O(1)$.
+Numerically,
+\begin{align*}
+q&\approx0.41003242818198557608,\\
+V_Q&\approx0.20834731023907319744,\\
+c&\approx0.01737362702590893204,\\
+B_{P,Q}&\approx0.66879251142378039507.
+\end{align*}
+The exact all-$n$ lower bound is \eqref{eq:finite}, with these constants
+defined by their formulas, not by the rounded decimal values.
+\end{corollary}
+
+Together with Corollary 19.2 of \cite{mikulik}, this gives the presently
+established range in this addendum
+\begin{equation}\label{eq:range}
+\boxed{\Omega(\sqrt n)\ \le\ E_n\ \le\ O(n^{2/3}).}
+\end{equation}
+This excludes two alternatives in Open Problem 27.3 of that manuscript.
+It does \emph{not} determine the exact asymptotic order, nor prove a
+matching $O(\sqrt n)$ upper bound for the crash-test pair.
+
+\section{A constructive improvement when varentropies match}
+The same normal-approximation estimate also improves the upper bound for
+a different class of pairs. The construction is explicit, although the
+block alphabets can be exponentially large.
+
+\begin{theorem}[Matched-varentropy anti-diagonal construction]\label{thm:upper}
+Suppose $H(P)=H(Q)=h$ and $V_P=V_Q=V>0$. Define
+\[
+D=\frac{\rho_P+\rho_Q}{2V}+\cst,
+\qquad \cst=\frac{\log_2 e}{e}.
+\]
+For $n=mL$, where $m\ge2$ and $L\ge1$ are integers, there is an exact
+causal seed with
+\begin{equation}\label{eq:upper}
+H(S)\le nh+Lh+(m-1)D.
+\end{equation}
+In particular, $E_n(P,Q)=O(\sqrt n)$ for all positive integers $n$.
+\end{theorem}
+\begin{proof}
+Since the two centered information sums have the same normal approximation,
+\eqref{eq:goldstein} and the triangle inequality give
+\[
+W_1(\mu_{P^{\otimes L}},\mu_{Q^{\otimes L}})
+\le \frac{\rho_P+\rho_Q}{V}.
+\]
+The two-distribution greedy/profile bound of \cite[Theorem 4.1]{compton},
+together with the profile identity in \cite[Lemma 17.1]{mikulik}, gives a
+block coupling $J_L\in\Pi(Q^{\otimes L},P^{\otimes L})$ satisfying
+\[
+H(J_L)\le Lh+
+\tfrac12 W_1(\mu_{P^{\otimes L}},\mu_{Q^{\otimes L}})+\cst
+\le Lh+D.
+\]
+For completeness, the profile identity follows by integrating
+$\max\{F_{\mu_A}^{-1}(u),F_{\mu_B}^{-1}(u)\}$ over $0<u<1$ and using
+$\max\{a,b\}=(a+b+|a-b|)/2$.
+
+Apply the anti-diagonal construction of \cite[Section 18]{mikulik}.
+Split two length-$n$ streams $X,W$ into $m$ blocks of length $L$.
+Independently draw $X^{(1)}\sim P^{\otimes L}$,
+$W^{(m)}\sim Q^{\otimes L}$, and
+\[
+(W^{(j)},X^{(j+1)})\sim J_L,\qquad j=1,\ldots,m-1.
+\]
+On the $a$th occurrence of action $P$, output $X_a$; on the $b$th
+occurrence of action $Q$, output $W_{n+1-b}$.
+Observing both members of any coupled pair requires at least
+$jL+1$ occurrences of $P$ and $n-jL+1$ occurrences of $Q$, hence at
+least $n+2$ actions. No horizon-$n$ path can do this.
+For any fixed action word, exposed coordinates therefore have their
+required product law. Each output branch of an adaptive deterministic
+policy determines such an action word, proving exact adaptive validity;
+independent policy randomization follows by conditioning.
+
+The independent components of the seed have total entropy at most
+\[
+2Lh+(m-1)(Lh+D)=nh+Lh+(m-1)D.
+\]
+For general $n\ge3$, choose $L=\lceil\sqrt n\rceil$,
+$m=\lceil n/L\rceil$, and $N=mL$. Restrict the horizon-$N$ construction
+to its first $n$ actions. Since $N-n<L$ and $m-1<n/L$,
+\[
+E_n\le (N-n)h+Lh+(m-1)D
+\le (2h+D)\sqrt n+2h.
+\]
+The finitely many smaller horizons do not affect the stated order.
+\end{proof}
+
+If $V_P=V_Q=0$ and the entropies agree, both distributions are uniform
+on the same number of positive-probability symbols. They are permutations
+of one another, and $E_n=0$ by sharing an iid uniform stream and relabeling
+its outputs. Thus the zero-variance case is also completely covered.
+
+\section{An explicit different pair for the next logarithmic attempt}
+Here are actual \emph{output-symbol distributions}, rather than auxiliary
+increment laws. Repeated entries represent distinct symbols:
+\begin{align*}
+P_\star&=\bigl(1/8,\underbrace{1/32,\ldots,1/32}_{24\ \mathrm{symbols}},
+                  \underbrace{1/128,\ldots,1/128}_{16\ \mathrm{symbols}}\bigr),\\
+Q_\star&=\bigl(\underbrace{1/16,\ldots,1/16}_{8\ \mathrm{symbols}},
+                  \underbrace{1/64,\ldots,1/64}_{32\ \mathrm{symbols}}\bigr).
+\end{align*}
+Their total masses are $1$; they have $41$ and $40$ positive-probability
+symbols, so they are not permutations. If a common output alphabet is
+required, append one zero to $Q_\star$.
+Their information laws are especially simple:
+\[
+\mu_{P_\star}=\tfrac18\delta_3+\tfrac34\delta_5+\tfrac18\delta_7,
+\qquad
+\mu_{Q_\star}=\tfrac12\delta_4+\tfrac12\delta_6.
+\]
+Direct rational arithmetic gives
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Quantity & $P_\star$ & $Q_\star$\\
+\midrule
+Entropy & $5$ & $5$\\
+Varentropy & $1$ & $1$\\
+Third centered moment & $0$ & $0$\\
+Fourth centered moment & $4$ & $1$\\
+Third absolute centered moment & $2$ & $1$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The shifted information generating polynomials satisfy the exact identity
+\[
+\left(\frac18+\frac34z^2+\frac18z^4\right)
+-\left(\frac12z+\frac12z^3\right)=\frac{(z-1)^4}{8}.
+\]
+Thus the first three information moments match, while the fourth differs.
+Theorem~\ref{thm:upper} gives $E_n(P_\star,Q_\star)=O(\sqrt n)$ with
+$D=3/2+\cst$. For square horizons $n=L^2$, $L\ge2$, the concrete seed obeys
+\[
+H(S)\le5n+\left(\frac{13}{2}+\cst\right)\sqrt n
+             -\left(\frac32+\cst\right).
+\]
+For these same marginals, the noncausal product-block problem already has
+a uniform bound
+\[
+0\le \MEC(P_\star^{\otimes n},Q_\star^{\otimes n})-5n
+\le \frac32+\cst.
+\]
+This last statement follows directly from the block coupling bound in the
+proof. It is not a bounded-residual causal construction: a coupling of two
+constant paths alone does not supply all mixed adaptive paths.
+
+\paragraph{What remains to be constructed.}
+For this new pair, a logarithmic causal residual is not excluded by the
+varentropy converse. Establishing it requires a causal seed of entropy
+$5n+O(\log n)$, valid under every adaptive policy. The present construction
+still pays a boundary cost proportional to $L$ and a constant cost for each
+of approximately $n/L$ blocks. Balancing those costs yields $\sqrt n$.
+Fourth-order moment cancellation alone does not remove either cost.
+
+\paragraph{Scope and reproducibility.}
+The main lower bound is self-contained apart from the classical central
+limit theorem and elementary one-dimensional transport facts. The explicit
+finite-$n$ constant and the matched-varentropy upper bound use the cited
+quantitative results. No historical priority claim is made for those tools
+or their combination. The supplied script checks the exact integer
+certificates, verifies the new pair with rational arithmetic, and computes
+the displayed decimals at 80-digit working precision. It does not substitute
+numerical tests for causal validity or asymptotic proofs.
+
+\begin{thebibliography}{9}
+\bibitem{mikulik}
+J. Mikul\'ik.
+\emph{Who Pays the Bill? Substrate Skepticism, Stable Counterfactual
+Identity, Hidden Synergy, and the Causal Shannon Floor}.
+Version 4, 19 August 2026. User-supplied manuscript.
+
+\bibitem{shkel}
+Y. Y. Shkel and A. K. Yadav.
+\emph{Information Spectrum Converse for Minimum Entropy Couplings and
+Functional Representations}. ISIT, 2023.
+\url{https://arxiv.org/abs/2305.05745}.
+
+\bibitem{goldstein}
+L. Goldstein.
+\emph{Bounds on the constant in the mean central limit theorem}.
+Annals of Probability 38(4), 1672--1689, 2010.
+\url{https://arxiv.org/abs/0906.5145}.
+
+\bibitem{compton}
+S. Compton, D. Katz, B. Qi, K. Greenewald, and M. Kocaoglu.
+\emph{Minimum-Entropy Coupling Approximation Guarantees Beyond the
+Majorization Barrier}. AISTATS, PMLR 206, 10445--10469, 2023.
+\url{https://proceedings.mlr.press/v206/compton23a.html}.
+\end{thebibliography}
+\end{document}
