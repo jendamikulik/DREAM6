@@ -1,0 +1,350 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,booktabs}
+\usepackage[margin=25mm]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prb}{\mathbb P}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\cc}{C_n^{\mathrm{causal}}}
+\newcommand{\ii}{\imath}
+\newcommand{\MEC}{\operatorname{MEC}}
+\title{An Exact Causal Construction Below the Logarithmic Scale\\[3pt]
+\large Equal entropy, exact dyadic refinement, and a martingale envelope}
+\author{A constructive note for the history-indexed C3-C model}
+\date{26 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We construct an entropy-optimal finite discrete seed for each horizon $n$, valid under every
+adaptive action policy, for an explicit nonpermutation pair with equal
+entropy $5$ and equal varentropy $1$. Its entropy is
+$5n+O(\sqrt{\log(n+1)})$. The construction uses exact dyadic partitions,
+not independent block couplings. Its information distribution is a Bellman
+envelope of controlled martingale sums. A uniform martingale Berry--Esseen
+bound with vanishing conditional third moments, combined with a tail
+estimate, proves the sublogarithmic overhead. Bounded overhead is suggested
+by numerical values but is not proved here.
+\end{abstract}
+
+\section{The pair and the result}
+All entropies and information contents use base-two logarithms. Define
+\begin{align*}
+P&=\bigl(1/8,\underbrace{1/32,\ldots,1/32}_{24\ \mathrm{symbols}},
+              \underbrace{1/128,\ldots,1/128}_{16\ \mathrm{symbols}}\bigr),\\
+Q&=\bigl(\underbrace{1/16,\ldots,1/16}_{8\ \mathrm{symbols}},
+              \underbrace{1/64,\ldots,1/64}_{32\ \mathrm{symbols}}\bigr).
+\end{align*}
+Their information contents have laws
+\[
+\mu_P=\tfrac18\delta_3+\tfrac34\delta_5+\tfrac18\delta_7,
+\qquad \mu_Q=\tfrac12\delta_4+\tfrac12\delta_6.
+\]
+In particular, their entropies are both $5$, their varentropies are both
+$1$, and their third centered information moments are both zero.
+Their positive support sizes, $41$ and $40$, differ.
+
+\begin{theorem}\label{thm:main}
+For this fixed pair there is an explicit sequence of finite source laws
+$R_n$ and deterministic response maps, exact under every adaptive policy,
+such that
+\[
+\boxed{\frac12\le \cc(P,Q)-5n
+= H(R_n)-5n=O\bigl(\sqrt{\log(n+1)}\bigr).}
+\]
+Consequently a logarithmic upper bound holds for this nonpermutation,
+equal-entropy pair. The construction actually has $o(\log n)$ overhead.
+\end{theorem}
+
+Here $\cc$ is the minimum seed entropy in the history-indexed causal
+model C3-C: one initial seed determines all responses, and under every
+adaptive policy each next output has exactly the law selected by the
+current action. The seed law may depend on the horizon. No synchronous
+cross-history identity or infinite-horizon consistency is imposed.
+
+\section{An exact partition lemma}
+In this note a \emph{dyadic law} means a finite probability vector whose
+every positive atom is $2^{-k}$ for a nonnegative integer $k$.
+For such a law $A$, let
+\[
+F_A(k)=\Prb\{\ii_A(X)\le k\},\qquad
+\ii_A(x)=-\log_2 A(x),\quad X\sim A.
+\]
+Say that $R$ refines $A$ if there is a deterministic map taking a random
+variable of law $R$ to one of law $A$.
+
+\begin{lemma}[Dyadic refinement criterion]\label{lem:partition}
+For finite dyadic laws $R,A$, a refinement map exists if and only if
+\[
+F_R(k)\le F_A(k)\qquad\hbox{for every integer }k.
+\]
+It can be constructed by assigning source atoms in decreasing order of
+size to target bins with sufficient remaining capacity.
+\end{lemma}
+\begin{proof}
+An atom of size at least $2^{-k}$ must be assigned to a target bin of
+size at least $2^{-k}$. This proves necessity.
+For sufficiency, process source atoms by increasing information length.
+When assigning atoms of mass $2^{-k}$, all remaining capacities of target
+bins originally of size at least $2^{-k}$ are integer multiples of
+$2^{-k}$. Their combined remaining capacity is
+$F_A(k)-F_R(k-1)$, at least the total source mass
+$F_R(k)-F_R(k-1)$ now being assigned. Thus every atom fits.
+After all source atoms have been assigned, equal total masses imply that
+every target bin is exactly filled.
+\end{proof}
+
+\begin{lemma}[The minimum CDF is realizable]\label{lem:min}
+For two finite dyadic laws $A,B$, the function
+$F(k)=\min\{F_A(k),F_B(k)\}$ is the information CDF of a finite dyadic
+law $R$ refining both $A$ and $B$.
+\end{lemma}
+\begin{proof}
+The function is nondecreasing, is zero for $k<0$, and eventually equals
+$1$. Both $F_A(k)$ and $F_B(k)$ are integer multiples of $2^{-k}$.
+Consequently
+\[
+N_k=2^k\bigl(F(k)-F(k-1)\bigr)
+\]
+is a nonnegative integer. Take $N_k$ atoms of mass $2^{-k}$ at each
+level $k$. Their total mass is one and their information CDF is $F$.
+Lemma~\ref{lem:partition} supplies both refinement maps.
+\end{proof}
+
+There is no rounding penalty in this step. In fact this law attains the
+minimum entropy coupling value:
+\[
+\MEC(A,B)=\tfrac12\bigl(H(A)+H(B)+W_1(\mu_A,\mu_B)\bigr).
+\]
+For the lower bound, any common seed atom has probability at most either
+of its image probabilities, so its information dominates the maximum of
+the two image information contents. The minimum expected maximum is
+their common-quantile value, equal to the displayed expression.
+The law in Lemma~\ref{lem:min} has precisely this information CDF and
+entropy, proving attainability.
+
+\section{A recursive source with exact continuation laws}
+Let $R_0$ be a point mass. Recursively define $R_n$ by
+\begin{equation}\label{eq:recursion}
+F_n(k)=\min\bigl\{(\mu_P*F_{n-1})(k),
+                         (\mu_Q*F_{n-1})(k)\bigr\},
+\qquad F_0(k)=\mathbf1_{\{k\ge0\}}.
+\end{equation}
+Convolution here means $(\mu*F)(k)=\sum_\ell\mu(\ell)F(k-\ell)$.
+The two CDFs on the right are the information CDFs of
+$P\otimes R_{n-1}$ and $Q\otimes R_{n-1}$. Lemma~\ref{lem:min}
+constructs $R_n$ and deterministic maps
+\begin{equation}\label{eq:decoder}
+g_{n,P}:R_n\longrightarrow P\otimes R_{n-1},\qquad
+g_{n,Q}:R_n\longrightarrow Q\otimes R_{n-1}.
+\end{equation}
+
+Start with one sample of $R_n$. When an action $a$ is selected, apply
+$g_{n,a}$, output its first coordinate, and retain its second coordinate
+as the new state. Repeat with $n-1$ remaining steps.
+Conditional on the output, the retained state has \emph{exactly} law
+$R_{n-1}$. Induction shows that, conditional on every positive-probability
+history, the current state has the required continuation law. Therefore
+the simulator is exact for every adaptive policy. No further random bits
+are injected after the initial seed.
+
+\begin{theorem}[Exact optimality of the CDF recursion]\label{thm:optimal}
+For any finite pair of dyadic action laws, the construction
+\eqref{eq:recursion} satisfies
+\[
+C_n^{\mathrm{causal}}=H(R_n).
+\]
+More strongly, every admissible discrete seed $S$ has information CDF
+$F_S(t)\le F_n(t)$ for all real $t$. The competing seed need not be dyadic.
+\end{theorem}
+\begin{proof}
+At horizon zero every seed has nonnegative information, so its CDF is at
+most $F_0(t)=\mathbf1_{\{t\ge0\}}$. Assume the assertion for horizon
+$n-1$, and fix an arbitrary admissible horizon-$n$ seed $S$.
+Choose the first action $a$. Its output $Y_a$ is a deterministic function
+of $S$. Conditional on each output $y$ of positive probability, the seed
+law $S\mid Y_a=y$ is an admissible horizon-$(n-1)$ seed: every continuation
+policy must still give the prescribed memoryless conditional output laws.
+Since, for each atom in that fiber,
+\[
+-\log_2\Prb(S=s)
+=-\log_2 P_a(y)-\log_2\Prb(S=s\mid Y_a=y),
+\]
+the induction hypothesis gives
+\[
+F_S(t)=\sum_yP_a(y)F_{S\mid Y_a=y}\bigl(t-\ii_{P_a}(y)\bigr)
+\le(\mu_{P_a}*F_{n-1})(t).
+\]
+This holds for both actions, hence $F_S(t)\le F_n(t)$.
+Integrating survival functions gives $H(S)\ge H(R_n)$, including the
+case of infinite seed entropy. The exact decoder construction attains
+$H(R_n)$, proving equality.
+\end{proof}
+
+Thus the high-dimensional optimization over causal trees reduces, for
+dyadic action laws, to the one-dimensional recursion \eqref{eq:recursion}.
+This optimality argument uses no normal approximation or moment matching.
+
+For the present pair all calculations can use integers. The CDF of
+$R_n$ has denominator $8^n$. On the centered grid $x=-2n,\ldots,2n$,
+write $G_n(x)=F_n(5n+x)$. Then
+\begin{equation}\label{eq:centered}
+G_n(x)=\min\left\{
+\frac{G_{n-1}(x+2)+6G_{n-1}(x)+G_{n-1}(x-2)}8,
+\frac{G_{n-1}(x+1)+G_{n-1}(x-1)}2\right\}.
+\end{equation}
+Outside its finite support, each CDF is extended by zero and one.
+Its atom counts are
+\[
+N_{n,k}=2^k\bigl(F_n(k)-F_n(k-1)\bigr).
+\]
+This is a compact exact description of the seed distribution. Expanding
+the atoms and decoder maps can require exponentially many states; no
+polynomial-size expanded simulator is claimed.
+
+\section{The martingale envelope and its entropy bound}
+Let $\alpha_P$ be the centered increment law taking $-2,0,2$ with
+probabilities $1/8,3/4,1/8$, and let $\alpha_Q$ take $-1,1$ with
+probabilities $1/2,1/2$. A controller selects either law predictably,
+then observes the increment. For every such policy $\pi$, write
+$S_n^\pi=D_1+\cdots+D_n$.
+
+\begin{lemma}[Bellman representation]\label{lem:bellman}
+For every real $x$,
+\begin{equation}\label{eq:envelope}
+G_n(x)=\inf_\pi\Prb\{S_n^\pi\le x\}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+At horizon zero the assertion is the indicator CDF.
+At the first step choose an increment law. Once an increment $d$ is
+observed, optimize the remaining probability at threshold $x-d$.
+This gives exactly \eqref{eq:centered}. The finite horizon and finite
+increment sets allow the conditional minima to be attained.
+\end{proof}
+
+The policy attaining the infimum may depend on $x$. We therefore need
+a normal approximation uniform over \emph{all} policies, not a
+Wasserstein estimate for one policy at a time.
+For every policy and every step,
+\begin{equation}\label{eq:moments}
+\E[D_i\mid\mathcal F_{i-1}]=0,\quad
+\E[D_i^2\mid\mathcal F_{i-1}]=1,\quad
+\E[D_i^3\mid\mathcal F_{i-1}]=0,\quad |D_i|\le2.
+\end{equation}
+Apply the martingale Berry--Esseen theorem of Wu, Ma, Sang and Fan
+\cite[Theorem 1.1]{wu} to $\xi_i=D_i/\sqrt n$.
+The predictable quadratic variation equals $1$ exactly. With their
+parameter $\rho=1$,
+\[
+\E[|\xi_i|^4\mid\mathcal F_{i-1}]
+\le\frac4n\E[\xi_i^2\mid\mathcal F_{i-1}],
+\]
+so their assumptions hold with $\varepsilon_n=2/\sqrt n$ and
+$\delta_n=0$ for $n\ge16$. Thus an absolute constant $K$ satisfies
+\begin{equation}\label{eq:be}
+\sup_\pi\sup_{x\in\mathbb R}
+\left|\Prb\{S_n^\pi\le x\}-\Phi(x/\sqrt n)\right|
+\le\frac K{\sqrt n}.
+\end{equation}
+By \eqref{eq:envelope}, the same bound holds with $G_n(x)$ in place
+of the policy CDF. This use of a published probability theorem is the
+only non-elementary input to the rate estimate.
+
+The bounded-increment exponential estimate gives, for $x>0$, uniformly
+over policies,
+\[
+\Prb\{S_n^\pi>x\},\ \Prb\{S_n^\pi\le-x\}
+\le e^{-x^2/(8n)}.
+\]
+For example, it follows by iterating the conditional estimate
+$\E[e^{tD_i}\mid\mathcal F_{i-1}]\le e^{2t^2}$ and optimizing $t$.
+Therefore both tails of the distribution with CDF $G_n$ obey the same
+bound. If $Z_n$ has this CDF, then $H(R_n)=5n+\E Z_n$.
+For any $a>0$, the one-dimensional CDF formula for $W_1$ yields
+\begin{align}
+0\le\E Z_n
+&\le W_1\bigl(\Law(Z_n),\mathcal N(0,n)\bigr)\notag\\
+&=\int_{\mathbb R}|G_n(x)-\Phi(x/\sqrt n)|\,dx\notag\\
+&\le\frac{2aK}{\sqrt n}
+       +4\int_a^\infty e^{-x^2/(8n)}\,dx\notag\\
+&\le\frac{2aK}{\sqrt n}+\frac{16n}{a}e^{-a^2/(8n)}.
+\label{eq:integrated}
+\end{align}
+Set $a=\sqrt{8n\ln(n+1)}$. The first term is
+$4\sqrt2K\sqrt{\ln(n+1)}$ and the second is bounded. Increasing the
+constant for $n<16$ proves the upper bound in Theorem~\ref{thm:main}.
+In particular, no interchange of an integral and a policy supremum is
+being assumed: the CDF and tail bounds hold uniformly before integration.
+
+\paragraph{The positive lower bound.}
+For one step, $P$-information is always odd and $Q$-information is always
+even. In any coupling their absolute difference is therefore at least
+$1$. The common-seed atom inequality used above gives
+$C_1^{\mathrm{causal}}\ge5+1/2$.
+The constructed $R_1$ has information masses
+$(1/8,3/8,3/8,1/8)$ at lengths $(4,5,6,7)$ and entropy $5+1/2$,
+so equality holds. Finally, conditioning any horizon-$(n+1)$ seed on
+its first output under action $P$ gives
+\[
+C_{n+1}^{\mathrm{causal}}\ge5+C_n^{\mathrm{causal}}.
+\]
+Hence $C_n^{\mathrm{causal}}-5n\ge1/2$ for every $n$.
+
+\section{Scope, exact checks, and the remaining question}
+The same argument applies to any finite pair of dyadic laws with equal
+entropy, a common positive varentropy, and zero third centered information
+moment for each action: bounded support supplies the fourth-moment and
+tail estimates, and dyadic refinement supplies exact continuation maps.
+The zero-varentropy case with equal entropy consists of uniform laws on
+the same number of positive-probability symbols and has zero overhead.
+
+Let $E_n=H(R_n)-5n$ denote the optimal residual, by
+Theorem~\ref{thm:optimal}.
+\begin{center}
+\begin{tabular}{rll}
+\toprule
+$n$ & $E_n$ (bits) & computation\\
+\midrule
+1 & $0.5$ & exact\\
+2 & $0.5625$ & exact\\
+5 & $0.658203125$ & exact\\
+10 & $0.689732807688415\ldots$ & exact rational, decimal shown\\
+100 & $0.734055223902409\ldots$ & exact rational, decimal shown\\
+128 & $0.736278139421860\ldots$ & exact rational, decimal shown\\
+5000 & $0.750361245574903\ldots$ & floating-point experiment\\
+\bottomrule
+\end{tabular}
+\end{center}
+The script checks exact dyadic histograms through horizon $128$ and
+constructs full deterministic decoder maps at horizons $1$ and $2$.
+The latter have $54$ and $2312$ seed atoms. Every output/continuation
+pair is checked with integer arithmetic to have exactly the prescribed
+product probability. This certificate verifies the recursion directly;
+the all-horizon claim follows from the partition lemmas and induction.
+
+The numerical values suggest bounded overhead, but this note proves only
+$O(\sqrt{\log(n+1)})$. It does not prove a finite limit of $E_n$.
+It does prove exact optimality of $R_n$ and the requested logarithmic upper
+bound, with a stronger asymptotic estimate, for the displayed equal-entropy
+pair. It does not change the square-root obstruction for pairs with equal
+entropy and unequal varentropy.
+
+The source is not constrained to be a uniform $5n$-bit block plus a
+nonnegative reserve: its individual information lengths lie on both sides
+of $5n$. The controlled martingale above is a representation of its
+information CDF, not an additional randomness source used by the simulator.
+This is why the construction avoids the repeated independent-block costs.
+No historical priority claim is made without a separate literature review.
+
+\begin{thebibliography}{9}
+\bibitem{wu}
+S. Wu, X. Ma, H. Sang, and X. Fan.
+\emph{A Berry--Esseen bound of order $1/\sqrt n$ for martingales}.
+2020, Theorem 1.1.
+\url{https://arxiv.org/abs/2002.00307}.
+\end{thebibliography}
+\end{document}
