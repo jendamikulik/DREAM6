@@ -1,0 +1,477 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,booktabs}
+\usepackage[margin=23mm]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prb}{\mathbb P}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\ii}{\imath}
+\title{A Moment Classification of Exact Dyadic Causal Overhead\\[3pt]
+\large Bounded, logarithmic, and square-root regimes at equal entropy}
+\author{A constructive note for the history-indexed C3-C model}
+\date{26 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We classify the order of the exact causal seed overhead for all pairs of
+finite pure dyadic laws with equal entropy. Unequal information variances
+give order $\sqrt n$; equal variances but unequal third centered information
+moments give order $\log n$; matching both moments gives bounded overhead,
+with a positive limit unless the laws are permutations of one another.
+An explicit pair on $79$ and $80$ symbols realizes the logarithmic regime.
+The proof combines an exact optimal CDF recursion, a Fourier lower bound
+on every entropy increment, and a smoothed envelope contraction. The lower
+bounds also apply to arbitrary finite action laws with equal entropy.
+\end{abstract}
+
+\section{The classification}
+All information quantities use base-two logarithms. For a finite law $A$,
+write $\ii_A(x)=-\log_2 A(x)$ on its positive support. Define
+\[
+h_A=\E\ii_A(X),\quad
+v_A=\E(\ii_A(X)-h_A)^2,\quad
+\kappa_A=\E(\ii_A(X)-h_A)^3,\qquad X\sim A.
+\]
+A \emph{pure dyadic law} has each positive atom equal to $2^{-k}$ for an
+integer $k\ge0$. The restriction is to individual powers of two, not to
+arbitrary rational numbers with a power-of-two denominator.
+
+In the history-indexed model C3-C, one initial discrete seed determines
+all responses. At every positive-probability history, and under every
+adaptive action policy, the next output must have exactly the selected
+law $P$ or $Q$. The policy observes past actions and outputs, not the seed.
+Let $C_n^{\mathrm{causal}}(P,Q)$ be the infimum seed entropy at horizon $n$.
+The seed is allowed to depend on $n$.
+
+\begin{theorem}[Complete equal-entropy classification for pure dyadic laws]
+\label{thm:classification}
+Let $P,Q$ be finite pure dyadic laws with $h_P=h_Q=h$, and set
+$\Delta_n=C_n^{\mathrm{causal}}(P,Q)-nh$.
+The optimum is attained by an explicit finite seed. The following cases
+are exhaustive:
+\[
+\boxed{
+\begin{array}{ll}
+v_P\ne v_Q &: \Delta_n=\Theta(\sqrt n),\\[2pt]
+v_P=v_Q,\ \kappa_P\ne\kappa_Q &: \Delta_n=\Theta(\log(n+1)),\\[2pt]
+v_P=v_Q,\ \kappa_P=\kappa_Q &: \Delta_n=O(1).
+\end{array}}
+\]
+In the bounded case, $\Delta_n$ is nondecreasing and converges to a finite
+limit. This limit is positive unless $P,Q$ are permutations of one another;
+in that exceptional case $\Delta_n=0$ for all $n$.
+All asymptotic constants may depend on the fixed pair.
+\end{theorem}
+Thus, within this class, the second and third centered information
+moments completely determine the growth order. Higher moments may affect
+the bounded limit but do not create further unbounded orders.
+
+\begin{corollary}[Necessary conditions without dyadic assumptions]
+\label{cor:general}
+For arbitrary finite action laws of equal entropy, unequal information
+variances imply $\Delta_n=\Omega(\sqrt n)$. Equal variances and unequal
+third centered information moments imply $\Delta_n=\Omega(\log(n+1))$.
+In particular, bounded overhead requires matching both moments.
+\end{corollary}
+
+\section{Exact profile recursion and dyadic realization}
+For any discrete law $A$, let $F_A(t)=\Prb\{\ii_A(X)\le t\}$, and let
+$\mu_A=\Law(\ii_A(X))$. Define CDFs recursively by
+\begin{equation}\label{eq:F}
+F_0(t)=\mathbf1_{\{t\ge0\}},\qquad
+F_n(t)=\min\{(\mu_P*F_{n-1})(t),(\mu_Q*F_{n-1})(t)\}.
+\end{equation}
+Convolution means $(\mu*F)(t)=\int F(t-x)\,\mu(dx)$.
+The minimum of two finite-support CDFs is again a finite-support CDF.
+
+\begin{lemma}[Profile lower bound and exact dyadic attainment]\label{lem:optimal}
+For any finite $P,Q$, every admissible discrete horizon-$n$ seed $S$
+satisfies $F_S(t)\le F_n(t)$ for all real $t$.
+For pure dyadic $P,Q$, $F_n$ is the information CDF of a constructible
+finite pure dyadic seed $R_n$ and
+$C_n^{\mathrm{causal}}=H(R_n)$.
+\end{lemma}
+\begin{proof}
+At horizon zero every seed has nonnegative information. Suppose the
+profile bound holds for $n-1$ and fix the first action $a$ with output $Y$.
+For every $y$ of positive probability, $S\mid Y=y$ is an admissible seed
+for the remaining horizon. On that fiber,
+\[
+-\log_2\Prb\{S=s\}=
+\ii_a(y)-\log_2\Prb\{S=s\mid Y=y\}.
+\]
+Induction gives $F_S(t)\le(\mu_a*F_{n-1})(t)$ for both first actions,
+proving the lower bound. Integrating survival functions bounds seed
+entropy below by the mean of $F_n$.
+
+For finite pure dyadic laws $R,A$, a deterministic map from $R$ to $A$
+exists if and only if $F_R(k)\le F_A(k)$ for all integers $k$.
+Necessity follows because a source atom must fit inside its target atom.
+For sufficiency, assign source atoms in decreasing order of size. At
+mass $2^{-k}$, all eligible remaining target capacities are integer
+multiples of $2^{-k}$ and total $F_A(k)-F_R(k-1)$, enough for the current
+level. Thus all bins can be filled exactly.
+
+For $F(k)=\min(F_A(k),F_B(k))$, the counts
+$N_k=2^k(F(k)-F(k-1))$ are nonnegative integers. Taking $N_k$ atoms of
+mass $2^{-k}$ realizes $F$ and refines both $A,B$.
+Apply this recursively to $P\otimes R_{n-1}$ and $Q\otimes R_{n-1}$,
+starting at a point mass $R_0$. The refinement maps send the current
+state to an output and a new state. Conditional on that output, the new
+state has exactly law $R_{n-1}$. Induction proves correctness after every
+history and for every adaptive policy. The profile lower bound proves
+optimality, even against non-dyadic seeds.
+\end{proof}
+
+\section{The envelope and its exact entropy increments}
+Assume henceforth that both entropies equal $h$. Put
+$\alpha=\Law(\ii_P-h)$ and $\beta=\Law(\ii_Q-h)$.
+Both laws are centered. Let a controller choose either increment law
+predictably, and let $S_j^\pi$ be its sum after $j$ steps. Define
+\[
+G_j(x)=\inf_\pi\Prb\{S_j^\pi\le x\},\qquad
+U_j(x)=\sup_\pi\Prb\{S_j^\pi\le x\}.
+\]
+Dynamic programming, conditioning on the first increment, gives
+\[
+G_j=\min(\alpha*G_{j-1},\beta*G_{j-1}),\qquad
+G_0=\mathbf1_{[0,\infty)}.
+\]
+Consequently $G_j(x)=F_j(jh+x)$.
+Let $Z_j$ have CDF $G_j$ and put $e_j=\E Z_j$.
+For all finite action laws $\Delta_j\ge e_j$; for pure dyadic laws,
+Lemma~\ref{lem:optimal} gives equality.
+The two CDFs in the minimum have the same mean $e_{j-1}$. Therefore
+\begin{equation}\label{eq:increments}
+e_{j+1}-e_j=\frac12\| (\alpha-\beta)*G_j\|_1\ge0.
+\end{equation}
+Indeed, use $\min(A,B)=(A+B-|A-B|)/2$ and the CDF formula for differences
+of means. This identity charges a nonnegative cost at every horizon.
+
+Write $B=\max\{|x|:x\in\operatorname{supp}\alpha\cup
+\operatorname{supp}\beta\}$. If $B=0$, both information laws coincide
+and the problem is trivial. Assume $B>0$. For every policy, conditional
+centering and $|D_i|\le B$ imply
+\[
+\Prb\{S_j^\pi\ge t\},\ \Prb\{S_j^\pi\le-t\}
+\le\exp\left(-\frac{t^2}{2jB^2}\right),\qquad t>0.
+\]
+For completeness, convexity gives
+$\E[e^{sD_i}\mid\mathcal F_{i-1}]\le\cosh(sB)\le e^{s^2B^2/2}$;
+iterate and optimize the exponential Markov bound.
+The estimate is uniform over policies, hence also bounds both tails of
+$Z_j$. Integrating the tails yields
+\begin{equation}\label{eq:second}
+\E Z_j^2\le4B^2j,\qquad 0\le e_j\le2B\sqrt j.
+\end{equation}
+
+\section{A Fourier lower bound: why a logarithm is unavoidable}
+Let $D=\alpha-\beta$, and use the Fourier convention
+$\widehat\nu(t)=\int e^{itx}\nu(dx)$.
+Suppose $d\ge2$ is the first order at which the moments of $\alpha,\beta$
+differ. Finite support and Taylor expansion imply that for some
+$c_0,t_0>0$,
+\begin{equation}\label{eq:fourierD}
+|\widehat D(t)|\ge c_0|t|^d\qquad(0<|t|\le t_0).
+\end{equation}
+Choose $c=\min(t_0,1/(2B))$ and $t_j=c/\sqrt{j+1}$.
+Equation~\eqref{eq:second} and $\cos u\ge1-u^2/2$ show
+\[
+|\widehat{\Law(Z_j)}(t_j)|\ge
+\Re\widehat{\Law(Z_j)}(t_j)
+\ge1-\tfrac12t_j^2\E Z_j^2\ge\tfrac12.
+\]
+The function $R_j=D*G_j$ is compactly supported, and its distributional
+derivative is $D*\Law(Z_j)$. Integration by parts therefore gives
+\[
+\|R_j\|_1\ge|\widehat R_j(t_j)|
+=\frac{|\widehat D(t_j)|\,
+|\widehat{\Law(Z_j)}(t_j)|}{|t_j|}
+\ge\frac{c_0c^{d-1}}2(j+1)^{-(d-1)/2}.
+\]
+Together with \eqref{eq:increments}, this proves
+\begin{equation}\label{eq:lower}
+e_n\ge\frac{c_0c^{d-1}}4
+\sum_{j=0}^{n-1}(j+1)^{-(d-1)/2}.
+\end{equation}
+For $d=2$ this is $\Omega(\sqrt n)$; for $d=3$ it is
+$\Omega(\log(n+1))$. Since $\Delta_n\ge e_n$ without a dyadic
+assumption, Corollary~\ref{cor:general} follows already.
+The upper estimate in \eqref{eq:second} proves the matching square-root
+upper bound for pure dyadic laws.
+
+\section{An integrated envelope contraction}
+For the remaining upper bounds, put
+\[
+W_j=\int_{\mathbb R}(U_j-G_j)(x)\,dx.
+\]
+The all-$\beta$ walk has mean zero and its CDF lies between the envelopes.
+Thus $0\le e_j\le W_j$. No reflection symmetry is assumed here.
+
+Let $V$ be independent smoothing noise supported in $[-A,A]$, let $T_r$
+be the all-$\beta$ walk, and define
+\[
+h_r(x)=\Prb\{T_r+V\le x\},\quad
+R_r=D*h_r,\quad K_r=|R_r|,\quad
+ a_r=\|K_r\|_1,\quad b_r=\|K_r'\|_1.
+\]
+The noise chosen below ensures that these functions are absolutely
+continuous and compactly supported where needed.
+
+\begin{lemma}[Contraction]\label{lem:contraction}
+For every $n\ge1$,
+\begin{equation}\label{eq:contract}
+W_n\le2A+2\sum_{r=0}^{n-1}(a_r+b_rW_{n-1-r}).
+\end{equation}
+If $b_*:=\sum_{r\ge0}b_r<1/2$, then for every $N\ge1$,
+\begin{equation}\label{eq:maxW}
+\max_{0\le n\le N}W_n
+\le\frac{2A+2\sum_{r=0}^{N-1}a_r}{1-2b_*}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Write $G_n^V,U_n^V$ for the smoothed policy envelopes and $W_n^V$ for
+their integrated width. Bounded support of $V$ gives
+$U_n(x)\le U_n^V(x+A)$ and $G_n(x)\ge G_n^V(x-A)$.
+Every CDF $F$ satisfies $\int(F(x+A)-F(x-A))dx=2A$ by Tonelli, so
+$W_n\le W_n^V+2A$.
+
+For each policy, telescope $\E h_{n-i}(x-S_i^\pi)$ over $i$.
+Since $h_{r+1}=\beta*h_r$, conditioning on the past gives
+\[
+\Prb\{S_n^\pi+V\le x\}-h_n(x)
+=\sum_{i=1}^n\E\left[
+\mathbf1_{\{\text{action }i\text{ uses }\alpha\}}
+R_{n-i}(x-S_{i-1}^\pi)\right].
+\]
+Its absolute value is at most
+$\sum_i\E K_{n-i}(x-S_{i-1}^\pi)$.
+Let $B_j$ be the CDF of $T_j$. For every controlled prefix CDF $F_j^\pi$,
+$|F_j^\pi-B_j|\le U_j-G_j$. Stieltjes integration by parts gives
+\[
+\E K_r(x-S_j^\pi)\le\E K_r(x-T_j)
++\int|K_r'(x-y)|(U_j(y)-G_j(y))\,dy.
+\]
+The right side is independent of $\pi$, so taking the supremum first
+and then integrating in $x$ proves
+\[
+\int\sup_\pi\E K_r(x-S_j^\pi)dx\le a_r+b_rW_j.
+\]
+The smoothed envelope width is at most twice the largest absolute
+deviation from $h_n$ at each threshold. Summing proves
+\eqref{eq:contract}. Taking a maximum over $n\le N$, with $W_0=0$,
+and moving $2b_*$ times that finite maximum to the left proves
+\eqref{eq:maxW}.
+\end{proof}
+
+\section{Derivative estimates for an arbitrary finite reference law}
+Assume $\beta$ is nondegenerate. Choose two of its support points
+$x<y$, put $b=(y-x)/2>0$ and
+$\rho=2\min(\beta\{x\},\beta\{y\})>0$.
+Then $\beta=\rho\eta+(1-\rho)\zeta$, where
+$\eta=(\delta_x+\delta_y)/2$ and $\zeta$ is a probability law when
+$\rho<1$. The case $\rho=1$ needs no residual law.
+Let $v_a$ denote the uniform density on $[-a,a]$, choose
+$a=Lb$ with a positive integer $L$, and take $V$ to be the sum of
+four independent variables with density $v_a$. Then $A=4a$ and, in
+weak-derivative notation,
+\begin{equation}\label{eq:derivative}
+h_r^{(q+1)}=(v_a')^{*q}*v_a^{*(4-q)}*\beta^{*r},
+\qquad q=2,3,4.
+\end{equation}
+Here $v_a'=(\delta_{-a}-\delta_a)/(2a)$, and exponent zero means
+$\delta_0$. In particular $\|h_r^{(q+1)}\|_{\TV}\le a^{-q}$.
+The fourth case can be a signed measure; for densities the total
+variation norm agrees with the $L^1$ norm.
+
+\begin{lemma}\label{lem:decay}
+There are constants $C_q<\infty$ depending on $\beta,q$, but independent
+of $a=Lb$ and $r$, such that
+\begin{equation}\label{eq:decay}
+\|h_r^{(q+1)}\|_{\TV}
+\le\min\{a^{-q},C_q(r+1)^{-q/2}\},\qquad q=2,3,4.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Telescoping point masses shows
+$v_a'=\nu_L*v_b'$, where $\nu_L$ is uniform on
+$\{-a+b,-a+3b,\ldots,a-b\}$.
+Convolution with probability measures cannot increase total variation.
+In the binomial mixture expansion of $\beta^{*r}$, the number $K$ of
+$\eta$ increments has law $\operatorname{Bin}(r,\rho)$.
+For a fixed $K=k$, translation and scaling of symmetric signs give
+\[
+\|(v_b')^{*q}*\eta^{*k}\|_{\TV}
+\le b^{-q}\binom{k+q}{q}^{-1/2}.
+\]
+To verify this inequality, let $N=k+q$ independent symmetric signs be
+$\varepsilon_i$. Up to sign and the factor $b^{-q}$, the signed measure
+is the law of their sum weighted by $\prod_{i=1}^q\varepsilon_i$.
+Given the sum, the conditional product equals the average of
+$\prod_{i\in I}\varepsilon_i$ over all $q$-element subsets $I$.
+These products are orthonormal, so that average has squared $L^2$ norm
+$\binom Nq^{-1}$. Cauchy--Schwarz proves the asserted variation bound.
+
+It remains to average over $K$. Using
+$\binom{k+q}{q}\ge(k+1)^q/q!$ and splitting at $K=\rho r/2$ gives
+\[
+\E\binom{K+q}{q}^{-1/2}
+\le\sqrt{q!}(1+\rho r/2)^{-q/2}+e^{-\rho r/8}
+\le C'_q(r+1)^{-q/2}.
+\]
+For the exponential term, apply Markov to $e^{-(\ln2)K}$ and use
+$1-\rho/2\le e^{-\rho/2}$ and $\ln2<3/4$.
+This proves the decay estimate; combine it with the direct bound
+$a^{-q}$ from \eqref{eq:derivative}.
+\end{proof}
+
+\section{Closing the classification}
+For pure dyadic laws, the uncentered information laws have integer
+support. If their moments through order $m-1$ coincide, their probability
+generating polynomials differ by a multiple of $(1-z)^m$.
+Centering by the common $h$ gives a finite signed measure $\Gamma$ such
+that
+\begin{equation}\label{eq:factor}
+D=(\delta_0-\delta_1)^{*m}*\Gamma.
+\end{equation}
+This follows because ordinary moments and falling-factorial moments
+span the same polynomials through that degree. The common translation
+by $-h$ is absorbed into $\Gamma$; $h$ need not be an integer.
+
+Let $M=\|\Gamma\|_{\TV}$. The $m$th unit finite difference is, up to
+translation, the $m$th weak derivative convolved with
+$\mathbf1_{[0,1]}^{*m}$, whose $L^1$ norm is one. Therefore
+\begin{equation}\label{eq:ab}
+a_r\le M\|h_r^{(m)}\|_{\TV},\qquad
+b_r\le M\|h_r^{(m+1)}\|_{\TV}.
+\end{equation}
+If $v_P=v_Q>0$, the reference law is nondegenerate and
+Lemma~\ref{lem:decay} applies.
+For $m=3$ or $4$, the summable sequence
+$MC_m(r+1)^{-m/2}$ dominates the bounds on $b_r$.
+As $a=Lb\to\infty$, their pointwise upper bound $Ma^{-m}$ tends to
+zero. Dominated convergence lets us fix a finite $a$ with
+$\sum b_r<1/2$.
+
+If variances match but third moments differ, use $m=3$.
+Then $a_r\le MC_2/(r+1)$, and \eqref{eq:maxW} gives
+$W_n=O(\log(n+1))$. Since $\Delta_n=e_n\le W_n$, the Fourier lower
+bound proves the logarithmic case.
+
+If variances and third moments both match, use $m=4$.
+Then $a_r\le MC_3(r+1)^{-3/2}$ is summable, so
+\eqref{eq:maxW} gives $W_n=O(1)$ and $\Delta_n=O(1)$.
+If the common variance is zero, both information laws are the same point
+mass and this conclusion holds trivially.
+Finally \eqref{eq:increments} proves monotonicity. When
+$\alpha\ne\beta$, it also gives
+$e_1=\tfrac12\int|F_\alpha-F_\beta|>0$.
+For pure dyadic laws, equality of the information laws is equivalent to
+equality of all atom multiplicities, hence to being permutations of one
+another. In that case the recursion is the ordinary product profile and
+$\Delta_n=0$. This completes Theorem~\ref{thm:classification}.
+
+\section{An explicit logarithmic pair, with numerical constants}
+Take
+\begin{align*}
+P&=\bigl(1/16,(1/32)^{\times10},(1/64)^{\times12},
+                       (1/128)^{\times56}\bigr),\\
+Q&=\bigl((1/32)^{\times16},(1/128)^{\times64}\bigr).
+\end{align*}
+Their support sizes are $79$ and $80$. Their centered information laws are
+\[
+\alpha=\tfrac1{16}\delta_{-2}+\tfrac5{16}\delta_{-1}
+       +\tfrac3{16}\delta_0+\tfrac7{16}\delta_1,
+\qquad \beta=\tfrac12\delta_{-1}+\tfrac12\delta_1.
+\]
+Direct calculation gives
+\[
+h_P=h_Q=6,\qquad v_P=v_Q=1,\qquad
+\kappa_P=-\tfrac38,\quad\kappa_Q=0,\qquad
+D=\tfrac1{16}\delta_{-2}*(\delta_0-\delta_1)^{*3}.
+\]
+Let $\mathsf H_n=\sum_{k=1}^n1/k$ be the harmonic number.
+
+\begin{theorem}[A genuine logarithmic overhead]\label{thm:explicit}
+For the displayed fixed pair and every $n\ge1$,
+\begin{equation}\label{eq:explicit}
+\boxed{\frac{\mathsf H_n}{2048}
+\le C_n^{\mathrm{causal}}(P,Q)-6n
+<\frac{128}{5}+\frac3{10}\mathsf H_n.}
+\end{equation}
+In particular, the overhead is $\Theta(\log n)$ and is unbounded.
+The exact one-step excess is $\Delta_1=1/8$.
+\end{theorem}
+\begin{proof}
+For the lower bound, $B=2$ in \eqref{eq:second}. Choose
+$t_j=1/(4\sqrt{j+1})$, so $|\widehat{\Law(Z_j)}(t_j)|\ge1/2$.
+For $0\le t\le1/4$, the inequality
+$2\sin(t/2)\ge t-t^3/24$ implies
+$|1-e^{it}|^3\ge t^3/2$. Thus
+$|\widehat D(t_j)|\ge t_j^3/32$, and
+\eqref{eq:increments} gives
+\[
+e_{j+1}-e_j\ge\tfrac12\frac{t_j^3/32}{t_j}\cdot\tfrac12
+=\frac1{2048(j+1)}.
+\]
+Summation proves the lower bound.
+
+For the upper bound use four uniform smoothing variables on $[-2,2]$,
+so $a=2$ and $A=8$. For the Rademacher reference, the derivative estimate
+has the explicit form
+\[
+\|h_r^{(q+1)}\|_{\TV}
+\le\min\{2^{-q},\binom{r+q}{q}^{-1/2}\}.
+\]
+Equations \eqref{eq:ab} with $m=3$ and $M=1/16$ give
+\[
+\sum_{r=0}^{n-1}a_r\le\frac{\sqrt2}{16}\mathsf H_n,
+\qquad
+b_*\le\frac1{16}\sum_{r\ge0}
+\min\{2^{-3},\sqrt6(r+1)^{-3/2}\}
+\le\frac{3\sqrt[3]6}{32}.
+\]
+For the last sum, bound it by
+$\int_0^\infty\min(2^{-3},\sqrt6 x^{-3/2})dx
+=3\sqrt[3]6/2$.
+Therefore \eqref{eq:maxW} and $e_n\le W_n$ give
+\[
+\Delta_n\le
+\frac{16+\frac{\sqrt2}{8}\mathsf H_n}
+     {1-\frac{3\sqrt[3]6}{16}}
+<\frac{128}{5}+\frac3{10}\mathsf H_n,
+\]
+using $\sqrt2<3/2$ and $\sqrt[3]6<2$.
+Finally the CDF of $\alpha-\beta$ is $1/16,-2/16,1/16$ on the unit
+intervals starting at $-2,-1,0$. Equation~\eqref{eq:increments} gives
+$\Delta_1=(1+2+1)/32=1/8$.
+\end{proof}
+
+\section{Scope and reproducibility}
+The classification is for all finite pure dyadic pairs of equal entropy,
+with no symmetry assumption and no restriction on their alphabet sizes.
+For general finite laws the lower bounds remain valid, but this note
+does not supply matching upper constructions. It does not claim a full
+classification outside the pure dyadic class or literature priority.
+
+The companion program \texttt{logarithmic\_seed.py} constructs the exact
+profile of the explicit pair, verifies normalization and entropy using
+integer atom counts, and checks complete decoder partitions through
+horizon two. It also checks the moment identities, cubic factorization,
+and displayed harmonic bounds at finite horizons. Optional floating-point
+runs illustrate growth but are not part of the all-horizon proof.
+For example, a floating-point run gives
+$\Delta_{1000}\simeq0.62701621$ and
+$\Delta_{10000}\simeq0.69669408$.
+Slow apparent stabilization does not contradict logarithmic divergence.
+
+Each horizon uses its own finite initial seed, with no later randomness.
+Expanded state spaces may be exponential in the horizon. No single
+projectively consistent infinite source or efficient expanded decoder is
+asserted. The proof is independent of numerical extrapolation.
+\end{document}
