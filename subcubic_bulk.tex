@@ -1,0 +1,261 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,microtype,booktabs}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\Var}{\operatorname{Var}}
+\title{Bulk log-concavity failure in subcubic trees}
+\author{Research draft prepared for Jan Mikul\'ik}
+\date{27 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We give an argument for log-concavity failure a fixed positive fraction before the end of the independence sequence, already for trees of maximum degree three. Start with a fixed even path and repeatedly join two copies to a new root. A suitable uniform activity pins the hard-core recursion at an unstable fixed point. Exact conditional fourth moments separate two outer mass windows from an intervening window and force a log-concavity failure. For a path on $20000$ vertices, rational interval arithmetic certifies a relative gap of $1/60004$ for all sufficiently large heights. An entirely analytic argument also establishes the result for all sufficiently long fixed even paths. Degree three is optimal. This is an unrefereed proof draft; independent review and a broader priority check remain outstanding.
+\end{abstract}
+
+\paragraph{Statement.}
+Write $i_k(T)$ for the number of independent sets of size $k$ and $\alpha(T)$ for the independence number. Galvin's Question~3.1 asks whether log-concavity can fail before $(1-c)\alpha(T)$ for a fixed $c>0$ and arbitrarily large $\alpha(T)$~\cite{Galvin}. The recent preprint~\cite[Section 9]{Fang} still leaves open whether all failures are confined to $(1-o(1))\alpha(T)$.
+
+For an integer $m$, let $T_{m,0}=P_{2m}$, rooted at an endpoint. Form $T_{m,h+1}$ by joining a new root to the roots of two disjoint copies of $T_{m,h}$. The underlying family of binary trees with terminal paths appears in the computational examples of Bencs reported by Galvin~\cite[Section 3]{Galvin}. The assertion here is an asymptotic one with the terminal path length fixed.
+
+\begin{theorem}\label{thm:main}
+For each fixed integer $m\ge10000$, and every sufficiently large $h$, there is an interior index $k_h$ such that
+\[
+ i_{k_h}(T_{m,h})^2<i_{k_h-1}(T_{m,h})i_{k_h+1}(T_{m,h}),
+ \qquad \frac{k_h}{\alpha(T_{m,h})}\longrightarrow\beta_m
+ <1-\frac1{6m+4}.
+\]
+These trees have maximum degree at most $3$ and
+\[
+ |V(T_{m,h})|=(2m+1)2^h-1.
+\]
+In particular, $m=10000$ gives a fixed relative gap $c=1/60004$.
+\end{theorem}
+
+The gain over a construction with maximum degree $65$ is the optimal degree restriction; the explicit relative gap is smaller. No failure of unimodality of the unweighted coefficients is asserted.
+
+\paragraph{1. Pinning the recursion with a path.}
+Let $R_j(\lambda)$ be the ratio of root-present to root-absent partition functions for an endpoint-rooted path on $2j$ vertices. With $R_0=0$, the continued fraction gives
+\begin{equation}\label{eq:path}
+ R_j=\frac{\lambda(1+R_{j-1})}{\lambda+1+R_{j-1}}
+ =R_{j-1}+1-\frac{(1+R_{j-1})^2}{\lambda+1+R_{j-1}}.
+\end{equation}
+In particular $0\le R_j<j$ for $j\ge1$, and, writing $S_m=\sum_{j=1}^m j^2$,
+\begin{equation}\label{eq:pathbound}
+ R_m(\lambda)\ge m-\frac{S_m}{\lambda}.
+\end{equation}
+Choose $r\in(m/2,m)$ such that
+\begin{equation}\label{eq:pin}
+ R_m\bigl(r(1+r)^2\bigr)=r,\qquad \lambda=r(1+r)^2.
+\end{equation}
+Such an $r$ exists for $m\ge6$. At $r=m/2$, the error in~\eqref{eq:pathbound} is less than $8/3$, since
+\[
+ S_m\le\frac{m(m+1)^2}{3},\qquad
+ \frac{S_m}{(m/2)(1+m/2)^2}<\frac83.
+\]
+Thus $R_m>m/2$ there. At $r=m$, $R_m<m$. Continuity proves the claim. Uniqueness is not needed; fix any such root.
+
+Sample an independent set with probability proportional to $\lambda^{|I|}$, using this same activity at every vertex. If $R_h$ is the root odds for $T_{m,h}$, then
+\[
+ R_0=r,\qquad R_{h+1}=\frac{\lambda}{(1+R_h)^2}=r.
+\]
+Thus each rooted copy of $T_{m,j}$ has the same root probability
+\begin{equation}\label{eq:q}
+ q=\frac r{1+r},\quad \epsilon=1-q,\quad \rho=2q,
+ \qquad q>\frac{m}{m+2}\ge\frac{5000}{5001}.
+\end{equation}
+There are no imposed boundary states or vertex-dependent weights.
+
+\paragraph{2. A nondegenerate growing difference of conditional means.}
+Write $X_h=|I|$ and let $\mu_h^s=\E(X_h\mid\text{root state }s)$ for $s\in\{0,1\}$. Set $D_h=\mu_h^1-\mu_h^0$. Conditional independence gives
+\[
+ \mu_{h+1}^0=2\bigl((1-q)\mu_h^0+q\mu_h^1\bigr),\qquad
+ \mu_{h+1}^1=1+2\mu_h^0,
+\]
+hence
+\begin{equation}\label{eq:D}
+ D_{h+1}=1-\rho D_h,\qquad
+ D_h=\frac1{1+\rho}+(-\rho)^h\left(D_0-\frac1{1+\rho}\right).
+\end{equation}
+The growing coefficient is nonzero. Indeed, differentiation of the partition-function ratio gives
+\[
+ D_0=\lambda\frac{d}{d\lambda}\log R_m(\lambda).
+\]
+For $d_j=\lambda R_j'(\lambda)$, differentiating~\eqref{eq:path} yields
+\[
+ 0\le d_j\le d_{j-1}+\frac{j^2}{\lambda},
+ \qquad D_0\le\frac{S_m}{r\lambda}<\frac{16}{3m}<\frac14.
+\]
+But $1/(1+\rho)>1/3$. It follows that
+\begin{equation}\label{eq:scale}
+ d_h:=|D_h|\asymp\rho^h\longrightarrow\infty,
+ \qquad d_h=o(2^h),\qquad D_h/D_{h+1}\longrightarrow-1/\rho.
+\end{equation}
+
+\paragraph{3. Limiting conditional moments.}
+For $j=2,3,4$, normalize the conditional central moments by $D_h^j$ (with its sign when $j=3$). Their limits will be denoted respectively by $A_s,T_s,U_s$, where $s$ is the root state. These limits exist, as justified below. Define the central moments of their mixture, whose component means differ by one, by
+\begin{align}
+ B_2={}&\epsilon A_0+q A_1+q\epsilon,\label{eq:B2}\\
+ B_3={}&\epsilon T_0+q T_1+3q\epsilon(A_1-A_0)
+       +q\epsilon(1-2q),\label{eq:B3}\\
+ B_4={}&\epsilon U_0+q U_1+4q\epsilon(T_1-T_0)\notag\\
+ &+6q\epsilon(q A_0+\epsilon A_1)
+       +q\epsilon(q^3+\epsilon^3).\label{eq:B4}
+\end{align}
+The elementary moment formulas for a sum of two independent identically distributed variables give
+\begin{align}
+ A_0&=\frac{2B_2}{\rho^2},& A_1&=\frac{2A_0}{\rho^2},\label{eq:A}\\
+ T_0&=-\frac{2B_3}{\rho^3},& T_1&=-\frac{2T_0}{\rho^3},\label{eq:T}\\
+ U_0&=\frac{2B_4+6B_2^2}{\rho^4},&
+ U_1&=\frac{2U_0+6A_0^2}{\rho^4}.\label{eq:U}
+\end{align}
+
+To see convergence rather than merely formal consistency, first apply these same mixture and sum identities to the finite-height moments. At order $j$, the linear part of the two-dimensional recurrence is
+\[
+ 2(D_h/D_{h+1})^j
+ \begin{pmatrix}\epsilon&q\\1&0\end{pmatrix}.
+\]
+Its maximum-row-sum norm tends to $2/\rho^j<1$, since $2q^2>1$. The remaining terms at order $j$ are polynomials in moments of lower order, which have already converged. Induction over $j=2,3,4$ proves convergence to the unique solution of~\eqref{eq:A}--\eqref{eq:U}. More explicitly, subtracting this solution bounds the error by $\theta$ times the preceding error plus a term tending to zero, for a fixed $\theta<1$. All initial moments are finite because the base path is finite.
+
+\paragraph{4. Fourth moments reveal the valley.}
+Solving the triangular linear systems above, or differentiating them at $\epsilon=0$, gives
+\begin{equation}\label{eq:slopes}
+\begin{array}{lll}
+ A_0=\frac23\epsilon+O(\epsilon^2),&
+ T_0=\frac4{15}\epsilon+O(\epsilon^2),&
+ U_0=\frac8{63}\epsilon+O(\epsilon^2),\\[2pt]
+ A_1=\frac13\epsilon+O(\epsilon^2),&
+ T_1=-\frac1{15}\epsilon+O(\epsilon^2),&
+ U_1=\frac1{63}\epsilon+O(\epsilon^2).
+\end{array}
+\end{equation}
+All denominators in these systems are nonzero near $q=1$, so these are ordinary Taylor expansions of rational functions.
+
+Take three integer windows of equal radius $K_h=\lfloor d_h/10\rfloor$, centered at integers nearest to $\mu_h^0$, $\mu_h^1$, and their midpoint. They are disjoint and ordered for large $h$. Each outer window captures, under its own conditional law, at least $1-10^4U_s-o(1)$ of the mass, by the fourth-moment version of Markov's inequality. The middle window is at distance at least $(2/5)d_h-O(1)$ from both conditional means. Its unconditional mass is at most
+\begin{equation}\label{eq:middle}
+ \frac{625}{16}(\epsilon U_0+qU_1)+o(1).
+\end{equation}
+For $q\uparrow1$, the smaller outer mass lower bound divided by $\epsilon$ tends to $1$, whereas~\eqref{eq:middle} divided by $\epsilon$ tends to
+\[
+ \frac{625}{16\cdot63}=\frac{625}{1008}<1.
+\]
+Thus a strict valley follows for all sufficiently large fixed $m$, independently of any computer calculation. The order of choices matters: first fix $m$, and then let $h\to\infty$.
+
+For the explicit value $m=10000$, the rational certificate in the appendix proves, uniformly for $5000/5001\le q<1$,
+\begin{equation}\label{eq:bounds}
+ 0\le U_0<\frac{16}{125}\epsilon,\qquad
+ 0\le U_1<\frac{2}{125}\epsilon.
+\end{equation}
+Consequently the root-absent outer mass has limiting lower bound
+\[
+ \epsilon(1-10^4 U_0)>
+ \epsilon\left(1-\frac{1280}{5001}\right)>0.74\epsilon,
+\]
+and the root-present outer mass has limiting lower bound
+\[
+ q(1-10^4 U_1)>
+ \frac{5000}{5001}\left(1-\frac{160}{5001}\right)>0.96.
+\]
+Meanwhile the middle mass has limiting upper bound
+\[
+ \frac{625}{16}(\epsilon U_0+qU_1)
+ <\epsilon\left(\frac58+\frac5{5001}\right)<0.63\epsilon.
+\]
+For each fixed $m\ge10000$, the $o(1)$ errors vanish with $h$, so the two outer masses eventually exceed the middle mass.
+
+\begin{lemma}\label{lem:valley}
+A positive sequence that is log-concave on the integer hull of three ordered, disjoint windows of equal cardinality cannot give the middle window less mass than each outer window.
+\end{lemma}
+\begin{proof}
+Choose in each outer window a term at least its window average. Concavity of the logarithms forces every intermediate term to be at least the smaller of the two selected terms. Summing over the middle window proves the assertion.
+\end{proof}
+
+The lemma therefore gives a local log-concavity failure inside the hull. This is also a failure for the ordinary, unweighted independence coefficients: if $p_k=\Prob(X_h=k)$, then
+\[
+ p_k^2-p_{k-1}p_{k+1}
+ =\frac{\lambda^{2k}}{Z(T_{m,h};\lambda)^2}
+   \bigl(i_k^2-i_{k-1}i_{k+1}\bigr).
+\]
+With $M_h=\E X_h$, the resulting index satisfies $k_h=M_h+O(d_h)$. The support and the claimed relative location are established next.
+
+\paragraph{5. A fixed relative distance from the endpoint.}
+Put $\pi=q/(1+q)<1/2$. The marginal root-state probability at level $\ell$ of the binary skeleton is
+\[
+ p_\ell=\pi+(q-\pi)(-q)^\ell.
+\]
+Indeed $p_0=q$ and $p_{\ell+1}=q(1-p_\ell)$. At level $h$, the attached path contributes mean $\mu_0^0+p_hD_0$. Hence
+\begin{equation}\label{eq:meanlocation}
+ \frac{M_h}{2^h}
+ =\sum_{\ell=0}^{h-1}2^{\ell-h}p_\ell+\mu_0^0+p_hD_0
+ \longrightarrow L_m:=\pi+\mu_0^0+\pi D_0.
+\end{equation}
+Since either conditional independent set in the base path has size at most $m$,
+\[
+ 0<L_m\le m+\pi<m+\frac12.
+\]
+The conditional maximum sizes in the base path are both $m$. The recurrences
+$u_{h+1}=2\max(u_h,v_h)$ and $v_{h+1}=1+2u_h$ give
+\[
+ \alpha(T_{m,h})=m2^h+\sum_{j=0}^{\lfloor(h-1)/2\rfloor}2^{h-1-2j},
+ \qquad \frac{\alpha(T_{m,h})}{2^h}\longrightarrow m+\frac23.
+\]
+Together with $d_h=o(2^h)$, this places all three windows strictly inside the support for large $h$ and proves
+\[
+ \frac{k_h}{\alpha(T_{m,h})}\longrightarrow
+ \beta_m=\frac{L_m}{m+2/3}
+ <\frac{m+1/2}{m+2/3}=1-\frac1{6m+4}.
+\]
+This completes the proof of Theorem~\ref{thm:main}.\hfill$\square$
+
+\paragraph{Optimality of the degree restriction.}
+Every tree of maximum degree at most two is a path. Its coefficients are
+$i_k(P_n)=\binom{n-k+1}{k}$, and the ratio
+\[
+ \frac{i_{k+1}(P_n)}{i_k(P_n)}
+ =\frac{n-2k+1}{n-k+1}\,\frac{n-2k}{k+1}
+\]
+is decreasing wherever defined with positive numerator: both factors are positive and decreasing. Paths are therefore log-concave. The degree bound three in Theorem~\ref{thm:main} is the smallest possible.
+
+\paragraph{A fluctuation consequence.}
+The variance decomposition and Section~3 give
+\[
+ \Var X_h\sim (\epsilon A_0+qA_1+q\epsilon)D_h^2
+ \asymp\rho^{2h}\asymp |V(T_{m,h})|^{\gamma_m},
+ \qquad \gamma_m=2\log_2(2q).
+\]
+Since $q\to1$ as $m\to\infty$, $\gamma_m\to2$. Thus for every $\eta>0$ some fixed positive activity and a sequence of trees of maximum degree three give $\Var X_h=\Omega(|V|^{2-\eta})$. The activity depends on $m$ but not on $h$. This is a consequence of the same pinned recursion, not a separate claim of research priority.
+
+\paragraph{Appendix: exact numerical certificate.}
+For reproducibility, the following rational formulas specify every bound used in~\eqref{eq:bounds}. Use bars for the moments divided by $\epsilon$, and set
+\[
+ a=\frac1{2q^2},\quad t=-\frac1{4q^3},\quad
+ u=\frac1{8q^4},\quad z=\frac3{8q^4}.
+\]
+Successively evaluate
+\begin{align*}
+ \bar A_0&=\frac{aq}{1-a\epsilon-a^2q},&\bar A_1&=a\bar A_0,\\
+ \bar B_2&=\epsilon\bar A_0+q\bar A_1+q,\\
+ \bar T_0&=\frac{tq[3\epsilon(\bar A_1-\bar A_0)+1-2q]}{1-t\epsilon-t^2q},
+ &\bar T_1&=t\bar T_0,\\
+ \bar C&=4q\epsilon(\bar T_1-\bar T_0)
+  +6q\epsilon(q\bar A_0+\epsilon\bar A_1)+q(q^3+\epsilon^3),\\
+ \bar U_0&=\frac{u(qz\epsilon\bar A_0^2+\bar C)+z\epsilon\bar B_2^2}
+ {1-u\epsilon-u^2q},
+ &\bar U_1&=u\bar U_0+z\epsilon\bar A_0^2.
+\end{align*}
+The supplied program \texttt{verify\_subcubic.py} evaluates these expressions with rational interval arithmetic on $\epsilon\in[0,1/5001]$, $q=1-\epsilon$. All divisions check that their denominator interval avoids zero. It proves $0\le\bar U_0<16/125$ and $0\le\bar U_1<2/125$, as well as the three window bounds directly. The report \texttt{subcubic\_certificate.json} records the exact rational enclosures.
+
+As separate checks, the program verifies the limiting moment equations at three rational values of $q$, and compares the conditional mixture and sum identities through order four with exact independence-polynomial computations on small trees. These checks do not substitute for the convergence argument. The certificate concerns limiting moments; it does not specify an individual finite-height violating coefficient.
+
+\paragraph{Research status.}
+This draft contains a proposed proof, with an exact arithmetic certificate for the explicit constant. The qualitative existence result also follows analytically from~\eqref{eq:slopes}. It has not received independent expert review. Searches through 27 September 2026 found the relevant bulk-location question open in the cited sources; no exhaustive priority claim is made. The result concerns log-concavity, not the all-sizes unimodality conjecture.
+
+\begin{thebibliography}{9}\small
+\bibitem{Galvin} D. Galvin, \emph{Trees with non log-concave independent set sequences}, arXiv:2502.10654v2, 23 January 2026, Section 3. \url{https://arxiv.org/abs/2502.10654}.
+\bibitem{Fang} E. X. Fang, J. Lu, E. Nevo, Y. Yao and H. Zheng, \emph{Unimodality of Independence Polynomials for Sufficiently Large Forests}, arXiv:2609.20961v1, 17 September 2026, Section 9. \url{https://arxiv.org/abs/2609.20961}.
+\end{thebibliography}
+\end{document}
