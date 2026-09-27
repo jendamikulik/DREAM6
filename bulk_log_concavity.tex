@@ -1,0 +1,232 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,microtype,booktabs}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\title{Log-concavity failures at a fixed fraction\\of the independence number}
+\author{Research draft prepared for Jan Mikul\'ik}
+\date{27 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We give a self-contained argument for an explicit sequence of trees of maximum degree $65$ whose independence sequences fail log-concavity at indices $k_h$ with $k_h/\alpha(T_h)\to\beta<0.99$. The construction is a complete $64$-ary tree with one pendant leaf added to each terminal vertex. At a fixed positive activity, a single pendant edge realizes exactly an unstable fixed point of the hard-core recursion. Conditional means remain well separated relative to conditional standard deviations, producing two separated mass concentrations and a local obstruction to log-concavity. The argument supplies a proposed affirmative solution to Galvin's Question~3.1. All proof steps are included; independent expert review and a broader priority check remain outstanding.
+\end{abstract}
+
+\paragraph{Statement and context.}
+Let $i_k(T)$ be the number of independent sets of size $k$ and let $\alpha(T)$ be the largest possible size. Galvin asks whether some fixed $c>0$ permits arbitrarily large trees with
+\[
+ i_k(T)^2<i_{k-1}(T)i_{k+1}(T),\qquad k\le(1-c)\alpha(T)
+\]
+\cite[Question 3.1]{Galvin}. The earlier boundary constructions do not provide such a fixed $c$. The preprint of Fang, Lu, Nevo, Yao and Zheng proves central log-concavity for sufficiently large forests, and leaves open whether its asymptotically universal upper endpoint $b_{\rm lc}$ equals $1$~\cite[Section 9]{Fang}. The construction below gives $c=1/100$ and $b_{\rm lc}<1$. It concerns log-concavity, not a counterexample to unimodality.
+
+Fix $b=64$. Let $T_0$ be an edge rooted at an endpoint. Obtain $T_{h+1}$ by joining a new root to the roots of $b$ disjoint copies of $T_h$. Equivalently, $T_h$ is the complete $b$-ary tree of height $h$, with one extra leaf at each vertex on level $h$. Then
+\[
+ |V(T_h)|=b^h+\frac{b^{h+1}-1}{b-1},\qquad \Delta(T_h)\le65.
+\]
+\begin{theorem}\label{thm:main}
+For every sufficiently large $h$, there is an interior index $k_h$ such that
+\[
+ i_{k_h}(T_h)^2<i_{k_h-1}(T_h)i_{k_h+1}(T_h),\qquad
+ \frac{k_h}{\alpha(T_h)}\longrightarrow\beta,
+\]
+where, with $r\in(0,1)$ the nonzero solution of $(1-r)(1+r)^{64}=1$,
+\begin{equation}\label{eq:beta}
+ q=\frac r{1+r},\quad \pi=\frac q{1+q},\qquad
+ \beta=\frac{r+(1-r)\pi+\pi/63}{1+64/4095}
+ <\frac{12350}{12477}<\frac{99}{100}.
+\end{equation}
+Consequently Galvin's requested constant can be taken to be $c=1/100$.
+\end{theorem}
+
+\paragraph{1. Exact realization of the fixed point.}
+Put $\delta=1-r$. The equation for $r$ becomes
+\[
+ \delta(2-\delta)^b=1.
+\]
+There is a solution with
+\begin{equation}\label{eq:delta}
+ 2^{-b}<\delta<2^{1-b}\le b^{-2}.
+\end{equation}
+Indeed the left side is less than $1$ at $2^{-b}$ and greater than $1$ at $2^{1-b}$, since
+$2(1-2^{-b})^b\ge2(1-b2^{-b})>1$. It is strictly increasing on this interval: its derivative has the sign of $2-(b+1)\delta$.
+The function $(1-r)(1+r)^b$ first increases and then decreases on $[0,1]$, so this is the unique nonzero solution.
+
+Set $\lambda=r/(1-r)>0$ and sample an independent set $I$ with probability proportional to $\lambda^{|I|}$. This uses the same activity at every vertex, with no imposed boundary configuration. For a rooted tree let $R$ be the ratio of partition functions with its root occupied and unoccupied. For $T_0$,
+\[
+ R_0=\frac{\lambda}{1+\lambda}=r.
+\]
+The usual conditioning identity gives
+\[
+ R_{h+1}=\frac{\lambda}{(1+R_h)^b}=r.
+\]
+The last equality follows from $\lambda=r(1+r)^b$. Thus the root occupation probability of every $T_h$ is exactly $q$. In particular,
+\begin{equation}\label{eq:q}
+ \frac{49}{100}\le\frac{1-b^{-2}}2\le q<\frac12,
+ \qquad \rho:=bq,\qquad \rho-2\ge\frac{7b}{15}>1.
+\end{equation}
+
+\paragraph{2. Conditional moments.}
+Write $X_h=|I|$. Conditional on root state $s\in\{0,1\}$, let
+\[
+ \mu_h^s=\E(X_h\mid s),\quad V_h^s=\Var(X_h\mid s),\quad
+ D_h=\mu_h^1-\mu_h^0,\quad W_h=\max(V_h^0,V_h^1).
+\]
+Given an unoccupied root, the $b$ child subtrees are independent copies of the unconditioned law. Given an occupied root, they are independent copies conditioned on an unoccupied child root. Therefore
+\begin{align}
+ \mu_{h+1}^0&=b\big((1-q)\mu_h^0+q\mu_h^1\big),&
+ \mu_{h+1}^1&=1+b\mu_h^0,\label{eq:means}\\
+ V_{h+1}^0&=b\big((1-q)V_h^0+qV_h^1+q(1-q)D_h^2\big),&
+ V_{h+1}^1&=bV_h^0.\label{eq:vars}
+\end{align}
+The initial values are
+\[
+ \mu_0^0=r,\quad\mu_0^1=1,\quad V_0^0=r\delta,\quad V_0^1=0.
+\]
+In particular
+\begin{equation}\label{eq:D}
+ D_0=\delta,\qquad D_{h+1}=1-\rho D_h,
+ \qquad W_{h+1}\le bW_h+\frac b4D_h^2.
+\end{equation}
+
+\begin{lemma}\label{lem:variance}
+For every $h\ge1$,
+\[
+ |D_h|\ge(1-1/(2b))(\rho-2)^{h-1},\qquad
+ W_h\le\frac{5}{4b}D_h^2=\frac5{256}D_h^2.
+\]
+Moreover $|D_h|/b^h\to0$.
+\end{lemma}
+\begin{proof}
+By~\eqref{eq:delta}, $D_1=1-\rho\delta\ge1-1/(2b)>1/2$.
+Whenever $|D_h|\ge1/2$,
+$|D_{h+1}|\ge\rho|D_h|-1\ge(\rho-2)|D_h|$.
+This proves the lower bound by induction. Also
+\[
+ W_1\le b\delta+\frac b4\delta^2
+ \le\frac1b+\frac1{4b^3},\qquad
+ \frac{W_1}{D_1^2}\le\frac5{4b}.
+\]
+For the induction step,~\eqref{eq:D} and~\eqref{eq:q} give
+\[
+ \frac{W_{h+1}}{D_{h+1}^2}
+ \le\frac{225}{49b}\left(\frac{W_h}{D_h^2}+\frac14\right)
+ \le\frac{225}{49b}\left(\frac5{4b}+\frac14\right)
+ \le\frac5{4b}.
+\]
+The last scalar inequality holds at $b=64$ (equivalently, $15525<15680$).
+Finally the exact solution
+\[
+ D_h=\frac1{1+\rho}+(-\rho)^h\left(\delta-\frac1{1+\rho}\right)
+\]
+implies $D_h=O(\rho^h)$, and $\rho/b=q<1$.
+\end{proof}
+
+\paragraph{3. A local obstruction to log-concavity.}
+\begin{lemma}\label{lem:valley}
+Suppose a positive sequence $(p_k)$ is log-concave on the integer hull of three ordered, disjoint integer intervals $J_L,J_M,J_R$ of equal cardinality. Then
+\[
+ \sum_{k\in J_M}p_k\ge
+ \min\left(\sum_{k\in J_L}p_k,\sum_{k\in J_R}p_k\right).
+\]
+\end{lemma}
+\begin{proof}
+In each outer interval select a term at least its interval average.
+Discrete concavity of $\log p_k$ forces every intermediate term to be at least the smaller of the two selected terms. Sum this inequality over the middle interval.
+\end{proof}
+
+Set $d_h=|D_h|\to\infty$ and $K_h=\lfloor d_h/4\rfloor-2$.
+Take equal-length integer intervals of radius $K_h$ centered at integers nearest to $\mu_h^0$, $\mu_h^1$, and $(\mu_h^0+\mu_h^1)/2$.
+For large $h$ these are ordered and disjoint, with the midpoint interval in between. Call the outer intervals $J_L,J_R$ and the middle interval $J_M$.
+Chebyshev's inequality and Lemma~\ref{lem:variance} imply
+\begin{align*}
+ \min\{\Prob(X_h\in J_L),\Prob(X_h\in J_R)\}
+ &\ge\min(q,1-q)\left(1-\frac5{16}-o(1)\right)
+ \ge\frac{539}{1600}-o(1),\\
+ \Prob(X_h\in J_M)&\le\frac5{16}+o(1)
+ =\frac{500}{1600}+o(1).
+\end{align*}
+For the first bound, the appropriate conditional mean is at distance at least $d_h/4-O(1)$ from the complement of its interval. For the second, the middle interval is at least that distance from either conditional mean. The strict gap $39/1600$ proves that the law of $X_h$ is not log-concave on the hull of these intervals.
+
+This transfers exactly to the unweighted independence coefficients, since
+\begin{equation}\label{eq:tilt}
+ \Prob(X_h=k)=\frac{i_k(T_h)\lambda^k}{I(T_h;\lambda)},\qquad
+ p_k^2-p_{k-1}p_{k+1}
+ =\frac{\lambda^{2k}}{I(T_h;\lambda)^2}
+   \big(i_k^2-i_{k-1}i_{k+1}\big).
+\end{equation}
+Thus there is a strict log-concavity failure at some interior index $k_h$ in this hull. If $M_h=\E X_h$, its location satisfies
+\begin{equation}\label{eq:location}
+ k_h=M_h+O(d_h).
+\end{equation}
+The support and the asymptotic location of these intervals are checked next.
+
+\paragraph{4. The failure stays a positive fraction from the endpoint.}
+Let $p_\ell$ be the occupation probability of a vertex at level $\ell\le h$ in the full tree. Conditional on an unoccupied parent this probability is $q$, and on an occupied parent it is zero. Hence
+\[
+ p_0=q,\qquad p_{\ell+1}=q(1-p_\ell),\qquad
+ p_\ell=\pi+(q-\pi)(-q)^\ell,\quad \pi=\frac q{1+q}.
+\]
+A terminal vertex on level $h$ and its extra leaf contribute expected size
+$r+(1-r)p_h$. Therefore
+\[
+ \frac{M_h}{b^h}
+ =\sum_{\ell=0}^{h-1}b^{\ell-h}p_\ell+r+(1-r)p_h
+ \longrightarrow L:=\frac{\pi}{b-1}+r+(1-r)\pi.
+\]
+The convergence of the sum follows by splitting it at a fixed distance from its last term and bounding the remaining geometric tail.
+
+To calculate $\alpha_h=\alpha(T_h)$, let $u_h,v_h$ be the maximum sizes conditional on root state $0,1$. Then
+\[
+ u_0=v_0=1,\qquad u_{h+1}=b\max(u_h,v_h),\qquad v_{h+1}=1+bu_h.
+\]
+Their difference alternates between $1$ at odd heights and $1-b$ at positive even heights. Thus
+\[
+ \alpha_h=b^h+\sum_{j=0}^{\lfloor(h-1)/2\rfloor}b^{h-1-2j},
+ \qquad \frac{\alpha_h}{b^h}\longrightarrow A:=1+\frac b{b^2-1}.
+\]
+Since $0<r<1$ and $\pi<1/3$,
+\[
+ 0<L<1+\frac1{3(b-1)}<A.
+\]
+Together with $d_h=o(b^h)$, this also shows that all three intervals above lie strictly inside the support for sufficiently large $h$. Equations~\eqref{eq:location} and~\eqref{eq:beta} now follow, and
+\[
+ \beta=\frac LA<\frac{1+1/189}{1+64/4095}
+ =\frac{12350}{12477}<\frac{99}{100}.
+\]
+This completes the proof of Theorem~\ref{thm:main}.\hfill$\square$
+
+\paragraph{A further consequence.}
+The total variance is at least $q(1-q)D_h^2$. The exact formula for $D_h$ shows $|D_h|\asymp\rho^h$: its growing-mode coefficient is nonzero, since $\delta\le b^{-2}<1/(1+\rho)$. Hence
+\[
+ \Var X_h\ge c_0\rho^{2h},\qquad |V(T_h)|\asymp b^h,
+ \qquad \rho^2>b.
+\]
+At this fixed activity the variance is superlinear in the number of vertices. This does not conflict with the activity interval used for the central limit theorem in~\cite{Fang}; our activity lies between $2^{63}-1$ and $2^{64}-1$.
+
+\paragraph{Exact finite verification.}
+The accompanying Python program uses only rational interval arithmetic, enclosing $\delta$ in $[2^{-64},2^{-63}]$ and propagating~\eqref{eq:means}--\eqref{eq:vars}. It certifies a finite instance at height $8$:
+\[
+ |V(T_8)|=567417810194497,\qquad
+ \alpha(T_8)=285874097225792.
+\]
+All three equal-length windows lie in the integer interval
+\[
+ [282933720312059,\ 282983698113316],
+\]
+whose upper endpoint is strictly below $0.99\alpha(T_8)$. Both outer-window probabilities exceed $0.37$, whereas the middle-window probability is below $0.26$. These rounded bounds are asserted against exact rational enclosures by the verifier. Lemma~\ref{lem:valley} therefore certifies a failure inside this explicit interval without constructing the enormous coefficient list. The script separately checks the conditional-moment identities against exact polynomial calculations on small trees. These checks supplement the all-heights argument above.
+
+\paragraph{Research status.}
+This is a newly derived, unrefereed proof draft. No unproved analytic lemma is used in its argument. The proposed answers to the cited open questions depend on the correctness of this draft; they should be independently checked before a priority or publication claim is made. Literature checked through 27 September 2026 includes the sources below. No resolution of the all-sizes unimodality conjecture is claimed.
+
+\begin{thebibliography}{9}\small
+\bibitem{Galvin} D. Galvin, \emph{Trees with non log-concave independent set sequences}, arXiv:2502.10654v2, Question 3.1. \url{https://arxiv.org/abs/2502.10654}.
+\bibitem{Fang} E. X. Fang, J. Lu, E. Nevo, Y. Yao and H. Zheng,
+\emph{Unimodality of Independence Polynomials for Sufficiently Large Forests}, arXiv:2609.20961v1, 17 September 2026, Theorem 1.2 and Section 9. \url{https://arxiv.org/abs/2609.20961}.
+\bibitem{Yu} X. Yu, \emph{Unbounded runs of non-log-concavity in independence polynomials of trees}, manuscript in reproducibility archive, version 1.1.0, 3 September 2026. \url{https://doi.org/10.5281/zenodo.22263331}.
+\end{thebibliography}
+\end{document}
