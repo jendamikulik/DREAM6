@@ -1,0 +1,149 @@
+\section*{Quantitative closure of the curvature step}
+
+The only non-numerical constant needed in the run argument is a nondegenerate
+interval on which the limiting density has strictly positive logarithmic
+curvature.  This interval follows quantitatively from the three-window valley;
+no numerical reconstruction of the limiting density is required.
+
+Let
+\[
+J_L=[-q-\tfrac14,-q+\tfrac14],\qquad
+J_M=[\tfrac14-q,\tfrac34-q],\qquad
+J_R=[\tfrac34-q,\tfrac54-q].
+\]
+All three intervals have length \(1/2\).  From the variance bound
+\(v_s\le 5/256\) and the component weights \(q,1-q\ge49/100\),
+Chebyshev gives
+\[
+ \min\{\Pr(Z\in J_L),\Pr(Z\in J_R)\}\ge \frac{539}{1600},
+ \qquad
+ \Pr(Z\in J_M)\le\frac{5}{16}.
+\]
+Hence the average density on each outer interval is at least
+\(539/800>67/100\), whereas the average density on the middle interval is at
+most \(5/8<63/100\).  Since the limiting density \(f\) is continuous and
+strictly positive, there are interior points
+\[
+x_L\in J_L,\qquad x_M\in J_M,\qquad x_R\in J_R
+\]
+such that
+\[
+f(x_L),f(x_R)>\frac{67}{100},
+\qquad
+f(x_M)<\frac{63}{100}.
+\]
+Put \(g=\log f\).  The point \(x_M\) lies between \(x_L,x_R\), and the value of
+the affine chord through \((x_L,g(x_L))\) and \((x_R,g(x_R))\) at \(x_M\)
+exceeds \(g(x_M)\) by more than
+\[
+\Delta:=\log\frac{67}{63}.
+\]
+If \(M=\sup_{[x_L,x_R]}g''\), the elementary interpolation estimate
+\[
+\operatorname{chord}_g(x_M)-g(x_M)
+ \le \frac{M}{2}(x_M-x_L)(x_R-x_M)
+\]
+gives, because both factors on the right are at most \(1\),
+\[
+M>2\log\frac{67}{63}.
+\]
+For \(x\ge0\),
+\[
+\log(1+x)\ge\frac{2x}{2+x},
+\]
+since the difference has derivative
+\(x^2/((1+x)(2+x)^2)\ge0\).  Taking \(x=4/63\) yields
+\[
+2\log\frac{67}{63}\ge\frac8{65}>\frac3{25}.
+\]
+Consequently there exists \(x_0\in(x_L,x_R)\) with
+\[
+g''(x_0)>\frac3{25}.
+\]
+By continuity there is a nondegenerate closed interval \(J\ni x_0\) such that
+\[
+\boxed{(\log f)''\ge\frac3{25}=2\zeta\quad\hbox{on }J},
+\qquad
+\zeta:=\frac3{50}.
+\]
+
+Now use Lemma~6.  On the compact interval \(J\), \(f\) has a positive minimum,
+and
+\[
+g_h^{(j)}\longrightarrow f^{(j)}
+\quad\text{uniformly},\qquad j=0,1,2.
+\]
+The map
+\[
+(u,v,w)\longmapsto \frac wu-\left(\frac vu\right)^2
+\]
+is continuous on \(u>0\).  Therefore there is a finite integer \(H_1\) such
+that for every \(h\ge H_1\),
+\[
+g_h>0,\qquad
+(\log g_h)''\ge\zeta=\frac3{50}
+\quad\text{throughout }J.
+\]
+
+Let \(L=|J|>0\).  Since
+\[
+|a_h|=|a_0|\rho^h,
+\]
+the set \(I_h\) of integers \(k\) for which the three interpolation nodes
+\(x_{h,k-1},x_{h,k},x_{h,k+1}\) all belong to \(J\) is consecutive and satisfies
+\[
+|I_h|\ge L|a_h|-4.
+\]
+Choose \(H_2\) so that \(L|a_0|\rho^h\ge8\) for \(h\ge H_2\).  Then
+\[
+\boxed{|I_h|\ge c_b\rho^h},
+\qquad
+c_b:=\frac12L|a_0|>0.
+\]
+For every \(k\in I_h\), with \(s_h=|a_h|^{-1}\), the exact centered
+second-difference identity gives
+\[
+\log\frac{p_{h,k-1}p_{h,k+1}}{p_{h,k}^2}
+=
+\int_{-s_h}^{s_h}
+ (s_h-|u|)(\log g_h)''(x_{h,k}+u)\,du
+\ge
+\frac{\zeta}{|a_h|^2}>0.
+\]
+Thus every \(k\in I_h\) is a strict failure of log-concavity.  Multiplication
+by the hard-core factor \(\lambda^k/Z(T_{b,h};\lambda)\) preserves the sign of
+the log-concavity determinant, so the same interval consists of failures of
+the unweighted independence sequence.
+
+Finally,
+\[
+\frac{m_h}{b^h}\to L_b,\qquad
+\frac{\alpha_h}{b^h}\to A_b,\qquad
+\frac{|a_h|}{b^h}=|a_0|q^h\to0.
+\]
+Since \(J\) is bounded,
+\[
+\sup_{k\in I_h}\left|\frac{k}{\alpha_h}-\beta_b\right|\to0,
+\qquad
+\beta_b=\frac{L_b}{A_b}.
+\]
+For \(b=64\),
+\[
+\beta_{64}
+<
+\frac{12350}{12477}
+<
+\frac{99}{100}.
+\]
+Hence there is a finite \(H_3\) such that the entire run lies below
+\(0.99\,\alpha_h\) for all \(h\ge H_3\).  With
+\[
+H_{64}:=\max\{H_1,H_2,H_3\},
+\]
+all assertions of the consecutive-run theorem hold for every
+\(h\ge H_{64}\).
+
+This closes the proof without an unquantified curvature step.  The constants
+\(J\) and \(H_{64}\) need not be numerically evaluated because the theorem
+asserts their existence; their positivity and finiteness are established
+above.

@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "b": 64,
+  "maximum_degree": 65,
+  "q_interval": [
+    "9223372036854775807/18446744073709551615",
+    "18446744073709551615/36893488147419103231"
+  ],
+  "rho_interval": [
+    "590295810358705651648/18446744073709551615",
+    "1180591620717411303360/36893488147419103231"
+  ],
+  "w2_contraction_squared_upper": "340282366920938463426481119284349108225/5444517870735015414233402098190880079936",
+  "fixed_variance_upper": "5/256",
+  "outer_mass_lower": "539/1600",
+  "middle_mass_upper": "5/16",
+  "outer_density_average": "539/800",
+  "middle_density_average": "5/8",
+  "curvature_point_lower": "3/25",
+  "certified_interval_curvature_level_2zeta": "3/25",
+  "zeta": "3/50",
+  "beta64_upper": "12350/12477",
+  "beta64_below_99_percent": true,
+  "kappa64_gt_4_over_5": true,
+  "analytic_dependencies": [
+    "W2 contraction and fixed-pair existence",
+    "stretched-exponential Fourier decay",
+    "uniform C^2 lattice interpolation",
+    "continuity transfer from log f curvature to log g_h curvature"
+  ],
+  "note": "No numerical value of J or H_64 is required by the theorem; their existence is certified analytically from strict curvature and uniform C^2 convergence."
+}
