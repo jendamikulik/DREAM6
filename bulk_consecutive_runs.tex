@@ -1,0 +1,485 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,microtype}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Law}{\mathcal L}
+\title{Polynomially long consecutive failures of log-concavity\\in the bulk of tree independence sequences}
+\author{Research draft prepared for Jan Mikul\'ik with ChatGPT}
+\date{27 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+For each integer $b\ge64$, we give a fixed family of trees of maximum
+degree $b+1$ whose independence sequences contain a consecutive run of
+$\Omega(N^{\log_b(bq)})$ strict log-concavity failures at a limiting
+relative position strictly below $1$. Here $q<1/2$ is an explicitly
+specified algebraic number. At maximum degree $65$, the run has length
+$\Omega(N^{4/5})$ and lies below $0.99$ times the independence number.
+Allowing the fixed degree bound to depend on $\varepsilon$ yields
+$\Omega(N^{1-\varepsilon})$ consecutive bulk failures for every
+$\varepsilon>0$. Consequently the extremal run-length exponent is $1$.
+The analytic step is a finite-height, stretched-exponential Fourier bound;
+it gives uniform convergence of an exact lattice interpolation and all its
+derivatives. This closes the transfer from a limiting mass valley to a
+consecutive block of finite coefficient inequalities.
+\end{abstract}
+
+\noindent\textbf{Status.} This is a proposed proof with all analytic steps
+supplied below, not an independently refereed result or a formal
+verification. No claim of bibliographic priority is made. The lower-bound
+constants and the starting height in this stronger run theorem are not
+numerically evaluated.
+
+\section{Statement}
+For a tree $T$, let $i_k(T)$ count its independent sets of size $k$, and
+write $\alpha(T)$ for its independence number. A failure is an interior
+index $k$ such that $i_k(T)^2<i_{k-1}(T)i_{k+1}(T)$.
+
+Fix an integer $b\ge64$. Let $T_{b,0}$ be an edge rooted at one endpoint.
+Construct $T_{b,h+1}$ by attaching a new root to the roots of $b$ disjoint
+copies of $T_{b,h}$. Put
+\begin{equation}\label{eq:size}
+ N_h=b^h+\frac{b^{h+1}-1}{b-1},\qquad
+ \alpha_h=b^h+\sum_{j=0}^{\lfloor(h-1)/2\rfloor}b^{h-1-2j}.
+\end{equation}
+The sum is empty at $h=0$. These are respectively the order and
+independence number of $T_{b,h}$; its maximum degree is at most $b+1$.
+
+Let $\delta$ be the unique solution in $(2^{-b},2^{1-b})$ of
+\begin{equation}\label{eq:parameters}
+ \delta(2-\delta)^b=1,
+ \qquad r=1-\delta,\quad q=\frac{r}{1+r},\quad \rho=bq,
+ \quad \pi=\frac{q}{1+q}.
+\end{equation}
+Define
+\begin{equation}\label{eq:beta}
+ A_b=1+\frac{b}{b^2-1},\qquad
+ L_b=r+\delta\pi+\frac{\pi}{b-1},\qquad
+ \beta_b=\frac{L_b}{A_b},\qquad \kappa_b=\log_b\rho.
+\end{equation}
+
+\begin{theorem}\label{thm:main}
+For every fixed integer $b\ge64$, there exist constants $c_b>0$ and
+$H_b<\infty$ such that, for every $h\ge H_b$, there is an interval of
+consecutive interior indices $I_h$ with
+\begin{align}
+ |I_h|&\ge c_b\rho^h=\Omega_b(N_h^{\kappa_b}),\label{eq:run}\\
+ i_k(T_{b,h})^2&<i_{k-1}(T_{b,h})i_{k+1}(T_{b,h})
+ \quad(k\in I_h),\label{eq:failure}\\
+ \sup_{k\in I_h}\left|\frac{k}{\alpha_h}-\beta_b\right|&\longrightarrow0.
+ \label{eq:location}
+\end{align}
+Moreover
+\begin{equation}\label{eq:gap}
+ 0<\beta_b<\frac{(3b-2)(b+1)}{3(b^2+b-1)}
+ =1-\frac{2b-1}{3(b^2+b-1)}<1.
+\end{equation}
+For $b=64$, the entire run lies below $0.99\alpha_h$ for all sufficiently
+large $h$, and has length $\Omega(N_h^{4/5})$.
+\end{theorem}
+
+\begin{corollary}\label{cor:epsilon}
+For every $\varepsilon>0$, there are constants $\Delta_\varepsilon<\infty$
+and $d_\varepsilon>0$ and a family of arbitrarily large trees of maximum
+degree at most $\Delta_\varepsilon$ with $\Omega_\varepsilon(N^{1-\varepsilon})$
+consecutive failures, all at indices below $(1-d_\varepsilon)\alpha(T)$.
+The degree bound and relative gap are fixed along each family.
+\end{corollary}
+
+Let $M(N)$ denote the largest length of a consecutive run of failures
+among trees on \emph{at most} $N$ vertices.
+\begin{corollary}\label{cor:exponent}
+The extremal logarithmic exponent is exactly one:
+\[
+ \lim_{N\to\infty}\frac{\log M(N)}{\log N}=1,
+ \qquad\text{equivalently }M(N)=N^{1-o(1)}.
+\]
+This does not assert $M(N)=\Theta(N)$.
+\end{corollary}
+
+\paragraph{Context.}
+Galvin's Question 3.1 asks for log-concavity failure at a fixed relative
+distance from the last coefficient~\cite{Galvin}. Consecutive failures
+have been studied in~\cite{Ramos,Yu}. Yu's construction gives
+$\Omega(N^{1/3})$ consecutive failures with indices $k/\alpha(T)\to1$;
+its discussion explicitly raises a bulk analogue. Fang et al. prove
+central log-concavity for sufficiently large forests~\cite{Fang}; the
+location here is outside their guaranteed interval. The present argument
+strengthens the earlier single-failure construction on the same rooted
+trees. It neither changes that construction nor contradicts unimodality.
+
+\section{Exact recursion and its normalized limit}
+At $\delta=2^{-b}$ the left side of~\eqref{eq:parameters} is below $1$;
+at $\delta=2^{1-b}$ it is at least $2(1-b2^{-b})>1$. Its derivative has
+the sign of $2-(b+1)\delta$, which is positive between these endpoints.
+Thus the specified solution exists uniquely. In particular
+\begin{equation}\label{eq:bounds}
+ 0<\delta<b^{-2},\quad \frac{49}{100}\le q<\frac12,
+ \quad \sqrt b<\rho<b.
+\end{equation}
+Use the same activity $\lambda=r/\delta=r(1+r)^b$ at every vertex.
+An independent set has probability proportional to $\lambda^{|I|}$.
+The occupied/unoccupied root partition-function ratio is
+$\lambda/(1+\lambda)=r$ for $T_{b,0}$, and the recursion
+$R_{h+1}=\lambda/(1+R_h)^b$ makes it exactly $r$ at every height.
+Thus each isolated rooted subtree has root occupation probability $q$.
+
+Let $X_h$ be the size under this probability law, let
+$\mu_h^s=\E(X_h\mid\text{root}=s)$, and let $m_h=\E X_h$.
+Root conditioning gives
+\[
+ \mu_{h+1}^0=b[(1-q)\mu_h^0+q\mu_h^1],\qquad
+ \mu_{h+1}^1=1+b\mu_h^0.
+\]
+Therefore, with $D_h=\mu_h^1-\mu_h^0$,
+\begin{equation}\label{eq:mode}
+ D_0=\delta,\quad D_{h+1}=1-\rho D_h,\quad
+ D_h=\theta+a_h,\qquad
+ \theta=\frac1{1+\rho},\quad a_h=(\delta-\theta)(-\rho)^h.
+\end{equation}
+Here $\delta<\theta$: indeed $\delta<b^{-2}<1/(1+b/2)<\theta$.
+The signed normalization $a_h$ removes the alternating growing mode
+exactly. Define the centered conditional variables and a deterministic
+correction by
+\[
+ Y_h^s=\frac{X_h-\mu_h^s}{a_h}\ \Big|\ (\text{root}=s),\qquad
+ z_h=\frac{D_h}{a_h}=1+\frac{\theta}{a_h}.
+\]
+If $S_i$ are independent Bernoulli$(q)$ variables, with conditionally
+independent copies of the appropriate conditional laws, then
+\begin{equation}\label{eq:smoothing}
+ \begin{split}
+ Y_{h+1}^0&\ \overset d=\ -\rho^{-1}
+   \sum_{i=1}^b\bigl(Y_{h,i}^{S_i}+(S_i-q)z_h\bigr),\\
+ Y_{h+1}^1&\ \overset d=\ -\rho^{-1}\sum_{i=1}^bY_{h,i}^0.
+ \end{split}
+\end{equation}
+
+\begin{lemma}\label{lem:contraction}
+The pair $(\Law(Y_h^0),\Law(Y_h^1))$ converges in the maximum of the two
+$2$-Wasserstein distances to a unique centered finite-variance fixed pair
+$(\Law(Y^0),\Law(Y^1))$ of~\eqref{eq:smoothing} with $z_h$ replaced by $1$.
+Both limiting variances $v_s$ are positive and at most $5/(4b)$.
+\end{lemma}
+\begin{proof}
+On pairs of centered finite-second-moment laws, call the transformation
+in~\eqref{eq:smoothing} $\mathcal T_z$. Couple two input pairs optimally
+in each state, use common $S_i$, and take independent couplings over $i$.
+The differences have mean zero, so their sum's second moment is the sum
+of their second moments. Consequently
+\[
+ d(\mathcal T_z\nu,\mathcal T_z\widetilde\nu)
+ \le \frac{\sqrt b}{\rho}\,d(\nu,\widetilde\nu),\qquad
+ d(\mathcal T_z\nu,\mathcal T_1\nu)
+ \le\frac{\sqrt{bq(1-q)}}{\rho}|z-1|.
+\]
+The space is complete (centering is closed under $W_2$ convergence),
+and $\ell:=\sqrt b/\rho<1$. The contraction theorem gives the fixed pair.
+Its distance $e_h$ from the height-$h$ pair obeys
+$e_{h+1}\le\ell e_h+C\rho^{-h}$, so $e_h\to0$ (indeed
+$e_h=O_b(\ell^h)$).
+
+Put $t=b/\rho^2=1/(bq^2)<1$. Taking variances in the fixed equations gives
+\[
+ v_1=tv_0,\qquad
+ v_0=t[(1-q)v_0+qv_1+q(1-q)],
+ \qquad
+ v_0=\frac{tq(1-q)}{1-t(1-q)-qt^2}>0.
+\]
+Since $q^2\ge(49/100)^2>6/25$, we have $t<25/(6b)$.
+For $b\ge64$,
+\[
+ 1-t(1-q)-qt^2\ge1-t-t^2
+ \ge1-\frac{25}{384}-\left(\frac{25}{384}\right)^2>\frac56.
+\]
+Thus $0<v_1\le v_0\le (25/(24b))/(5/6)=5/(4b)$.
+\end{proof}
+
+The unconditional centered normalization is
+\begin{equation}\label{eq:Z}
+ Z_h:=\frac{X_h-m_h}{a_h}\ \overset d=\ Y_h^S+(S-q)z_h
+ \ \longrightarrow\ Z:=Y^S+(S-q)
+\end{equation}
+in $W_2$, where $S$ has probability $q$ of being $1$.
+
+\section{A Fourier bound uniform at finite height}
+Weak convergence alone does not decide neighboring coefficient signs.
+We now control the complete fundamental frequency interval before taking
+any derivative or lattice difference.
+
+Let $\chi_h^s(u)=\E(e^{iuX_h}\mid\text{root}=s)$ and
+$Q_h(u)=\max_s|\chi_h^s(u)|$. The exact conditional recursion is
+\begin{equation}\label{eq:fourierrec}
+ \chi_{h+1}^0(u)=((1-q)\chi_h^0(u)+q\chi_h^1(u))^b,
+ \qquad \chi_{h+1}^1(u)=e^{iu}(\chi_h^0(u))^b.
+\end{equation}
+In particular, for $1\le k\le h$,
+\begin{equation}\label{eq:amplify}
+ Q_h(u)\le Q_k(u)^{b^{h-k}}.
+\end{equation}
+
+\begin{lemma}\label{lem:fourier}
+Set $\gamma=\log b/\log\rho>1$. There are positive constants $K,c$ and
+an integer $h_0$, depending only on $b$, such that for every $h\ge h_0$
+and $|t|\le\pi|a_h|$,
+\begin{equation}\label{eq:domination}
+ \max_s|\E e^{itY_h^s}|\le K e^{-c|t|^\gamma},
+ \qquad |\E e^{itZ_h}|\le K e^{-c|t|^\gamma}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Let $\psi_s$ be the characteristic functions of $Y^s$.
+Positive finite variance gives
+$|\psi_s(t)|^2=1-v_st^2+o(t^2)$ at zero. Choose $\eta>0$ sufficiently
+small that both moduli are strictly below $1$ throughout
+$\eta\le|t|\le\rho\eta$. Convergence in $W_2$ gives uniform convergence
+of characteristic functions on compact intervals, since
+$|\psi_h^s(t)-\psi_s(t)|\le|t|W_2(\Law(Y_h^s),\Law(Y^s))$.
+Thus, after increasing $h_0$ if necessary, there is $u_*<1$ such that
+\begin{equation}\label{eq:annulus}
+ Q_k(t/a_k)\le u_*\quad
+ (k\ge h_0,\ \eta\le|t|\le\rho\eta).
+\end{equation}
+Increase $h_0$ again to ensure $\eta/|a_{h_0}|<\pi$.
+
+First suppose
+$\eta/|a_h|\le|u|\le\eta/|a_{h_0}|$.
+Choose $k\in[h_0,h]$ with
+$\eta\le|a_ku|\le\rho\eta$; successive values grow by the factor $\rho$.
+Writing $t=a_hu$, we have
+$|t|\le\rho\eta\rho^{h-k}$. Hence~\eqref{eq:amplify}--\eqref{eq:annulus}
+give
+\[
+ Q_h(u)\le u_*^{b^{h-k}}
+ \le\exp\left(-\frac{-\log u_*}{(\rho\eta)^\gamma}|t|^\gamma\right).
+\]
+
+For the remaining physical frequencies
+$\eta/|a_{h_0}|\le|u|\le\pi$, observe that
+\[
+ X_1\mid0\ \overset d=\operatorname{Bin}(b,2q),\qquad
+ X_1\mid1\ \overset d=1+\operatorname{Bin}(b,r).
+\]
+Indeed $X_0$ is Bernoulli$(2q)$, while $X_0\mid0$ is Bernoulli$(r)$.
+Since $0<2q,r<1$, both conditional laws have lattice span one, and
+$Q_1(u)<1$ for $0<|u|\le\pi$. Compactness gives a common bound $v_*<1$
+on the remaining interval. Let $a_0=\delta-\theta$. Then
+\[
+ Q_h(u)\le v_*^{b^{h-1}}
+ \le\exp\left(-\frac{-\log v_*}{b(\pi|a_0|)^\gamma}|t|^\gamma\right),
+\]
+because $|t|\le\pi|a_0|\rho^h$ and $\rho^\gamma=b$.
+For $|t|<\eta$ a constant prefactor suffices. Centering does not change
+modulus; nor does the sign of $a_h$ affect these bounds. The unconditional
+characteristic function is a convex combination of the centered
+conditional ones with unit-modulus phase factors. This proves both claims.
+\end{proof}
+
+\section{Smooth densities and exact lattice interpolation}
+\begin{lemma}\label{lem:densities}
+The laws of $Y^0,Y^1,Z$ have densities $f_0,f_1,f$ that extend to entire
+functions and are strictly positive everywhere on the real line.
+If $\phi_h(t)=\E e^{itZ_h}$ and
+\begin{equation}\label{eq:interp}
+ g_h(x)=\frac1{2\pi}\int_{-\pi|a_h|}^{\pi|a_h|}
+                 e^{-itx}\phi_h(t)\,dt,
+\end{equation}
+then, for every fixed integer $j\ge0$,
+\begin{equation}\label{eq:Cj}
+ \sup_{x\in\mathbb R}|g_h^{(j)}(x)-f^{(j)}(x)|\longrightarrow0.
+\end{equation}
+At each lattice node $x_{h,k}=(k-m_h)/a_h$ one has exactly
+\begin{equation}\label{eq:lattice}
+ g_h(x_{h,k})=|a_h|\Pp(X_h=k).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Lemma~\ref{lem:fourier} passes to the limiting characteristic functions.
+Since $\gamma>1$, the bound $Ke^{-c|t|^\gamma}$ remains integrable after
+multiplication by $|t|^j e^{R|t|}$ for every finite $j,R$. Fourier
+inversion therefore gives densities with entire extensions. On the real
+axis they are nonnegative. Neither conditional density is identically
+zero, so its real zeros are isolated and it is positive almost everywhere.
+
+The fixed equation for $Y^1$ expresses its density as the scaled and
+reflected $b$-fold convolution of $f_0$. A convolution of two integrable
+densities positive almost everywhere is strictly positive at every point:
+its integrand is positive almost everywhere. These densities are bounded,
+so the convolution is finite. Iteration shows $f_1>0$ everywhere.
+The density of $Y^S+(S-q)$ is
+\[
+ f(x)=(1-q)f_0(x+q)+qf_1(x-(1-q))>0.
+\]
+The fixed equation for $Y^0$ now expresses $f_0$ as a scaled reflected
+$b$-fold convolution of this positive density, so $f_0>0$ everywhere as
+well. The identities first hold almost everywhere and then everywhere by
+continuity.
+
+Extend $\phi_h(t)$ by zero outside its fundamental interval in
+\eqref{eq:interp}. Pointwise convergence and Lemma~\ref{lem:fourier}
+give, by dominated convergence,
+\[
+ \int_{\mathbb R}|t|^j
+ \left|\phi_h(t)\boldsymbol1_{\{|t|\le\pi|a_h|\}}-\E e^{itZ}\right|dt
+ \longrightarrow0.
+\]
+Fourier inversion and differentiation under the integral prove
+\eqref{eq:Cj}. The functions $g_h$ are real by conjugate symmetry.
+Finally, substitute $t=a_hu$ in~\eqref{eq:interp} at $x_{h,k}$.
+Lattice Fourier inversion over $[-\pi,\pi]$ gives~\eqref{eq:lattice};
+the absolute Jacobian $|a_h|$ handles either sign of $a_h$.
+\end{proof}
+
+\section{A valley forces a whole interval of positive log curvature}
+\begin{lemma}\label{lem:valley}
+There are a closed interval $J$ of positive length and a constant
+$\zeta>0$ such that $(\log f)''\ge2\zeta$ throughout $J$.
+One can take $J$ inside $[-q-1/4,1-q+1/4]$.
+\end{lemma}
+\begin{proof}
+In the mixture $Z=Y^S+(S-q)$, the component means are $-q$ and $1-q$,
+their variances are at most $5/(4b)\le5/256$, and both weights are at
+least $49/100$. Consider intervals of radius $1/4$ centered at $-q$,
+$1/2-q$, and $1-q$, denoted $J_L,J_M,J_R$ in order. Chebyshev's
+inequality gives
+\[
+ \min\{\Pp(Z\in J_L),\Pp(Z\in J_R)\}
+ \ge\frac{49}{100}\left(1-\frac5{16}\right)=\frac{539}{1600},
+ \qquad
+ \Pp(Z\in J_M)\le\frac5{16}=\frac{500}{1600}.
+\]
+For the middle interval, each component is at least $1/4$ from its own
+mean. Endpoints have probability zero.
+
+If a positive continuous density is log-concave on the hull of three
+ordered intervals of equal length, the middle mass is at least the
+smaller outer mass. To see this, choose a point in each outer interval
+whose density is at least that interval's average. Concavity of the
+logarithm bounds the density at every intervening point below by the
+smaller chosen density, and integration over the middle interval proves
+the assertion. The strict inequalities above contradict this property.
+Since $f>0$ is smooth, $\log f$ is twice continuously differentiable.
+If its second derivative were everywhere nonpositive in the hull's
+interior it would be concave there. It therefore has a point of strictly
+positive second derivative. Continuity supplies $J$ and $\zeta$.
+\end{proof}
+
+By~\eqref{eq:Cj} with $j=0,1,2$, positivity of $f$ on $J$ implies that,
+for all sufficiently large $h$, $g_h>0$ and
+\begin{equation}\label{eq:curvature}
+ (\log g_h)''\ge\zeta\quad\text{on }J.
+\end{equation}
+Let $I_h$ consist of all integers $k$ whose three nodes
+$x_{h,k-1},x_{h,k},x_{h,k+1}$ belong to $J$. These integers are
+consecutive, even when $a_h<0$, and
+\begin{equation}\label{eq:count}
+ |I_h|\ge |J||a_h|-4\ge c_b\rho^h
+\end{equation}
+for all sufficiently large $h$ and a constant $c_b>0$.
+
+Write $p_{h,k}=\Pp(X_h=k)$ and $s_h=1/|a_h|$. The exact integral
+formula for a centered second difference, together with
+\eqref{eq:lattice}--\eqref{eq:curvature}, yields
+\begin{align}
+ \log\frac{p_{h,k-1}p_{h,k+1}}{p_{h,k}^2}
+ &=\int_{-s_h}^{s_h}(s_h-|u|)(\log g_h)''(x_{h,k}+u)\,du\notag\\
+ &\ge\frac{\zeta}{|a_h|^2}>0\qquad(k\in I_h).\label{eq:finitecurvature}
+\end{align}
+All three probabilities are positive, by~\eqref{eq:lattice} and
+positivity of $g_h$ on $J$. Thus these are interior indices of the true
+coefficient support. Finally
+$p_{h,k}=i_k(T_{b,h})\lambda^k/Z_{T_{b,h}}(\lambda)$, so
+\begin{equation}\label{eq:transfer}
+ \frac{i_{k-1}(T_{b,h})i_{k+1}(T_{b,h})}{i_k(T_{b,h})^2}
+ =\frac{p_{h,k-1}p_{h,k+1}}{p_{h,k}^2}
+ \ge\exp\left(\frac{\zeta}{|a_h|^2}\right)>1.
+\end{equation}
+This is a finite-height conclusion valid uniformly at every index in the
+run. No estimate of the form ``pointwise error is smaller than mesh
+squared'' is assumed; the exact interpolation and its $C^2$ convergence
+are what justify the signs.
+
+\section{Location and extremal consequences}
+We finish the proof of Theorem~\ref{thm:main}. At depth $j$ in the
+$b$-ary skeleton the occupation probability $p_j$ satisfies
+$p_0=q$, $p_{j+1}=q(1-p_j)$, whence
+\[
+ p_j=\pi+(q-\pi)(-q)^j.
+\]
+A terminal skeleton vertex and its extra leaf together have expectation
+$r+\delta p_h$. Summing over levels,
+\[
+ \frac{m_h}{b^h}=r+\delta p_h+\sum_{j=0}^{h-1}b^{j-h}p_j
+ \longrightarrow r+\delta\pi+\frac{\pi}{b-1}=L_b.
+\]
+Formula~\eqref{eq:size} follows alternatively from conditional maxima
+$u_0=v_0=1$, $u_{h+1}=b\max(u_h,v_h)$, $v_{h+1}=1+bu_h$;
+induction gives the displayed alternating-level sum. Hence
+$\alpha_h/b^h\to A_b$. Since $J$ is bounded and
+$|a_h|/b^h=|a_0|q^h\to0$, the nodes defining $I_h$ satisfy
+\[
+ \sup_{k\in I_h}|k-m_h|=O_b(\rho^h),\qquad
+ \sup_{k\in I_h}\left|k/\alpha_h-\beta_b\right|\to0.
+\]
+Since $r+\delta\pi<1$ and $\pi<1/3$, we have
+\[
+ \beta_b<\frac{1+1/[3(b-1)]}{1+b/(b^2-1)}
+ =\frac{(3b-2)(b+1)}{3(b^2+b-1)}<1.
+\]
+For $b=64$ this upper bound is $12350/12477<99/100$.
+Also $\rho\ge64(49/100)>30$ and $30^5>64^4$, so
+$\kappa_{64}>4/5$. This proves every assertion of the theorem.
+
+As $b\to\infty$, $q\to1/2$ and
+$\kappa_b=1+\log q/\log b\to1$. Given $\varepsilon>0$, fix an integer
+$b\ge64$ with $\kappa_b>1-\varepsilon$ and use
+$d_\varepsilon=(1-\beta_b)/2$ and $\Delta_\varepsilon=b+1$.
+This proves Corollary~\ref{cor:epsilon}. Here $b$ is fixed before
+$h\to\infty$; no estimate uniform in $b$ is being asserted.
+
+For Corollary~\ref{cor:exponent}, fix the same $b$. The orders satisfy
+$N_{h+1}=bN_h+1$. For every sufficiently large budget $N$, choose the
+largest $h$ with $N_h\le N$. Then $N_h>(N-1)/b$, and therefore
+\[
+ M(N)\ge c'_bN_h^{\kappa_b}
+ \ge c''_bN^{\kappa_b}.
+\]
+It follows that $\liminf\log M(N)/\log N\ge1-\varepsilon$ for every
+$\varepsilon>0$. The trivial upper bound $M(N)\le N$ completes the
+proof.\hfill$\square$
+
+\paragraph{What is and is not quantified.}
+The tree family, activity, exponent and limiting bulk location are
+explicit. The argument establishes positive run constants and a finite
+starting height for each fixed $b$, and proves the required uniform
+passage to finite coefficients. It does not evaluate the curvature
+interval $J$, its lower curvature bound, or the resulting $H_b$.
+In particular this paper does not assert that a polynomially long run
+already occurs at the height $8$ used in the earlier single-failure
+certificate. The inequalities here may be very weak in relative size:
+the guaranteed logarithmic ratio in~\eqref{eq:finitecurvature} is of
+order $\rho^{-2h}$.
+
+\begin{thebibliography}{9}
+\bibitem{Galvin} D. Galvin, \emph{Trees with non log-concave independent
+set sequences}, arXiv:2502.10654v2 (2026), Question 3.1.
+\url{https://arxiv.org/abs/2502.10654}.
+\bibitem{Ramos} C. Bautista-Ramos, C. Guill\'en-Galv\'an and
+A. G\'omez-Salgado, \emph{Linear Recurrences for Non-Log-Concave Independence
+Polynomials of Trees}, Graphs and Combinatorics 42, 59 (2026).
+\url{https://doi.org/10.1007/s00373-026-03054-4}.
+\bibitem{Yu} X. Yu, \emph{Unbounded runs of non-log-concavity in independence
+polynomials of trees}, Zenodo preprint, version 1.1.0 (3 September 2026).
+\url{https://zenodo.org/records/22263331}. Main manuscript consulted.
+\bibitem{Fang} E. X. Fang, J. Lu, E. Nevo, Y. Yao and H. Zheng,
+\emph{Unimodality of Independence Polynomials for Sufficiently Large
+Forests}, arXiv:2609.20961v1 (17 September 2026), Section 9.
+\url{https://arxiv.org/abs/2609.20961}.
+\end{thebibliography}
+\end{document}
