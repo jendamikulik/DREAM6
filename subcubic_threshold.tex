@@ -1,0 +1,743 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,microtype,booktabs}
+\usepackage[colorlinks=true,urlcolor=blue,linkcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\R}{\mathbb R}
+\title{Extremal exponent one for consecutive\\log-concavity failures in subcubic trees}
+\author{Research draft prepared for Jan Mikul\'ik with ChatGPT}
+\date{28 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Let $M_\Delta(N)$ be the maximum length of a consecutive run of strict
+log-concavity failures among independence polynomials of trees of order
+at most $N$ and maximum degree at most $\Delta$. We give a self-contained
+construction proving $\log M_3(N)/\log N\to1$. The construction uses
+binary branching and terminal gadgets whose limiting root odds grow
+exponentially in their order. For each fixed $\varepsilon>0$, a gadget
+of order $O(\log(1/\varepsilon))$ suffices to obtain
+$\Omega_\varepsilon(N^{1-\varepsilon})$ consecutive failures.
+We prove the finite-height transfer through a uniform local limit theorem
+with two derivatives. A separate, fully specified certificate for a
+14-vertex gadget proves at least $2^{-86}N^{47/50}$ consecutive failures
+at every height $h\ge1024$, below $0.99\alpha$. Degree two permits no
+failures. A finite covariance argument also gives $M_\Delta(N)=o(N)$
+for every fixed degree bound, so exponent one does not mean positive
+linear density.
+\end{abstract}
+
+\paragraph{Prior work and verification scope.}
+The exponent-one conclusion for subcubic trees is already reported in
+Christopher's preprint of 12 September 2026~\cite{Christopher}.
+It is therefore \emph{not claimed here as a first discovery}.
+The present text supplies its own compressed-gadget construction,
+proof, and finite-height certificate. The general theorem has an analytic
+proof with constants depending on the selected gadget. The explicit
+14-vertex theorem has a specified interval, starting height and numerical
+error bounds. The executed verifier checks those bounds using rigorous
+ball arithmetic; it is not a proof-assistant formalization or independent
+peer review. The literature statement about~\cite{Christopher} is based
+on its indexed abstract; that manuscript's full proof was not audited here.
+
+\section{The exact extremal statement}
+Write $i_k(T)$ for the number of independent sets of size $k$ in $T$,
+and $\alpha(T)$ for its independence number. A strict failure at $k$ is
+\[
+ i_k(T)^2<i_{k-1}(T)i_{k+1}(T),\qquad 1\le k<\alpha(T).
+\]
+A run consists of consecutive failure indices. Define
+\[
+ M_\Delta(N)=\max_{\substack{T\text{ a tree},\ |V(T)|\le N\\
+                                  \Delta(T)\le\Delta}}
+                  \{\text{length of a run in }T\},
+\]
+with value zero when no run exists.
+
+\begin{theorem}\label{thm:main}
+For every fixed integer $\Delta\ge3$,
+\begin{equation}\label{eq:main}
+ \boxed{\lim_{N\to\infty}\frac{\log M_\Delta(N)}{\log N}=1.}
+\end{equation}
+More explicitly, for every $0<\varepsilon<1$ there exist
+$c_\varepsilon>0$ and $N_\varepsilon<\infty$ such that
+\[
+ M_3(N)\ge c_\varepsilon N^{1-\varepsilon}
+ \quad(N\ge N_\varepsilon).
+\]
+For $\Delta\le2$, $M_\Delta(N)=0$ for all $N$.
+\end{theorem}
+
+The quantifiers matter: one fixes $\varepsilon$ and one terminal gadget,
+then lets the binary height grow. No uniformity in $\varepsilon$ is
+assumed when proving~\eqref{eq:main}. In particular, the theorem asserts
+$N^{1-o(1)}$, not $\Omega(N)$. Section~\ref{sec:upper} proves separately
+that $M_\Delta(N)/N\to0$ for every fixed $\Delta$.
+
+\section{An exponentially efficient terminal gadget}
+Let $G_0$ be an edge rooted at an endpoint. To obtain $G_{t+1}$, take
+one new root $v$, its single child $w$, and make the roots of two disjoint
+copies of $G_t$ the children of $w$. Thus
+\begin{equation}\label{eq:gadgetsize}
+ n_t:=|V(G_t)|=2^{t+2}-2,\qquad s_t=2^{t+1}-1=n_t/2.
+\end{equation}
+The maximum degree is three, and the root has degree one.
+Both root-conditioned independence numbers equal $s_t$.
+Indeed, if both conditional maxima of $G_t$ are $s_t$, the state with
+$w$ occupied has size $1+2s_t$, and the state with $v$ occupied has the
+same size. The alternative with both $v,w$ absent has size $2s_t$.
+This proves the assertion by induction.
+
+Let $R_t(\lambda)$ denote the occupied/unoccupied partition-function
+ratio at the root. The construction gives the exact recursion
+\begin{equation}\label{eq:R}
+ R_0(\lambda)=\frac{\lambda}{1+\lambda},\qquad
+ R_{t+1}(\lambda)=
+ \frac{\lambda(1+R_t(\lambda))^2}{\lambda+(1+R_t(\lambda))^2}.
+\end{equation}
+Define integers $A_0=1$, $A_{t+1}=(1+A_t)^2$. Their first values are
+$1,4,25,676,458329$. For $t\ge1$,
+\begin{equation}\label{eq:A}
+ A_t\ge2^{2^t}.
+\end{equation}
+
+\begin{lemma}\label{lem:tuning}
+For every $t\ge1$ there is $r_t\in(A_t-1,A_t)$ such that
+\begin{equation}\label{eq:tuning}
+ \lambda_t=r_t(1+r_t)^2,\qquad R_t(\lambda_t)=r_t.
+\end{equation}
+Moreover, for every $\lambda>0$,
+\begin{equation}\label{eq:gadgetbounds}
+ 0<R_t(\lambda)<A_t,\qquad
+ A_t-R_t(\lambda)\le\frac{2A_t^2}{\lambda},\qquad
+ 0<\frac{d\log R_t}{d\log\lambda}\le\frac{2A_t}{\lambda}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The first two claims hold at $t=0$. Put $a=A_t$, $R=R_t$, and
+$S=(1+R)^2$. Then
+\[
+ (1+a)^2-R_{t+1}
+ \le2(1+a)(a-R)+\frac{(1+a)^4}{\lambda}
+ \le\frac{4(1+a)a^2+(1+a)^4}{\lambda}
+ \le\frac{2(1+a)^4}{\lambda}.
+\]
+The last inequality is $4a^2\le(1+a)^3$, valid for $a\ge1$ since
+$(1+a)^3-4a^2=a^2(a-1)+3a+1>0$.
+For $d_t=d\log R_t/d\log\lambda$ and
+$e=S/(\lambda+S)$, differentiation gives
+\[
+ d_{t+1}=e+2(1-e)\frac{R}{1+R}d_t
+ \le\frac{A_{t+1}}{\lambda}+2d_t
+ \le\frac{A_{t+1}+4A_t}{\lambda}
+ \le\frac{2A_{t+1}}{\lambda}.
+\]
+Positivity is preserved, and the base is $d_0=1/(1+\lambda)$.
+Here $A_{t+1}\ge4A_t$ follows from $(A_t-1)^2\ge0$.
+
+For $A=A_t\ge4$, set $r=A-1$, so $\lambda=(A-1)A^2$.
+The second bound gives $R_t(\lambda)\ge A-2/(A-1)>A-1$.
+At $r=A$, the first bound gives $R_t(r(1+r)^2)<r$.
+Continuity gives a root between these two values. Uniqueness is not
+needed: choose any root, and keep it fixed.
+\end{proof}
+
+\section{Binary amplification and its smoothing limit}
+Fix $t\ge4$ for the general proof. Write $s=s_t$, $A=A_t$, and choose
+a root of~\eqref{eq:tuning}. Suppress $t$ from the activity and odds.
+Let $T_0=G_t$, and form $T_{h+1}$ by attaching the roots of two copies
+of $T_h$ to one new root. Its degree is at most three, and
+\begin{equation}\label{eq:orders}
+ N_h=(2s+1)2^h-1,\qquad
+ \alpha_h=s2^h+\sum_{j=0}^{\lfloor(h-1)/2\rfloor}2^{h-1-2j}.
+\end{equation}
+The second formula follows from the two root-conditioned maximum
+recurrences, starting from equal maxima $s$. In particular
+$\alpha_h/2^h\to s+2/3$.
+At the chosen activity every root has odds $r$, because the next odds
+are $\lambda/(1+r)^2=r$. Put
+\begin{equation}\label{eq:parameters}
+ q=\frac r{1+r},\quad p=1-q,\quad \rho=2q,\quad
+ \ell=\frac{\sqrt2}{\rho}<\frac34,\quad
+ \theta=\frac1{1+\rho}.
+\end{equation}
+Here $p<1/A\le1/458329<1/2048$ and $q>99/100$.
+
+Let $X_h$ be the independent-set size under the activity $\lambda$.
+Write $\mu_h^a=\E(X_h\mid\text{root}=a)$ and
+$D_h=\mu_h^1-\mu_h^0$. The seed derivative in~\eqref{eq:gadgetbounds}
+is precisely $D_0$. Thus
+\[
+ 0<D_0<\frac{2}{A(A-1)},\qquad
+ D_{h+1}=1-\rho D_h.
+\]
+Consequently, with $a_0=D_0-\theta$,
+\begin{equation}\label{eq:gap}
+ D_h=\theta+a_h,\quad a_h=a_0(-\rho)^h,\quad
+ \frac14<|a_0|<\frac12,\quad \theta/|a_0|<2.
+\end{equation}
+In particular the oscillating scale does not vanish.
+
+Set $Y_h^a=(X_h-\mu_h^a)/a_h$ conditionally on the root state, and
+$z_h=D_h/a_h$. Independence of the child subtrees gives
+\begin{equation}\label{eq:smoothing}
+ \begin{split}
+ Y_{h+1}^0&\overset d=-\rho^{-1}\sum_{j=1}^{2}
+       \{Y_{h,j}^{S_j}+(S_j-q)z_h\},\\
+ Y_{h+1}^1&\overset d=-\rho^{-1}\sum_{j=1}^{2}Y_{h,j}^0,
+ \end{split}
+\end{equation}
+where $S_j$ are independent Bernoulli variables of parameter $q$,
+and the conditional child copies are independent.
+
+\begin{lemma}\label{lem:fixed}
+The transformation~\eqref{eq:smoothing} with $z_h$ replaced by one
+has a unique fixed pair of centered finite-variance laws $(Y^0,Y^1)$.
+If $C=2s+5$, then
+\begin{equation}\label{eq:w2}
+ \max_a W_2(Y_h^a,Y^a)\le C\ell^h,\qquad
+ W_2(Z_h,Z)\le(C+1)\ell^h,
+\end{equation}
+where $m_h=\E X_h$, $Z_h=(X_h-m_h)/a_h$, and
+$Z=Y^S+(S-q)$.
+For $\nu=2/\rho^2$, the conditional variances satisfy
+\begin{equation}\label{eq:variances}
+ v_1=\nu v_0,\qquad
+ v_0=\frac{\nu qp}{1-\nu p-q\nu^2},\qquad
+ \frac p5<v_a<p.
+\end{equation}
+Both conditional laws are subgaussian with a common variance proxy
+\begin{equation}\label{eq:proxy}
+ \sigma^2=\frac{\nu}{4(1-\nu)}<\frac13.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Couple two centered pairs and use independent child couplings. The
+cross terms vanish by centering, so the maximum of their two $W_2$
+distances contracts by $\sqrt2/\rho=\ell$. Completeness gives the
+fixed pair. Taking variances gives~\eqref{eq:variances}. For its bounds,
+$1/2<\nu<\tfrac12(100/99)^2$, and
+\[
+ 1-\nu p-q\nu^2>
+ 1-\tfrac1{200}(100/99)^2-\tfrac14(100/99)^4>7/10>\nu.
+\]
+Thus $v_0<p$, $v_1<v_0$. Conversely, the denominator is less than
+one, so $v_0>qp/2$ and $v_1>qp/4>p/5$.
+
+A common subgaussian proxy $u$ is mapped to $\nu(u+1/4)$: condition
+on $S$, apply the conditional bound, and then the centered Bernoulli
+bound. Iteration from point masses and Fatou's lemma give~\eqref{eq:proxy}.
+Each initial conditional size lies in $[0,s]$, so its normalized standard
+deviation is at most $2s$ by~\eqref{eq:gap}. The initial $W_2$ error
+is therefore at most $2s+1$. The perturbation $z_h-1=\theta/a_h$
+contributes at most $\ell\rho^{-h}$ at the next step. Summing gives
+\[
+ \max_a W_2(Y_h^a,Y^a)
+ \le\ell^h\left(2s+1+\sum_{j\ge0}2^{-j/2}\right)
+ <(2s+5)\ell^h.
+\]
+The unconditional mixture adds at most $\rho^{-h}\le\ell^h$.
+\end{proof}
+
+\section{Uniform finite-height inversion through two derivatives}
+The following step is necessary: convergence of four moments, or weak
+convergence alone, would not imply a consecutive coefficient run.
+Let $\psi_a(u)=\E e^{iuY^a}$ and $\phi(u)=\E e^{iuZ}$. Then
+\begin{equation}\label{eq:CF}
+ \psi_0(u)=\phi(-u/\rho)^2,\quad
+ \psi_1(u)=\psi_0(-u/\rho)^2,\quad
+ \phi(u)=p e^{-iqu}\psi_0(u)+q e^{ipu}\psi_1(u).
+\end{equation}
+For $Q(u)=\max_a|\psi_a(u)|$, this implies $Q(u)\le Q(u/\rho)^2$.
+Define the explicit constants
+\begin{equation}\label{eq:annulus-general}
+ \tau=p/16,\qquad \eta=\tau/\rho,\qquad
+ c=p^3/2^{15},\qquad \gamma=\log_\rho2>1.
+\end{equation}
+
+\begin{lemma}\label{lem:density}
+For $|u|\ge\eta$,
+\begin{equation}\label{eq:limit-tail}
+ Q(u)\le\exp[-c(|u|/\tau)^\gamma].
+\end{equation}
+The law of $Z$ has a strictly positive entire density $f$.
+If $\phi_h$ is the characteristic function of $Z_h$, then
+\begin{equation}\label{eq:interpolant}
+ g_h(x)=\frac1{2\pi}\int_{-\pi|a_h|}^{\pi|a_h|}
+                         e^{-iux}\phi_h(u)\,du
+\end{equation}
+satisfies $\|g_h^{(j)}-f^{(j)}\|_\infty\to0$ for $j=0,1,2$.
+At every lattice node $x_{h,k}=(k-m_h)/a_h$,
+\begin{equation}\label{eq:nodes}
+ g_h(x_{h,k})=|a_h|\Pp(X_h=k).
+\end{equation}
+\end{lemma}
+\begin{proof}
+For an independent copy $Y'$ of $Y^a$, the subgaussian bound gives
+$\E(Y^a-Y')^4\le64\sigma^4<8$. The inequality
+$\cos x\le1-x^2/2+x^4/24$ yields, for $|u|\le\tau$,
+\[
+ |\psi_a(u)|^2\le1-v_a u^2+u^4/3
+ \le1-\tfrac12v_a u^2.
+\]
+Indeed $u^2\le p^2/256<(3/2)v_a$. Therefore
+$Q(u)\le e^{-pu^2/20}$. On $[\eta,\tau]$, since
+$\eta>p/32$, this is at most $e^{-c}$. Iterating
+$Q(u)\le Q(u/\rho)^2$ proves~\eqref{eq:limit-tail}.
+The same bound applies to $|\phi|$.
+Because $\gamma>1$, Fourier inversion defines an entire density $f$.
+It is nonnegative and not identically zero, hence positive almost
+everywhere. The first equation of~\eqref{eq:CF} expresses the law of
+$Y^0$ as a scaled convolution of two copies of $f$, which is strictly
+positive at every real argument. The mixture then gives $f>0$ everywhere.
+
+For the finite-height estimate use physical frequencies and write
+$Q_h(v)=\max_a|\E(e^{ivX_h}\mid a)|$. Root conditioning gives
+\begin{equation}\label{eq:physical}
+ Q_h(v)\le Q_k(v)^{2^{h-k}}\quad(0\le k\le h).
+\end{equation}
+Choose
+\[
+ h_0=\max\left\{1,
+ \left\lceil\frac{\log(4C\tau/c)}{\log(1/\ell)}\right\rceil\right\}.
+\]
+By~\eqref{eq:w2}, for every $k\ge h_0$ and $\eta\le|u|\le\tau$,
+\[
+ Q_k(u/a_k)\le e^{-c}+C\tau\ell^k\le e^{-c}+c/4\le e^{-c/4}.
+\]
+For $|u|\ge\eta$ and $|u/a_h|\le\eta/|a_{h_0}|$, select
+$k\in[h_0,h]$ with $\eta\le|a_k u/a_h|\le\tau$.
+Applying~\eqref{eq:physical} then gives
+\begin{equation}\label{eq:finite-low}
+ |\phi_h(u)|\le\exp[-(c/4)(|u|/\tau)^\gamma].
+\end{equation}
+
+There is a separate bound for the remaining physical frequencies.
+In each conditional seed law, two adjacent sizes have probability at
+least $(1+\lambda)^{-n_t}$. For root zero use the empty set and a
+singleton; for root one use the root alone and the root plus a vertex
+at distance two. Such a vertex exists for $t\ge1$.
+For adjacent masses $a,b$, the elementary bound
+$|\chi(v)|^2\le1-2ab(1-\cos v)$ gives
+\[
+ Q_0(v)\le e^{-d_t v^2}\quad(|v|\le\pi),\qquad
+ d_t=\frac1{8\{1+A_t(1+A_t)^2\}^{2n_t}}>0.
+\]
+We used $1-\cos v\ge2v^2/\pi^2$ and
+$\lambda<A_t(1+A_t)^2$.
+Thus for $|u/a_h|\ge\eta/|a_{h_0}|$ and $|u|\le\pi|a_h|$,
+\begin{equation}\label{eq:finite-high}
+ |\phi_h(u)|\le
+ \exp[-d_t\eta^2|a_{h_0}|^{-2}2^h].
+\end{equation}
+The integration range grows exponentially in $h$, while this bound
+decays exponentially in $2^h$. On the complementary range,
+\eqref{eq:finite-low} is a common integrable bound even after multiplication
+by $|u|^2$. On each fixed compact frequency interval,
+\eqref{eq:w2} gives uniform convergence. Split the inverse transforms
+into compact, low-physical-frequency tail, and high-physical-frequency
+tail parts; the three estimates prove convergence in $C^2$, uniformly
+in $x$. Finally~\eqref{eq:nodes} is the ordinary lattice Fourier inversion
+formula, with the change of variable $u=a_hv$.
+\end{proof}
+
+\section{A valley, a curvature interval, and the exponent}
+Consider three intervals of radius $1/4$, with centers $-q$, $1/2-q$,
+and $1-q$. Denote their probabilities under $Z$ by $L,V,R$.
+By Chebyshev's inequality and~\eqref{eq:variances},
+\begin{equation}\label{eq:valley}
+ L\ge p(1-16v_0)>p/2,\quad
+ R\ge q(1-16v_1)>1/2,\quad
+ V\le16(pv_0+qv_1)<16p.
+\end{equation}
+Since $p<1/2048$, it follows that $V^2<LR$.
+If $f$ were log-concave on the union of the intervals, its restriction
+extended by zero would be log-concave. Integrating over translates of
+a fixed interval preserves log-concavity, by the Pr\'ekopa--Leindler
+inequality, and would imply $V^2\ge LR$. This contradiction proves
+that $f$ is not log-concave there.
+
+Since $f$ is positive and smooth, there exist a nondegenerate closed
+interval $J_t\subset[-5/4,5/4]$ and $\zeta_t>0$ such that
+\begin{equation}\label{eq:J}
+ \inf_{J_t}f>0,\qquad (\log f)''\ge2\zeta_t\quad\text{on }J_t.
+\end{equation}
+The $C^2$ convergence proves that, for all sufficiently large $h$,
+$g_h>0$ and $(\log g_h)''\ge\zeta_t$ throughout $J_t$.
+All integers $k$ whose three nodes $x_{h,k-1},x_{h,k},x_{h,k+1}$ lie
+in $J_t$ form a consecutive interval of size at least
+$|J_t||a_h|-3=\Omega_t(\rho^h)$.
+Twice integrating the curvature with the triangular kernel gives
+\[
+ \log\frac{g_h(x_{h,k-1})g_h(x_{h,k+1})}{g_h(x_{h,k})^2}
+ \ge\frac{\zeta_t}{|a_h|^2}>0.
+\]
+The activity cancels exactly:
+\begin{equation}\label{eq:cancel}
+ \frac{\Pp(X_h=k-1)\Pp(X_h=k+1)}{\Pp(X_h=k)^2}
+ =\frac{i_{k-1}(T_h)i_{k+1}(T_h)}{i_k(T_h)^2}.
+\end{equation}
+Thus every index in this interval is a strict failure.
+
+For completeness the nodes are inside the coefficient range. Put
+$\pi_*=q/(1+q)$ and $b_j=\pi_*+(q-\pi_*)(-q)^j$.
+The occupation probability at distance $j$ from the top is $b_j$, so
+\begin{equation}\label{eq:mean}
+ m_h=2^h(\mu_0^0+b_hD_0)+\sum_{j=0}^{h-1}2^jb_j,
+ \qquad \frac{m_h}{2^h}\longrightarrow
+ L_t:=\mu_0^0+\pi_*D_0+\pi_*.
+\end{equation}
+The seed mixture has mean at most $s$, giving
+$0<L_t<s+1/2<s+2/3$. Since $a_h/2^h=a_0(-q)^h\to0$,
+all the selected nodes lie strictly between zero and $\alpha_h$ at
+large height. They even remain a fixed, $t$-dependent proportional
+distance below $\alpha_h$.
+
+\paragraph{Completion of the extremal proof.}
+Let $\kappa_t=\log_2\rho_t$. From $r_t>A_t-1$,
+\begin{equation}\label{eq:exponent}
+ \kappa_t=1-\frac{\log(1+1/r_t)}{\log2}
+ >1-\frac1{(A_t-1)\log2}\longrightarrow1.
+\end{equation}
+The run above has length $\Omega_t(N_h^{\kappa_t})$.
+For a given $\varepsilon>0$, select a fixed $t\ge4$ with
+$\kappa_t>1-\varepsilon$. For arbitrary sufficiently large $N$, take
+the largest $h$ for which $N_h\le N$. Since $N_{h+1}=2N_h+1$,
+$N_h>(N-1)/2$, which transfers the same power lower bound to every
+large $N$, not merely a subsequence.
+Therefore
+\[
+ \liminf_{N\to\infty}\frac{\log M_3(N)}{\log N}\ge1-\varepsilon.
+\]
+Let $\varepsilon\downarrow0$. The trivial upper bound
+$M_\Delta(N)\le N$ and the inclusion $M_\Delta\ge M_3$ for
+$\Delta\ge3$ prove~\eqref{eq:main}.
+
+Trees of maximum degree at most two are paths. Their coefficients are
+$i_k(P_n)=\binom{n-k+1}{k}$, and
+\[
+ \frac{i_{k+1}(P_n)}{i_k(P_n)}
+ =\frac{(n-2k+1)(n-2k)}{(k+1)(n-k+1)}
+\]
+is decreasing over its valid indices: the numerator decreases and the
+denominator increases there. Thus these sequences are log-concave,
+proving the degree-two assertion and completing Theorem~\ref{thm:main}.
+\qed
+
+\paragraph{Size of the terminal gadget.}
+By~\eqref{eq:A}, it suffices to take
+\[
+ t=\max\left\{4,
+ \left\lceil\log_2\log_2(2+2/\varepsilon)\right\rceil\right\}.
+\]
+Then $A_t\ge2+2/\varepsilon$, so~\eqref{eq:exponent} gives
+$\kappa_t>1-\varepsilon$. Formula~\eqref{eq:gadgetsize} yields
+\[
+ n_t\le64+8\log_2(2+2/\varepsilon).
+\]
+This bounds the terminal size, not the starting height or the coefficient
+in the run bound uniformly in $\varepsilon$.
+
+\section{A fully specified instance: fourteen terminal vertices}
+The general argument used $t\ge4$ for a simple analytic valley bound.
+A separate validated computation works already at $t=2$, where $s=7$
+and $A_2=25$. Choose the root $r\in(24,25)$ of~\eqref{eq:tuning}
+by the rational bisection implemented in the verifier, and define
+$\lambda,q,\rho,a_h,m_h$ as above. Numerically, for orientation only,
+\[
+ r\approx24.9509982314,\quad \lambda\approx16803.357278,
+ \quad \rho\approx1.92293167368.
+\]
+Let $x_*=-2/5$, $d=2^{-80}$, $J=[x_*-d,x_*+d]$, and
+\[
+ I_h=\{k\in\mathbb Z:x_{h,k-1},x_{h,k},x_{h,k+1}\in J\}.
+\]
+
+\begin{theorem}\label{thm:finite}
+For every integer $h\ge1024$, the unweighted subcubic tree $T_h$
+with seed $G_2$ has order $N_h=15\cdot2^h-1$ and satisfies
+\begin{align}
+ |I_h|&\ge2^{-82}\rho^h\ge2^{-86}N_h^{47/50},\label{eq:finite-run}\\
+ 0<k&<\tfrac{99}{100}\alpha_h\quad(k\in I_h),\label{eq:finite-bulk}\\
+ \log\frac{i_{k-1}(T_h)i_{k+1}(T_h)}{i_k(T_h)^2}
+ &\ge\frac{400}{|a_h|^2}>0\quad(k\in I_h).\label{eq:finite-curv}
+\end{align}
+\end{theorem}
+
+\subsection{Initial data and the limiting characteristic functions}
+The file \texttt{verify\_subcubic.py} uses Python-FLINT 0.9.0 at 512-bit
+precision. All sign decisions use exact rational arithmetic or rigorous
+Arb/Acb ball enclosures.
+The root interval is obtained by 400 exact rational bisections of
+$R_2(r(1+r)^2)-r$ on $[24,25]$. The endpoint signs are checked before
+and after bisection, so the interval contains an actual root.
+For conditional seed polynomials $P_0,P_1$ the exact update is
+\[
+ (P_0,P_1)=(1+\lambda,\lambda)\quad\text{initially},\qquad
+ (P_0,P_1)\longmapsto
+ ((P_0+P_1)^2+\lambda P_0^2,\;\lambda(P_0+P_1)^2).
+\]
+Two updates give $G_2$. Evaluating deficiency moments from these
+polynomials certifies
+\begin{gather}\label{eq:initial-numeric}
+ 2^{14}<\lambda<2^{15},\quad
+ 24/25<q<25/26,\quad48/25<\rho<2,\nonumber\\
+ 0<D_0<1/100,\quad1/4<|a_0|<1,\quad\theta/|a_0|<2,\nonumber\\
+ \mu_0^0>6,\quad
+ \Var(X_0\mid a)/a_0^2<1,\quad v_a<1/16,\quad\sigma^2<1/3.
+\end{gather}
+Here the variance formulas and contraction argument remain valid because
+$q>24/25$. Their explicit specialization is
+\begin{equation}\label{eq:finite-w2}
+ \max_a W_2(Y_h^a,Y^a)<6(3/4)^h,\qquad
+ W_2(Z_h,Z)<7(3/4)^h.
+\end{equation}
+Indeed the initial error is below $1+1/4<2$ and
+$2+\sum_{j\ge0}2^{-j/2}<6$.
+Moreover $\E|Y^a|<1/4$ and $\E|Z|<1/2$, as checked from the variances.
+
+For $k=0,\ldots,31$ let $B_k=\E(Y^0)^k/k!$ and
+$C_k=\E(Y^1)^k/k!$. Set $B_0=C_0=1$, $B_1=C_1=0$.
+At order $k\ge2$, temporarily set the unknown coefficients to zero
+and let $U_k,V_k$ be the coefficients of $z^k$ in
+\[
+ \{p e^{-qz}B(z)+q e^{pz}C(z)\}^2,\qquad B(z)^2.
+\]
+With $u_k=(-1/\rho)^k$ and $w_k=2u_k$, the exact solution is
+\[
+ B_k=\frac{u_kU_k+w_kq u_kV_k}{1-w_kp-w_k^2q},\qquad
+ C_k=w_kB_k+u_kV_k.
+\]
+The verifier encloses every denominator above $1/2$.
+Since $\E e^{2|Y^a|}\le2e^{2/3}<4$, the Taylor remainder at $iu$ is
+at most $4(|u|/2)^{32}$.
+Evaluate the degree-31 polynomials at $u=x/(-\rho)^{24}$ and apply
+24 exact transformations~\eqref{eq:CF}. For $|x|\le2048$,
+$|u|<1/1000$, and the propagated error is at most
+\[
+ 2\cdot2^{24}\frac4{2000^{32}}<E:=2^{-300}.
+\]
+Call the resulting entire conditional approximants $P_a(x)$ and their
+mixture $P(x)$. Their errors from $\psi_a$ and $\phi$ are at most $E$
+on the entire real integration range.
+
+\subsection{A complete annulus and both finite-height tails}
+Divide $[64,128]$ into 256 cells of width $1/4$. At a midpoint $x_c$
+put $u_c=-x_c/\rho$. The full cell is covered by the two bounds
+\begin{equation}\label{eq:cellbounds}
+ \left(|P(u_c)|+E+\frac12\frac{1/8}{48/25}\right)^2,\qquad
+ \left(|P_0(u_c)|+E+\frac14\frac{1/8}{48/25}\right)^2.
+\end{equation}
+The padding uses the first absolute moments before the final square.
+Every cell bound is strictly below $1/8$.
+By~\eqref{eq:finite-w2}, for every $k\ge128$ this transfers to
+\[
+ Q_k(u/a_k)<U:=1/4\qquad(64\le|u|\le128),
+\]
+because $1/8+6\cdot128(3/4)^{128}<1/4$.
+
+Take the Fourier cutoff $T=2048$. On a shell
+$64\rho^n\le|u|\le64\rho^{n+1}$, the limiting modulus is at most
+$U^{2^n}$. The same bound holds at finite height whenever
+$|u/a_h|\le64/|a_{128}|$, by~\eqref{eq:physical}.
+For $|u|\ge T$ the shell index is at least five, since $\rho<2$.
+For $0\le j\le3$, the corresponding tail integrals, including $1/\pi$,
+are bounded by
+\begin{equation}\label{eq:explicit-tails}
+ B_j^{\mathrm{tail}}=2^{12(j+1)+1-64}.
+\end{equation}
+To check this, each shell endpoint is at most $128\cdot2^n$.
+Sum from $n=5$: the first bound is $4096^{j+1}U^{32}$ and the
+successive ratio is at most $2^{j+1}U^{32}<1/2$.
+
+For the remaining physical frequencies use the seed's adjacent atoms.
+Each conditional seed law has two adjacent masses greater than
+$(1+\lambda)^{-14}>2^{-224}$, so
+$Q_0(v)\le\exp(-2^{-452}v^2)$ for $|v|\le\pi$.
+Since $|a_{128}|<2^{128}$, the high-frequency part has
+$|v|>2^{-122}$, and hence its modulus is at most
+\[
+ \exp[-2^{h-696}].
+\]
+The integration range is shorter than $2^{h+2}$.
+For every $h\ge1024$, its integrals against $|u|^j/\pi$, $j\le3$,
+are less than $2^{-390}$: it suffices that
+$2^{h-696}>4h+400$, which holds at 1024 and is preserved by induction.
+This explicitly controls the finite-height lattice tail.
+
+\subsection{Validated curvature and the all-height conclusion}
+Acb validated integration evaluates, for $j=0,1,2$,
+\[
+ \frac1\pi\operatorname{Re}\int_0^{2048}
+            (-iu)^jP(u)e^{-ix_*u}\,du,
+\]
+using 128 segments of length 16 and absolute/relative tolerances
+$2^{-80}$. Adding $ET^{j+1}+B_j^{\mathrm{tail}}$ proves the exact
+rational enclosures
+\begin{equation}\label{eq:boxes}
+ 0.045<f(x_*)<0.046,\quad
+ -0.088<f'(x_*)<-0.086,\quad
+ 24.9<f''(x_*)<25.
+\end{equation}
+In particular $W(x_*):=f(x_*)f''(x_*)-f'(x_*)^2>1$.
+The central range and~\eqref{eq:explicit-tails} give
+$\|f^{(j)}\|_\infty<2^{11(j+1)}$ for $j\le3$,
+so $\|W'\|_\infty<2^{56}$.
+Throughout $J$, these bounds imply
+\begin{equation}\label{eq:Jnumeric}
+ W>0.99,\quad0.044<f<0.047,\quad |f'|<0.09,\quad |f''|<26.
+\end{equation}
+For every $h\ge1024$, combining~\eqref{eq:finite-w2} and both tails
+bounds the three uniform finite-height errors by
+\begin{equation}\label{eq:finite-C2}
+ R_0=2^{-49},\qquad R_1=2^{-37},\qquad R_2=2^{-25}.
+\end{equation}
+Specifically, for derivative order $j$ a sufficient bound is
+$7(3/4)^hT^{j+2}+2B_j^{\mathrm{tail}}+2^{-390}$.
+The verifier checks it at $h=1024$; it decreases thereafter.
+
+Consequently, on $J$,
+$0.043<g_h<0.048$, $|g_h''|<27$, and
+$|g_h'|+|f'|<0.2$. The curvature numerator obeys
+\[
+ g_hg_h''-(g_h')^2
+ >0.99-27R_0-0.047R_2-0.2R_1>0.98.
+\]
+Thus
+\[
+ (\log g_h)''>0.98/(0.048)^2>400.
+\]
+Equations~\eqref{eq:nodes} and~\eqref{eq:cancel} prove
+\eqref{eq:finite-curv} for every selected node.
+
+The count is at least $2d|a_h|-3\ge d|a_h|\ge2^{-82}\rho^h$:
+$2^{-82}(48/25)^{1024}>4$. The exact rational inequality
+$(48/25)^{50}>2^{47}$ and $N_h<16\cdot2^h$ prove~\eqref{eq:finite-run}.
+Finally~\eqref{eq:mean}, $D_0>0$, $\mu_0^0>6$ and $|a_0|<1$ give,
+for $|x|<1$ and every $h\ge1024$,
+\[
+ 0<\frac{m_h+a_hx}{2^h}
+ <\frac{15}{2}+4(25/26)^h
+ <\frac{99}{100}(23/3-2^{-h})
+ \le\frac{99}{100}\frac{\alpha_h}{2^h}.
+\]
+For the first upper bound, the seed mixture is at most seven, and
+\[
+ \left|2^{-h}\sum_{j<h}2^j(b_j-\pi_*)\right|
+ \le\frac{q-\pi_*}{2q-1}q^h<q^h.
+\]
+The last numerical comparison holds at 1024 and improves with $h$.
+This proves~\eqref{eq:finite-bulk} and completes the finite theorem.
+\qed
+
+\section{Why exponent one still permits zero density}\label{sec:upper}
+We include an independent finite argument, so that this distinction
+does not depend on the behavior of the constructed family.
+Fix a degree bound $\Delta\ge3$, and put $b=\Delta-1$.
+Consider a run $u,\ldots,v$ of length $L$ in an $n$-vertex tree.
+Write $d=L+1$ and $c=(u+v)/2$. Choose the unique activity with
+$\E X=c$. Strict log-convexity in the window $[u-1,v+1]$ implies
+ordinary convexity of its tilted probabilities. The exact identity
+\[
+ \begin{split}
+ &\sum_{j=0}^d\left((j-d/2)^2-\frac{d(d+2)}{12}\right)p_{u-1+j}\\
+ &=\sum_{k=1}^{d-1}\frac{k(k+1)(d-k)(d-k+1)}{12}
+       (p_{u-2+k}-2p_{u-1+k}+p_{u+k})\ge0
+ \end{split}
+\]
+follows by collecting coefficients. Outside the window the squared
+distance from $c$ exceeds $d(d+2)/12$. Hence
+\begin{equation}\label{eq:var-lower}
+ \Var X\ge d(d+2)/12>d^2/12.
+\end{equation}
+Gibbs entropy gives
+$(\alpha-c)\log\lambda\le n\log2$; since $\alpha-c\ge d/2$,
+$\lambda\le2^{2n/d}$.
+
+Root the tree at a vertex $u$. On a directed edge to a child $z$,
+$\E(S_z\mid S_{\mathrm{parent}})=q_z(1-S_{\mathrm{parent}})$,
+where $q_z\le q_*:=\lambda/(1+\lambda)$.
+Conditional independence on tree paths gives
+$|\Cov(S_u,S_v)|\le q_*^{\operatorname{dist}(u,v)}/4$.
+A radius-$R$ ball has at most $3b^R$ vertices, and therefore
+\begin{equation}\label{eq:var-upper}
+ \Var X\le\tfrac14(3nb^R+n^2q_*^R).
+\end{equation}
+For an integer $m\ge1$ set
+\[
+ \Lambda=4^m,\quad K=\lceil\log_2(12m^2)\rceil,\quad
+ R=(\Lambda+1)K,\quad n_m=36m^2b^R.
+\]
+If $d\ge n/m$, then $\lambda\le\Lambda$ and
+$q_*^R<2^{-K}\le1/(12m^2)$, since
+$(1+1/\Lambda)^{\Lambda+1}>2$.
+For $n\ge n_m$,~\eqref{eq:var-upper} contradicts~\eqref{eq:var-lower}.
+For $N\ge mn_m$, trees with $n<n_m$ trivially have runs shorter than
+$N/m$, and those with $n\ge n_m$ satisfy $L<n/m\le N/m$.
+Thus $M_\Delta(N)<N/m$ for every $N\ge mn_m$.
+Letting $m\to\infty$ proves
+\[
+ \boxed{M_\Delta(N)=o(N)\quad\text{for every fixed }\Delta.}
+\]
+Together with Theorem~\ref{thm:main}, this gives exponent one and
+zero density for every fixed degree bound at least three. \qed
+
+\section{Reproduction and scope of the certificate}
+Run
+\begin{verbatim}
+python -m pip install python-flint==0.9.0
+python verify_subcubic.py
+\end{verbatim}
+The verifier writes \texttt{subcubic\_certificate.json}, with its source
+SHA-256, the algebraic root interval, conditional seed polynomials,
+Fourier bounds, derivative enclosures and all check names.
+The executed run passed \textbf{733 checks}, including all 256 complete
+annulus cells and 384 validated integration segments.
+The certificate does not enumerate the enormous trees at height 1024:
+the displayed recurrences and all-height estimates are the proof that
+transfers the finite checks to every height thereafter.
+
+The general exponent-one theorem uses the analytically proved valley
+and uniform local limit theorem. Its $J_t,\zeta_t$ and final starting
+height are not numerically tabulated for every $t$. This is an
+existence theorem with full quantifiers, not a claimed uniform numerical
+certificate for all $\varepsilon$. Theorem~\ref{thm:finite} is the separate
+fully quantified instance; it has no unspecified small parameter or
+unevaluated starting height.
+
+Earlier work established multiple failures~\cite{BR}, consecutive
+blocks of several fixed lengths~\cite{BRGG}, and unbounded runs with
+reproducibility archives~\cite{Yu}. Most directly, the indexed abstract
+of Christopher~\cite{Christopher} already states near-linear blocks in
+subcubic trees using terminal paths. The present exponent statement
+must be read with that attribution. No conclusion here settles an
+independence-sequence unimodality problem: a decreasing coefficient
+sequence can still fail log-concavity.
+
+\begin{thebibliography}{9}
+\bibitem{Christopher} S. Christopher,
+\emph{Independent Sets on Trees: Consecutive Log-Concavity Failures and
+an Exact Covariance Threshold}, preprint, 12 September 2026,
+Figshare item 33684715. Indexed abstract accessed 28 September 2026.
+\url{https://figshare.com/articles/preprint/33684715}.
+\bibitem{BR} C. Bautista-Ramos,
+\emph{Multiple breaks of log-concavity in the independence polynomials
+of trees}, arXiv:2511.00334 (2025).
+\url{https://arxiv.org/abs/2511.00334}.
+\bibitem{BRGG} C. Bautista-Ramos, C. Guill\'en-Galv\'an,
+P. G\'omez-Salgado,
+\emph{Linear recurrences for non-log-concave independence polynomials
+of trees}, Graphs and Combinatorics 42, 59 (2026).
+\url{https://doi.org/10.1007/s00373-026-03054-4}.
+\bibitem{Yu} X. Yu,
+\emph{Arbitrarily long consecutive failures of log-concavity in tree
+independence polynomials: reproducibility archive}, August 2026.
+\url{https://doi.org/10.5281/zenodo.21740615}.
+\end{thebibliography}
+\end{document}
