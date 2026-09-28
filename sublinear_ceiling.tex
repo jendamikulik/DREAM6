@@ -1,0 +1,368 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,microtype,booktabs}
+\usepackage[colorlinks=true,urlcolor=blue,linkcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\title{Near-linear, but never linear:\\a universal ceiling for consecutive log-concavity failures}
+\author{Research draft prepared for Jan Mikul\'ik with ChatGPT}
+\date{28 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+For every fixed maximum degree $\Delta$, consecutive runs of strict
+log-concavity failures in forest independence polynomials have sublinear
+length. We prove the effective upper bound
+$M_\Delta(N)<6N/\log_2\log_{\Delta-1}N$ for
+$N\ge(\Delta-1)^{2^{14}}$, where $\Delta\ge3$ and $M_\Delta(N)$ maximizes
+over forests with at most $N$ vertices. The argument combines an exact
+positive-coefficient identity converting a convex probability window
+into a variance lower bound, entropy control of the appropriate activity,
+and covariance decay along tree paths. At any fixed proportional distance
+below the independence number, the run length instead satisfies an
+explicit polynomial saving. Together with the companion degree-65
+construction, this gives exponent one but zero asymptotic density.
+\end{abstract}
+
+\section{The universal statement}
+Let $i_k(F)$ count independent sets of size $k$ in a finite forest $F$,
+and let $\alpha(F)$ be its independence number. A strict failure occurs
+at $k$ if $i_k(F)^2<i_{k-1}(F)i_{k+1}(F)$. A run is a consecutive
+interval of such indices, and its length is the number of failure
+indices, not the number of coefficients in the enlarged window.
+For integer $\Delta\ge3$, define
+\[
+ M_\Delta^{\mathrm{for}}(N)=
+ \max_{\substack{|V(F)|\le N\\\Delta(F)\le\Delta}}
+ \{\text{length of a strict failure run in }F\}.
+\]
+The maximum is zero if no failure occurs. Restricting the maximum to
+trees gives $M_\Delta^{\mathrm{tree}}(N)\le M_\Delta^{\mathrm{for}}(N)$.
+
+\begin{theorem}\label{thm:finite}
+Let $b=\Delta-1\ge2$. For each integer $m\ge1$, set
+\begin{equation}\label{eq:thresholds}
+ \Lambda_m=4^m,\qquad K_m=\lceil\log_2(12m^2)\rceil,\qquad
+ R_m=(\Lambda_m+1)K_m.
+\end{equation}
+Every $n$-vertex forest of maximum degree at most $\Delta$ with
+\[
+ n\ge n_{\Delta,m}:=36m^2b^{R_m}
+\]
+has no failure run of length $L$ satisfying $L+1\ge n/m$.
+Consequently, for every
+\begin{equation}\label{eq:Nthreshold}
+ N\ge N_{\Delta,m}:=36m^3b^{R_m},
+ \qquad M_\Delta^{\mathrm{for}}(N)<N/m.
+\end{equation}
+\end{theorem}
+
+\begin{corollary}\label{cor:global}
+For each $\Delta\ge3$,
+\begin{equation}\label{eq:global}
+ \boxed{M_\Delta^{\mathrm{for}}(N)
+ <\frac{6N}{\log_2\log_{\Delta-1}N}
+ \quad\text{for }N\ge(\Delta-1)^{2^{14}}.}
+\end{equation}
+In particular $M_\Delta^{\mathrm{for}}(N)=o(N)$.
+For $\Delta=65$, the displayed threshold is the explicit integer
+$N\ge2^{98304}$.
+\end{corollary}
+
+The large threshold is deliberately conservative. It is a closed
+formula, not an unevaluated ``sufficiently large'' constant. Neither
+this upper bound nor its constant is claimed to be asymptotically sharp.
+All probabilistic estimates used below hold at finite order and finite
+positive activity; there is no local limit theorem in this proof.
+
+\section{An exact variance certificate for a convex window}
+\begin{lemma}\label{lem:window}
+Let $X$ be integer-valued. Suppose its probabilities $p_j$ are convex
+on the integer interval $[a,b]$, meaning
+$p_{j-1}-2p_j+p_{j+1}\ge0$ for $a<j<b$.
+Put $d=b-a\ge2$ and $c=(a+b)/2$. Then
+\begin{equation}\label{eq:variance-lower}
+ \E(X-c)^2\ge\frac{d(d+2)}{12}.
+\end{equation}
+Thus if $\E X=c$, the same bound holds for $\Var X$.
+\end{lemma}
+\begin{proof}
+For an arbitrary sequence $u_0,\ldots,u_d$, the exact identity
+\begin{equation}\label{eq:dual}
+ \begin{split}
+ &\sum_{j=0}^{d}\left\{(j-d/2)^2-\frac{d(d+2)}{12}\right\}u_j\\
+ &\quad=\sum_{k=1}^{d-1}
+ \underbrace{\frac{k(k+1)(d-k)(d-k+1)}{12}}_{C_{d,k}>0}
+ (u_{k-1}-2u_k+u_{k+1})
+ \end{split}
+\end{equation}
+follows by collecting coefficients. Specifically, with $C_{d,0}=C_{d,d}=0$,
+\[
+ C_{d,k-1}-2C_{d,k}+C_{d,k+1}
+ =(k-d/2)^2-\frac{d(d+2)}{12}
+ \quad(1\le k\le d-1),
+\]
+and the two endpoint coefficients agree as well. The companion program
+verifies these as polynomial identities in two indeterminates, rather
+than checking finitely many window lengths.
+
+Apply~\eqref{eq:dual} with $u_j=p_{a+j}$. Its right side is nonnegative.
+For an integer $j$ outside $[a,b]$, $|j-c|\ge d/2+1$ and
+\[
+ (j-c)^2-\frac{d(d+2)}{12}
+ \ge\frac{(d+2)(d+3)}6>0.
+\]
+Adding the outside probabilities proves~\eqref{eq:variance-lower}.
+\end{proof}
+
+\paragraph{From a failure run to the lemma.}
+Suppose $i_k^2<i_{k-1}i_{k+1}$ for $k=u,\ldots,v$, a run of length
+$L=v-u+1$. Set
+\begin{equation}\label{eq:window}
+ a=u-1,\quad b=v+1,\quad d=L+1,\quad c=(u+v)/2.
+\end{equation}
+For any $\lambda>0$, the tilted probabilities
+\[
+ p_k=\Pp_\lambda(X=k)=\frac{i_k\lambda^k}{Z_F(\lambda)},\qquad
+ Z_F(\lambda)=\sum_j i_j\lambda^j,
+\]
+obey the same strict log-convexity inequalities on this window. Since
+$p_{k-1}+p_{k+1}\ge2\sqrt{p_{k-1}p_{k+1}}>2p_k$, they are strictly
+convex there.
+The function $\E_\lambda X$ increases continuously from $0$ to
+$\alpha(F)$ as $\lambda$ increases from $0$ to infinity, because
+\[
+ \frac{d}{d\log\lambda}\E_\lambda X=\Var_\lambda X>0.
+\]
+There is therefore a unique $\lambda$ for which $\E_\lambda X=c$.
+At that activity, Lemma~\ref{lem:window} yields
+\begin{equation}\label{eq:run-variance}
+ \Var_\lambda X\ge\frac{(L+1)(L+3)}{12}>\frac{(L+1)^2}{12}.
+\end{equation}
+This argument needs no assumptions on the coefficients outside the run.
+
+\section{Entropy controls the activity}
+For the Gibbs distribution on independent sets, its Shannon entropy in
+nats is
+\[
+ H=\log Z_F(\lambda)-(\E_\lambda X)\log\lambda.
+\]
+Since $Z_F(\lambda)\ge\lambda^{\alpha(F)}$ and the number of independent
+sets is at most $2^n$,
+\begin{equation}\label{eq:entropy}
+ (\alpha(F)-\E_\lambda X)\log\lambda\le H\le n\log2.
+\end{equation}
+This inequality holds also when $\lambda<1$.
+For the centered activity associated with~\eqref{eq:window},
+$\alpha(F)-c\ge d/2$, since $b\le\alpha(F)$. Hence
+\begin{equation}\label{eq:activity}
+ \lambda\le 2^{2n/d}.
+\end{equation}
+In particular $d\ge n/m$ implies $\lambda\le4^m=\Lambda_m$.
+
+\section{Covariance decay on every finite forest}
+\begin{lemma}\label{lem:cov}
+Let $F$ have $n$ vertices and maximum degree at most $\Delta\ge3$.
+Put $b=\Delta-1$ and $q=\lambda/(1+\lambda)$. For every integer $R\ge0$,
+\begin{equation}\label{eq:variance-upper}
+ \Var_\lambda X\le\frac{3n b^R+n^2q^R}{4}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Write $S_v=\mathbf1_{\{v\in I\}}$. Root a tree component at $u$.
+For a directed parent--child edge $w\to z$, let $q_z$ be the occupation
+probability of $z$ conditional on $S_w=0$. The separated subtree has
+root odds at most $\lambda$, so $0<q_z\le q$. The exact transition is
+\[
+ \E(S_z\mid S_w)=q_z(1-S_w).
+\]
+Removing an edge separates the component, giving the Markov property
+along any path. If $u=v_0,v_1,\ldots,v_t=v$, composition of the affine
+conditional expectations therefore gives
+\begin{equation}\label{eq:covariance}
+ \Cov(S_u,S_v)=(-1)^t\Var(S_u)\prod_{j=1}^t q_{v_j},
+ \qquad |\Cov(S_u,S_v)|\le\tfrac14q^t.
+\end{equation}
+Distinct components are independent, so their covariances are zero.
+
+The ball of radius $R$ about a vertex has at most
+\[
+ 1+\Delta\sum_{j=0}^{R-1}(\Delta-1)^j\le3b^R
+\]
+vertices (the sum is empty when $R=0$). For $R\ge0$, the difference
+between $3b^R$ and the geometric expression, multiplied by $b-1$, is
+$(2b-4)b^R+2\ge0$.
+Sum~\eqref{eq:covariance} over ordered pairs. There are at most
+$3nb^R$ near pairs; all other pairs have covariance modulus at most
+$q^R/4$, or zero. Bounding the variance by the sum of covariance moduli
+proves~\eqref{eq:variance-upper}.
+\end{proof}
+
+\section{Proof of the finite threshold and its explicit envelope}
+Suppose $d=L+1\ge n/m$ and choose the centered activity. By
+\eqref{eq:activity}, $q\le\Lambda_m/(1+\Lambda_m)$. The integer
+binomial inequality
+\[
+ (1+1/\Lambda_m)^{\Lambda_m+1}
+ \ge1+(\Lambda_m+1)/\Lambda_m>2
+\]
+implies, with the exact radius in~\eqref{eq:thresholds},
+\begin{equation}\label{eq:qR}
+ q^{R_m}<2^{-K_m}\le\frac1{12m^2}.
+\end{equation}
+If $n\ge36m^2b^{R_m}$, Lemma~\ref{lem:cov} gives
+\[
+ \Var_\lambda X
+ \le\frac{n^2}{48m^2}+\frac{n^2}{48m^2}
+ =\frac{n^2}{24m^2}
+ <\frac{d^2}{12},
+\]
+contradicting~\eqref{eq:run-variance}. This proves the exact-order
+assertion in Theorem~\ref{thm:finite}.
+For $N\ge m n_{\Delta,m}$, a forest with $n<n_{\Delta,m}$ has every
+run shorter than $N/m$ simply because $L\le n$. Forests with
+$n\ge n_{\Delta,m}$ satisfy $L<n/m\le N/m$. This proves the
+at-most-order assertion~\eqref{eq:Nthreshold}. \qed
+
+\paragraph{Deriving the closed $N/\log\log N$ bound.}
+For every integer $m\ge1$,
+\[
+ K_m\le4m,\qquad m\le2^m,\qquad
+ R_m\le8m4^m\le2^{3m+3}.
+\]
+The first inequality follows from $12m^2\le16^m$: it holds at $m=1$,
+and $16m^2-(m+1)^2>0$ for $m\ge1$ preserves it. Also
+$36m^3\le2^{6+3m}$ and $6+3m\le2^{3m+3}$. Consequently
+\begin{equation}\label{eq:threshold-envelope}
+ N_{\Delta,m}=36m^3b^{R_m}
+ \le b^{R_m+6+3m}\le b^{2^{3m+4}}.
+\end{equation}
+These inequalities are proved by elementary induction, and their
+algebraic witnesses are included in the verifier.
+
+For $N\ge b^{2^{14}}$, let $A=\log_2\log_bN\ge14$ and
+$m=\lfloor(A-4)/3\rfloor$. Then $3m+4\le A$ and
+\[
+ m\ge\frac{A-7}{3}\ge\frac A6.
+\]
+Equation~\eqref{eq:threshold-envelope} permits applying
+Theorem~\ref{thm:finite}, yielding
+$M_\Delta^{\mathrm{for}}(N)<N/m\le6N/A$. This proves
+Corollary~\ref{cor:global}. \qed
+
+\section{A polynomial barrier away from the final coefficient}
+The same argument also forces runs of exponent tending to one to
+move towards the independence number.
+
+\begin{theorem}\label{thm:bulk}
+Fix $\Delta\ge3$, put $b=\Delta-1$, and let $0<\delta<1$. Define
+\[
+ \varepsilon_{\Delta,\delta}
+ =\frac1{8(1+2^{2/\delta})\log b}>0.
+\]
+If a failure run of length $L$ in an $n$-vertex forest has midpoint
+$c\le(1-\delta)\alpha(F)$ and $n\ge b^4$, then
+\begin{equation}\label{eq:bulk}
+ \boxed{L+1<\sqrt{12}\,n^{1-\varepsilon_{\Delta,\delta}}.}
+\end{equation}
+\end{theorem}
+\begin{proof}
+A forest is bipartite, so $\alpha(F)\ge n/2$. At the centered activity,
+\eqref{eq:entropy} gives
+$\lambda\le\Lambda:=2^{2/\delta}$.
+Take $R=\lfloor\tfrac12\log_b n\rfloor$; since $n\ge b^4$,
+\[
+ b^R\le\sqrt n,\qquad R\ge\frac{\log n}{4\log b}.
+\]
+The elementary bound
+$\log(1+1/\Lambda)\ge1/(1+\Lambda)$ yields
+\[
+ q^R\le n^{-\eta},\qquad
+ \eta=\frac1{4(1+\Lambda)\log b}=2\varepsilon_{\Delta,\delta}.
+\]
+Here $0<\eta<1/2$. Thus~\eqref{eq:variance-upper} gives
+\[
+ \Var_\lambda X\le\tfrac34n^{3/2}+\tfrac14n^{2-\eta}
+ \le n^{2-\eta}.
+\]
+Combine this with~\eqref{eq:run-variance}.
+\end{proof}
+
+In particular, for any sequence of bounded-degree forests with
+$n\to\infty$ and failure runs of length $L=n^{1-o(1)}$, their
+midpoints satisfy $c/\alpha(F)\to1$. Otherwise a fixed $\delta>0$
+and an infinite subsequence would contradict~\eqref{eq:bulk}.
+By Corollary~\ref{cor:global}, $L=o(n)$; since $\alpha(F)\ge n/2$,
+both endpoints of each such run also have ratio tending to one with
+$\alpha(F)$. Thus near-linear exponents cannot persist in a fixed
+proportional bulk interval, under any bounded-degree construction.
+
+\section{Consequence for the degree-65 construction}
+The companion manuscript~\cite{companion} proves
+$M_{65}^{\mathrm{tree}}(N)=N^{1-o(1)}$ using even-path seeds and
+64-fold branching. Combining that lower bound with the independent
+upper bound proved here gives
+\begin{equation}\label{eq:two-limits}
+ \boxed{
+ \lim_{N\to\infty}\frac{\log M_{65}^{\mathrm{tree}}(N)}{\log N}=1,
+ \qquad
+ \lim_{N\to\infty}\frac{M_{65}^{\mathrm{tree}}(N)}N=0.}
+\end{equation}
+The first limit uses the companion construction. The second limit,
+and the explicit upper bounds in this paper, do not depend on it.
+The linear-run target is therefore impossible at any fixed maximum
+degree. Equation~\eqref{eq:two-limits} does not determine the exact
+subpolynomial factor between the upper and lower bounds.
+
+\section{Verification scope and literature}
+The proof above is finite and self-contained. The file
+\texttt{verify\_sublinear\_ceiling.py} uses only the Python standard
+library and exact rational arithmetic. Running
+\begin{verbatim}
+python verify_sublinear_ceiling.py
+\end{verbatim}
+writes \texttt{sublinear\_ceiling\_certificate.json}. The executed run
+passed 18 universal algebra/constant checks and an independent exact
+enumeration audit of 1364 ordered covariance pairs, with 5245 checks
+in total. The algebra checks include the two-variable polynomial
+identity~\eqref{eq:dual} and induction witnesses for
+\eqref{eq:threshold-envelope}. They are not numerical samples of the
+indeterminates. The enumeration audit uses five small forests at four
+rational activities and is explicitly a finite sanity check. The
+probability, entropy, positivity and induction arguments establishing
+the universal quantifiers are the written proofs above; no
+proof-assistant formalization is claimed.
+
+For orientation, Yu's September 2026 archive~\cite{Yu26} supplies
+unbounded consecutive runs and an $\Omega(N^{1/3})$ lower bound.
+Fang, Lu, Nevo, Yao and Zheng~\cite{Fang26} establish eventual
+unimodality of forest independence sequences via central-interval
+log-concavity. Their proof uses a fixed activity range $[1/4,12]$.
+The present upper bound concerns the length of an arbitrary run and
+allows the activity to depend on its relative length; it does not
+extend their local-limit theorem to all activities. The primitives
+used here---Gibbs tilting, entropy and tree conditional independence---are
+standard. This literature comparison is not a claim of exhaustive
+publication priority. This text is a research draft, not an independently
+refereed or formally verified result.
+
+\begin{thebibliography}{9}
+\bibitem{companion} \emph{Near-linear runs of strict log-concavity failures
+at one fixed maximum degree}. Companion research draft prepared for
+Jan Mikul\'ik with ChatGPT, 28 September 2026.
+Source file: \texttt{fixed\_degree\_nearlinear.tex}.
+\bibitem{Yu26} X. Yu, \emph{Unbounded runs of non-log-concavity in
+independence polynomials of trees: reproducibility archive}, version
+1.1.0, 3 September 2026.
+\url{https://doi.org/10.5281/zenodo.22263331}.
+\bibitem{Fang26} E. X. Fang, J. Lu, E. Nevo, Y. Yao, H. Zheng,
+\emph{Unimodality of Independence Polynomials for Sufficiently Large
+Forests}, arXiv:2609.20961v1, 17 September 2026.
+\url{https://arxiv.org/abs/2609.20961}.
+\end{thebibliography}
+\end{document}
