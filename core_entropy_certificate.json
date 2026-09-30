@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "arithmetic": "Exact rational arithmetic; universal quartic polynomial identity in Q[d,k]",
+  "graph_core_activity_cases": 4404,
+  "cases_with_forest_remainder": 4168,
+  "marginal_atoms_checked": 17340,
+  "checks_passed": 108334,
+  "checks_by_category": {
+    "centered_second_moment_domination": 4404,
+    "completion_partition_bounds": 17340,
+    "core_activity_count_bound": 4404,
+    "core_configuration_count": 4404,
+    "core_entropy_count_bound": 4404,
+    "core_range_variance": 4404,
+    "entropy_barrier_constant": 1,
+    "exact_marginal_reweighting": 17340,
+    "forest_radius_variance_bound": 16672,
+    "marginal_variance_domination": 4404,
+    "partition_decomposition": 4404,
+    "pointwise_density_domination": 17340,
+    "rational_relaxed_variance_transfer": 4404,
+    "sharp_standard_deviation_transfer": 4404,
+    "two_half_widths": 1,
+    "universal_quartic_interior": 1,
+    "universal_quartic_left_endpoint": 1,
+    "universal_quartic_right_endpoint": 1,
+    "universal_quartic_zero_endpoints": 1
+  },
+  "exhaustive_scope": "All labelled simple graphs of orders 1..4; all vertex cores; four activity vectors",
+  "additional_graphs": [
+    "fan9",
+    "clique3_binary7",
+    "clique4_star8"
+  ],
+  "universal_transfer": "sd_G(|I|) <= sqrt(Z_G[S] * Var_G-S(|I|)) + alpha(G[S])/2",
+  "proved_in_companion_note": "kappa(G_n)=o(log n) implies all strict log-concavity failure runs have length o(n)",
+  "limits": "Finite audit, not a formal or exhaustive proof for arbitrary graphs. Publication priority is not established.",
+  "verifier_sha256": "608fadb2fcebc809656c0171c5836a94172929eb020604089a123ea06d2bb575"
+}

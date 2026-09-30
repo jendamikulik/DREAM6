@@ -1,0 +1,340 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,microtype,hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=black}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\IS}{\mathcal I}
+\newcommand{\Z}{Z}
+\title{The entropy cost of a linear log-concavity failure run}
+\author{Research note prepared for Jan Mikul\'ik with ChatGPT}
+\date{30 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+The degree-free forest obstruction extends to graphs whose cyclic part has
+subpolynomially many independent configurations. Define
+\(\kappa(G)=\min_{G-S\text{ a forest}}\log_2 Z_{G[S]}(1)\).
+If \(\kappa(G_n)=o(\log n)\), every consecutive strict log-concavity
+failure run in \(Z_{G_n}\) has length \(o(n)\). In particular, this holds
+when the feedback vertex number is \(o(\log n)\), and when deleting a clique
+of size \(n^{o(1)}\) leaves a forest. Edges incident with the deleted part
+are unrestricted. The proof uses an exact marginal reweighting identity,
+not an assumption about the conditional independence of cyclic vertices.
+\end{abstract}
+
+\noindent\textbf{Scope.} This is a proved extension of the supplied forest
+argument, rederived below with an optimized variance exponent. It is a
+research draft: independent review and publication priority are not
+established. The accompanying exact finite audit checks the new transfer
+identities; enumeration is not a substitute for the universal proof.
+
+\section{Statement}
+All graphs are finite and simple. Write
+\[
+ Z_G(\lambda)=\sum_{I\in\IS(G)}\lambda^{|I|}
+   =\sum_{j=0}^{\alpha(G)}i_j(G)\lambda^j.
+\]
+A strict failure at index \(j\) means
+\(i_j^2<i_{j-1}i_{j+1}\). A run at \(u,\ldots,v\) has length
+\(L=v-u+1\); put \(d=L+1\). Set
+\[
+ \kappa(G)=\min_{S\subseteq V(G):\,G-S\text{ is a forest}}
+               \log_2 Z_{G[S]}(1).
+\]
+The empty graph counts as a forest, and \(Z_\varnothing=1\).
+
+\begin{theorem}[An explicit structural obstruction]\label{thm:main}
+Fix \(0<\delta\le1\), and define
+\[
+ \Lambda_\delta=4^{1/\delta},\qquad
+ B_\delta=2\sqrt{\Lambda_\delta},\qquad
+ \eta_\delta=
+ \frac{\log(1+1/\Lambda_\delta)}
+      {\log B_\delta+\log(1+1/\Lambda_\delta)} >0.
+\]
+If an \(n\)-vertex graph has a strict failure run with \(L+1\ge\delta n\),
+then
+\begin{equation}\label{eq:barrier}
+\boxed{\quad
+ \kappa(G)>
+ \min\left\{\frac{\delta n}{\sqrt{12}},
+ \frac{\eta_\delta\log n-\log(36/\delta^2)}
+      {\log(2\Lambda_\delta)}\right\}.
+ \quad}
+\end{equation}
+Here and below unmarked logarithms are natural. In particular, for every
+fixed \(\delta\), a run of this length forces
+\(\kappa(G)\ge c_\delta\log n\) for all sufficiently large \(n\), where
+\(c_\delta=\eta_\delta/[2\log(2\Lambda_\delta)]\).
+\end{theorem}
+
+\begin{corollary}\label{cor:asym}
+For any sequence of graphs of orders \(n\to\infty\),
+\[
+ \kappa(G_n)=o(\log n)
+ \quad\Longrightarrow\quad
+ \frac{\text{longest strict failure run in }G_n}{n}\longrightarrow0.
+\]
+There are no maximum-degree, edge-count, or component-count assumptions.
+\end{corollary}
+
+\section{The exact transfer identity}
+Allow positive vertex activities \(\lambda_v\). For any graph \(H\),
+\(Z_H=\sum_{I\in\IS(H)}\prod_{v\in I}\lambda_v\).
+Fix any \(S\subseteq V(G)\), let \(F=G-S\), and let \(P_F\) denote the
+hard-core measure on \(F\). For \(J\in\IS(F)\), define
+\[
+ W(J)=Z_{G[S\setminus N_G(J)]},\qquad C=Z_{G[S]}.
+\]
+Every independent set in \(G\) is uniquely \(J\cup K\), where
+\(K\in\IS(G[S\setminus N_G(J)])\). Consequently
+\begin{equation}\label{eq:density}
+ P_G(I\cap V(F)=J)=\frac{P_F(J)W(J)}{\mathbb E_F W},
+ \qquad 1\le W(J)\le C.
+\end{equation}
+This is an exact identity. No acyclicity is needed here.
+
+\begin{lemma}[Variance transfer]\label{lem:transfer}
+Let \(X_G=|I|\), \(X_F=|J|\), and \(a=\alpha(G[S])\). Then
+\begin{equation}\label{eq:transfer}
+ \sqrt{\Var_G X_G}\le
+       \sqrt{C\,\Var_F X_F}+\frac a2.
+\end{equation}
+More generally, every nonnegative observable \(f(J)\) satisfies
+\(\mathbb E_G f(I\cap F)\le C\mathbb E_F f(J)\).
+\end{lemma}
+\begin{proof}
+The expectation inequality follows from \eqref{eq:density}, since
+\(\mathbb E_F W\ge1\). Under \(P_G\), write \(X_G=Y+T\), with
+\(Y=|I\cap F|\) and \(0\le T=|I\cap S|\le a\). Choosing
+\(b=\mathbb E_F X_F\) gives
+\[
+ \Var_GY=\min_{t\in\mathbb R}\mathbb E_G(Y-t)^2
+ \le\mathbb E_G(Y-b)^2\le C\Var_F X_F.
+\]
+Also \(\Var_GT\le a^2/4\): a variable in \([0,a]\) has variance at most
+\(a^2/4\). The triangle inequality in \(L^2(P_G)\) for the centered
+variables \(Y\) and \(T\) proves \eqref{eq:transfer}. These variables
+need not be independent.
+\end{proof}
+
+\section{A self-contained forest variance estimate}
+\begin{lemma}\label{lem:forest}
+Let \(F\) be a forest with at most \(n\ge1\) vertices and positive
+activities at most \(\Lambda\ge1\). Put
+\[
+ B=2\sqrt\Lambda,\quad q=\frac{\Lambda}{1+\Lambda},\quad
+ \eta=\frac{\log(1/q)}{\log(B/q)}.
+\]
+Then, without a lower threshold on \(n\),
+\begin{equation}\label{eq:variance}
+ \Var_F X_F\le\frac34 n^{2-\eta}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The empty forest is immediate. Otherwise let \(S_v\) indicate occupancy,
+\(\mu_v=\mathbb E S_v\), \(s_v=\sqrt{\Var S_v}\), and
+\(w_v=\mu_v/(1-\mu_v)\). For an oriented edge \(u\to v\), let
+\(R_{u\to v}\) be the occupancy odds at \(u\) in the component obtained
+by deleting \(uv\). Conditioning at its root gives
+\[
+ R_{u\to v}=\lambda_u\prod_{z\sim u,\,z\ne v}(1+R_{z\to u})^{-1},
+ \qquad w_v=\lambda_v\prod_{u\sim v}(1+R_{u\to v})^{-1}.
+\]
+In particular \(R_{u\to v}\le\Lambda\). Adjacent vertices cannot both
+be occupied, so, with \(a_{uv}=|\operatorname{Corr}(S_u,S_v)|\),
+\[
+ a_{uv}^2=w_uw_v.
+\]
+Fix \(v\) and write \(x_u=R_{u\to v}\). Edge conditioning gives
+\(w_u=x_u/(1+R_{v\to u})\le x_u\). Therefore
+\[
+ \sum_{u\sim v}a_{uv}^2
+ \le\lambda_v\frac{\sum_{u\sim v}x_u}{\prod_{u\sim v}(1+x_u)}
+ \le\lambda_v\le\Lambda.
+\]
+The middle product is at least \(1+\sum x_u\). For an edge, writing
+\(R=R_{u\to v}\) and \(T=R_{v\to u}\) also gives
+\[
+ a_{uv}^2=\frac{R}{1+R}\frac{T}{1+T}\le q^2.
+\]
+Let \(A\) be weighted adjacency with entries \(a_{uv}\). Root each
+component, and let \(D\) contain the parent-to-child entries of \(A\).
+Distinct rows of \(D\) have disjoint supports. Thus \(DD^\mathsf T\)
+is diagonal, with entries at most \(\Lambda\), and
+\(\|A\|_2=\|D+D^\mathsf T\|_2\le2\sqrt\Lambda=B\).
+
+For vertices at distance \(r\) in the same component, the tree Markov
+property implies
+\[
+ \operatorname{Cov}(S_u,S_v)=(-1)^r s_us_v
+                  \prod_{e\in P(u,v)}a_e.
+\]
+For completeness, a centered function of a binary variable is a scalar
+multiple of its centered indicator. Hence on an edge the conditional
+expectation of the normalized centered indicator is its correlation
+times the normalized centered indicator at the other endpoint.
+Composing this relation along the path proves the formula. Distinct
+components are independent.
+
+The simple path is one of the nonnegative walks counted in \(A^r\).
+Writing \(y_v=s_v\), the sum over ordered pairs at distance \(r\) is
+at most \(y^\mathsf T A^r y\le(n/4)B^r\). Each individual pair at
+distance \(r\) has absolute covariance at most \(q^r/4\). Therefore,
+for every integer \(R\ge0\),
+\begin{equation}\label{eq:radius}
+ \Var_F X_F\le \frac n4\sum_{r=0}^R B^r+
+                      \frac{n^2}4q^{R+1}
+ \le\frac n2 B^R+\frac{n^2}4q^{R+1}.
+\end{equation}
+The exponent \(R+1\) uses the fact that all remaining distances exceed
+\(R\). Put \(t=\log n/\log(B/q)\) and \(R=\lfloor t\rfloor\).
+Then
+\[
+ B^R\le B^t=n^{1-\eta},\qquad q^{R+1}\le q^t=n^{-\eta}.
+\]
+Substitution in \eqref{eq:radius} proves \eqref{eq:variance}.
+\end{proof}
+
+\section{A failure window and its centered activity}
+\begin{lemma}\label{lem:window}
+For any \(n\)-vertex graph with a strict failure run at \(u,\ldots,v\),
+put \(c=(u+v)/2\) and \(d=v-u+2\). There is a unique common activity
+\(\lambda>0\) with \(\mathbb E_\lambda X_G=c\), and at that activity
+\begin{equation}\label{eq:window}
+ \Var_\lambda X_G>\frac{d^2}{12},\qquad
+ \lambda\le 2^{2n/d}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Every coefficient from \(0\) through \(\alpha(G)\) is positive, since
+subsets of a maximum independent set are independent. The mean tends
+to \(0\) and \(\alpha(G)\) as \(\lambda\) tends to \(0\) and
+\(\infty\), respectively. Its derivative with respect to \(\log\lambda\)
+is the positive variance. Also \(0<c<\alpha(G)\).
+
+At the centered activity let \(p_j=i_j\lambda^j/Z_G(\lambda)\).
+Tilting preserves the strict failure inequalities. The arithmetic-geometric
+mean inequality implies \(p_{j-1}-2p_j+p_{j+1}>0\) for
+\(u\le j\le v\). For any numbers \(z_0,\ldots,z_d\), collecting
+coefficients gives the exact identity
+\begin{align*}
+ \sum_{j=0}^{d}\left[(j-d/2)^2-\frac{d(d+2)}{12}\right]z_j
+ =\sum_{j=1}^{d-1}
+ \frac{j(j+1)(d-j)(d-j+1)}{12}
+                  (z_{j-1}-2z_j+z_{j+1}).
+\end{align*}
+Take \(z_j=p_{u-1+j}\). The right side is nonnegative, and every index
+outside the window has squared distance from \(c\) larger than
+\(d(d+2)/12\). Summing all probabilities gives
+\(\Var X_G\ge d(d+2)/12>d^2/12\).
+
+The Shannon entropy of the independent-set distribution, in nats, is
+\(H=\log Z_G(\lambda)-c\log\lambda\le n\log2\).
+Since \(Z_G(\lambda)\ge\lambda^{\alpha(G)}\),
+\((\alpha(G)-c)\log\lambda\le n\log2\).
+The enlarged window ends at \(v+1\le\alpha(G)\), so
+\(\alpha(G)-c\ge d/2\). If \(\log\lambda\ge0\) this yields the stated
+bound; if \(\lambda<1\), the bound is automatic.
+\end{proof}
+
+\section{Proof of the entropy barrier}
+\begin{proof}[Proof of Theorem \ref{thm:main}]
+Choose any \(S\) with \(F=G-S\) a forest, and put
+\(h=\log_2 Z_{G[S]}(1)\) and \(a=\alpha(G[S])\).
+All subsets of a maximum independent set in \(G[S]\) contribute to
+\(Z_{G[S]}(1)\), so \(a\le h\). At the centered activity of
+Lemma \ref{lem:window}, \(\lambda\le\Lambda_\delta\). Consequently
+\begin{equation}\label{eq:corecost}
+ C=Z_{G[S]}(\lambda)\le Z_{G[S]}(1)\Lambda_\delta^a
+                   \le(2\Lambda_\delta)^h.
+\end{equation}
+Apply Lemmas \ref{lem:transfer} and \ref{lem:forest}, using the ambient
+order \(n\) as an upper bound on the forest order. We obtain
+\begin{equation}\label{eq:master}
+ \frac{\delta}{\sqrt{12}}
+ <\frac{\sqrt{\Var_GX_G}}n
+ \le\frac{\sqrt3}{2}(2\Lambda_\delta)^{h/2}n^{-\eta_\delta/2}
+                         +\frac{h}{2n}.
+\end{equation}
+If \(h>\delta n/\sqrt{12}\), the desired minimum bound follows.
+Otherwise the last term is at most \(\delta/(2\sqrt{12})\).
+Rearranging and squaring the remaining positive terms gives
+\[
+ (2\Lambda_\delta)^h>\frac{\delta^2}{36}n^{\eta_\delta}.
+\]
+Taking logarithms proves the other alternative in \eqref{eq:barrier}.
+The bound holds for every admissible \(S\), including one attaining
+the minimum defining \(\kappa(G)\). For fixed \(\delta\), the logarithmic
+term is eventually the smaller term and eventually at least
+\(c_\delta\log n\).
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:asym}]
+If the conclusion failed, some fixed \(\delta>0\) and an infinite
+subsequence would have \(L+1\ge\delta n\). Theorem \ref{thm:main} would
+force \(\kappa(G_n)\ge c_\delta\log n\) along that subsequence,
+contradicting \(\kappa(G_n)=o(\log n)\).
+\end{proof}
+
+\section{Concrete consequences}
+\begin{corollary}[Feedback vertices and a finite threshold]
+Suppose deleting \(k\) vertices makes \(G\) a forest. Fix \(\delta\) and
+use the parameters of Theorem \ref{thm:main}. A run with
+\(L+1\ge\delta n\) is impossible whenever
+\[
+ n\ge\max\left\{1,\frac{\sqrt{12}\,k}{\delta},
+       \left[\frac{36(1+\Lambda_\delta)^k}{\delta^2}
+                  \right]^{1/\eta_\delta}\right\}.
+\]
+Thus feedback vertex number \(o(\log n)\) suffices for the asymptotic
+obstruction.
+\end{corollary}
+\begin{proof}
+For the chosen \(S\), \(a\le k\) and
+\(C\le(1+\Lambda_\delta)^k\). Under the displayed threshold each of
+the two upper terms in the analogue of \eqref{eq:master} is at most
+\(\delta/(2\sqrt{12})\), contradicting its strict lower bound.
+Also \(Z_{G[S]}(1)\le2^k\), so \(\kappa(G)\le k\).
+\end{proof}
+
+\noindent\textbf{Large dense cores.} If \(S\) induces a clique of size
+\(s\), then \(Z_{G[S]}(1)=1+s\). Thus a clique of size \(s=n^{o(1)}\)
+may be deleted, with every edge between the clique and the remaining
+forest arbitrary, while the conclusion still holds. For example,
+\(s=\lceil\exp(\sqrt{\log n})\rceil\) is far larger than \(\log n\),
+but its configuration cost is only \(O(\sqrt{\log n})\).
+More generally, \(Z_{G[S]}(1)=n^{o(1)}\) is the sufficient condition.
+
+\medskip
+\noindent\textbf{What has changed from the supplied proof.} The supplied
+note treats forests. The new structural statement treats arbitrary
+attachments to an induced cyclic core, charging that core by the number
+of its independent configurations. The forest exponent is also optimized:
+balancing \(B^R\) against \(q^{R+1}\) yields
+\(\eta=\log(1/q)/\log(B/q)\) for every ambient order \(n\ge1\).
+Neither the exact marginal identity nor the graph entropy barrier relies
+on the finite audit.
+
+\medskip
+\noindent\textbf{Verification.} Run
+\texttt{python verify\_core\_entropy\_barrier.py}.
+It uses the standard library and exact rational arithmetic. It independently
+enumerates graph independent sets, verifies the reweighting identity,
+observable domination, the sharp square-root variance inequality without
+floating-point roots, and the core counting inequalities. The JSON report
+states the finite scope and the number of checks.
+
+\medskip
+\noindent\textbf{Literature boundary.} Spectral estimates on trees below
+\(e^2\) appear in X.~Chen, X.~Yang, Y.~Yin and X.~Zhang,
+\emph{Spectral Independence Beyond Total Influence on Trees and Related
+Graphs}, \href{https://arxiv.org/abs/2404.04668}{arXiv:2404.04668}.
+The supplied \emph{A degree-free obstruction to linear runs of
+log-concavity failures in forests} (28 September 2026) is the starting
+point for this note. No claim that the present extension is absent from
+all existing literature is made.
+\end{document}
