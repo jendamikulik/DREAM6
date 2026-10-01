@@ -1,0 +1,368 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,microtype,booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\mis}{\operatorname{mis}}
+\newcommand{\LC}{\operatorname{LC}}
+\title{A square-root bound for global binomial log-concavity}
+\author{}
+\date{1 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Let $\mathcal F\subseteq2^{[N]}$ contain the empty set, and let $M$ be
+its number of inclusion-maximal members. We prove that every integer
+$m\ge4(N+1)^4\sqrt M$ makes all coefficients of
+$(1+x)^m\sum_{S\in\mathcal F}x^{|S|}$ log-concave.
+No closure assumption on $\mathcal F$ is needed. The exponent $1/2$ of
+$M$ cannot be reduced, even for independence complexes of trees, if
+arbitrary fixed polynomial factors in $N$ are allowed.
+Consequently the worst global repair thresholds are
+$2^{N/4+o(N)}$ for forests, $3^{N/6+o(N)}$ for graphs, and
+$2^{N/2+o(N)}$ for simplicial complexes or arbitrary set families.
+The proof separates a coefficient-independent interior estimate from
+uniform endpoint estimates. All constants in the upper bound are explicit.
+\end{abstract}
+
+\section{Statement and scope}
+For a nonzero polynomial $P$ with nonnegative coefficients and positive
+constant coefficient, put
+\[
+ \sigma(P)=\min\{m\in\mathbb Z_{\ge0}:
+        (1+x)^mP(x)\text{ has a log-concave coefficient sequence}\}.
+\]
+Log-concavity here includes the absence of internal zeros, as well as
+$c_k^2\ge c_{k-1}c_{k+1}$.
+The assertions below prove finiteness in the cases under consideration.
+For $\mathcal F\subseteq2^{[N]}$ containing $\varnothing$, write
+$P_{\mathcal F}(x)=\sum_{S\in\mathcal F}x^{|S|}$, and let
+$M(\mathcal F)$ count its inclusion-maximal members.
+
+\begin{theorem}[Global square-root bound]\label{thm:main}
+For $N\ge1$ and every such family $\mathcal F$,
+\[
+ \boxed{\quad\sigma(P_{\mathcal F})\le
+       \left\lceil4(N+1)^4\sqrt{M(\mathcal F)}\right\rceil.\quad}
+\]
+In fact every integer at or above the displayed real bound makes the
+entire coefficient sequence strictly log-concave at its interior indices.
+\end{theorem}
+
+For a graph $G$, use its family of independent sets. Then $M(\mathcal F)
+=\mis(G)$ and multiplying by $(1+x)^m$ adds $m$ isolated vertices.
+This theorem repairs \emph{all} log-concavity inequalities, not just the
+last one. For a simplicial complex the same operation is joining with a
+simplex on $m$ new vertices, or equivalently taking $m$ successive cones.
+
+\paragraph{Position relative to existing work.}
+Eventual log-concavity after multiplication by a binomial power is
+classical: Handelman~\cite{H92,H11} treats a much wider existence question
+and determines the exact threshold $k^2-3$ for $(1+x)^m(1+x^k)$.
+The contribution derived here is an explicit bound governed by the
+number of maximal members, with matching exponential rates for several
+classes. The lower-bound tree construction is known from Galvin~\cite{G},
+and the maximal-independent-set estimates are classical~\cite{PP}.
+A literature search has not established publication priority for the
+present quantitative statement. This is a self-contained research draft,
+not an independently reviewed or formally verified result.
+
+\section{The coefficient-independent interior}
+Write $B_r=\binom mr$, with $B_r=0$ outside $0\le r\le m$.
+
+\begin{lemma}[Pairwise binomial curvature]\label{lem:interior}
+Let $n\ge1$, $L=n^2$, and $m\ge2L$. If
+$L\le r,s\le m-L$ and $|r-s|\le n$, then
+\[
+ 2B_rB_s>B_{r-1}B_{s+1}+B_{s-1}B_{r+1}.
+\]
+Consequently, for any $P(x)=\sum_{i=0}^{d}a_ix^i$ with $a_i\ge0$,
+$a_0>0$, and $d\le n$, the coefficients
+$c_k=\sum_i a_iB_{k-i}$ satisfy $c_k^2>c_{k-1}c_{k+1}$ whenever
+\[
+ n^2+n<k<m+d-(n^2+n).
+\]
+\end{lemma}
+\begin{proof}
+Set $u_r=r/(m-r+1)$ and $v_r=(m-r)/(r+1)$. Direct subtraction gives
+\begin{align*}
+ 2-u_rv_s-u_sv_r
+ &=\frac{(m+1)\{(r+1)(m-r+1)+(s+1)(m-s+1)
+                  -(m+1)(r-s)^2\}}
+ {(r+1)(s+1)(m-r+1)(m-s+1)}.
+\end{align*}
+The braces are strictly positive: their first two terms sum to at least
+$2(L+1)(m-L+1)\ge(L+1)(m+2)>L(m+1)$, while the subtracted term is at most
+$L(m+1)$. Multiply by $B_rB_s>0$.
+
+For the consequence, every $r=k-i$ belongs to $[L,m-L]$ and any two
+such values differ by at most $d\le n$. Symmetrize the identity
+\[
+ c_k^2-c_{k-1}c_{k+1}
+ =\frac12\sum_{i,j}a_ia_j
+ \{2B_{k-i}B_{k-j}-B_{k-1-i}B_{k+1-j}-B_{k-1-j}B_{k+1-i}\}.
+\]
+Every summand is nonnegative, and the $(0,0)$ summand is positive.
+\end{proof}
+
+\section{Uniform control at both endpoints}
+\begin{lemma}[Two-endpoint smoothing]\label{lem:polynomial}
+Let $n\ge1$, $d\le n$, $M\ge1$, and
+$P(x)=\sum_{i=0}^{d}a_ix^i$ with $a_i\ge0$ and $a_0a_d>0$.
+Suppose, for $2\le i\le d$, that
+\[
+ \frac{a_i}{a_0}\le M(n+1)^i,
+ \qquad
+ \frac{a_{d-i}}{a_d}\le M(n+1)^i.
+\]
+Then every integer $m\ge4(n+1)^4\sqrt M$ makes $(1+x)^mP$ strictly
+log-concave at every interior index.
+\end{lemma}
+\begin{proof}
+If $d=0$, this is the binomial sequence. Assume $d\ge1$, and put
+$K=n(n+1)$. On the left, split
+\[
+ c_j=b_j+e_j,\qquad
+ b_j=a_0B_j+a_1B_{j-1},\qquad
+ e_j=\sum_{i=2}^{d}a_iB_{j-i}.
+\]
+For $0\le j\le K+1$ and $i\le j$,
+\[
+ \frac{B_{j-i}}{B_j}
+ =\prod_{\ell=0}^{i-1}\frac{j-\ell}{m-j+\ell+1}
+ \le\left(\frac{K+1}{m-K}\right)^i.
+\]
+Terms with $i>j$ vanish. Set $z=(n+1)(K+1)/(m-K)$.
+As $K\le(n+1)^4\sqrt M$ and $K+1\le(n+1)^2$,
+\[
+ z\le\frac{1}{3(n+1)\sqrt M}\le\frac16,
+ \qquad
+ 0\le\frac{e_j}{b_j}\le\frac{e_j}{a_0B_j}
+ \le M\sum_{i=2}^{d}z^i\le2Mz^2
+ \le\frac{2}{9(n+1)^2}\le\frac{1}{4K}.
+\tag{1}
+\]
+All denominators are positive; the bound on $m$ also ensures $K+1<m$.
+
+The baseline satisfies
+\[
+ b_k^2\ge\frac{k+1}{k}\,b_{k-1}b_{k+1}\qquad(1\le k\le K).
+\tag{2}
+\]
+For completeness, write $u_j=j!b_j$. For $j\ge1$,
+\[
+ u_j=(m)_{j-1}L_j,\qquad
+ L_j=(m-j+1)a_0+ja_1,
+\]
+where $(m)_r$ is a falling factorial. The $L_j$ are positive and affine,
+so $L_j^2-L_{j-1}L_{j+1}=(a_1-a_0)^2\ge0$.
+The falling-factorial factors are log-concave as well. This proves
+$u_j^2\ge u_{j-1}u_{j+1}$ for $j\ge2$ in the required range.
+At $j=1$, direct calculation gives $u_1^2-u_0u_2=ma_0^2+a_1^2\ge0$.
+This is precisely (2).
+
+With $\varepsilon=1/(4K)$, (1)--(2) imply, for $1\le k\le K$,
+\[
+ c_k^2\ge b_k^2\ge(1+1/K)b_{k-1}b_{k+1}
+ >(1+\varepsilon)^2b_{k-1}b_{k+1}
+ \ge c_{k-1}c_{k+1},
+\]
+since $1+1/K>(1+1/(4K))^2$.
+Apply the identical argument to $x^dP(1/x)$ for the last $K$ indices
+of the product, whose degree is $m+d$. All remaining indices satisfy
+Lemma~\ref{lem:interior}. Positivity of all coefficients follows from
+$a_0a_d>0$ and $m\ge d$: the contributions of $a_0$ and $a_d$ cover
+$[0,m]$ and $[d,m+d]$, respectively.
+\end{proof}
+
+\section{From maximal members to all coefficients}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Put $d=\max_{S\in\mathcal F}|S|$ and $P_{\mathcal F}=\sum a_ix^i$.
+We have $a_0=1$, $a_d\ge1$, and $a_i\le\binom Ni\le(N+1)^i$.
+Every member of size $d-i$ extends to an inclusion-maximal member.
+The extension adds at most $i$ elements. Each maximal member contains at
+most $\sum_{j=0}^{i}\binom Nj$ subsets obtained by deleting at most $i$
+elements. Therefore
+\[
+ a_{d-i}\le M\sum_{j=0}^{i}\binom Nj\le M(N+1)^i.
+\tag{3}
+\]
+The last inequality follows by encoding a subset of size at most $i$ as
+its increasing list, padded with zeros to length $i$, over an alphabet
+of $N+1$ symbols. This encoding is injective. Division by $a_d\ge1$
+only improves the estimate. Lemma~\ref{lem:polynomial}, with $n=N$,
+now applies. The case $d=0$ is already included.
+\end{proof}
+
+\begin{corollary}[A polynomial bound for few maximal members]
+If $M(\mathcal F)\le N^c$ for a fixed $c$, then
+$\sigma(P_{\mathcal F})\le\lceil4(N+1)^4N^{c/2}\rceil$.
+This applies without assuming that the family is a simplicial complex.
+\end{corollary}
+
+\section{Sharp exponential rates}
+Let $S_{\rm for}(N)$ and $S_{\rm gr}(N)$ be the maximum of
+$\sigma(I(G;x))$ over forests and all graphs, respectively, of order at
+most $N$. Let $S_{\rm cx}(N)$ and $S_{\rm fam}(N)$ be the analogous
+maxima over simplicial complexes and set families containing the empty
+set, on at most $N$ labelled elements.
+
+\begin{theorem}\label{thm:rates}
+As $N\to\infty$,
+\[
+ \boxed{\begin{aligned}
+ S_{\rm for}(N)&=2^{N/4+o(N)},\\
+ S_{\rm gr}(N)&=3^{N/6+o(N)},\\
+ S_{\rm cx}(N)&=2^{N/2+o(N)},\\
+ S_{\rm fam}(N)&=2^{N/2+o(N)}.
+ \end{aligned}}
+\]
+These are thresholds for global log-concavity.
+\end{theorem}
+\begin{proof}
+We give both sides.
+
+\smallskip\noindent\textit{Upper bounds.}
+The classical bounds $\mis(G)\le2^{N/2}$ for forests and
+$\mis(G)\le3^{N/3}$ for graphs give
+\[
+ S_{\rm for}(N)\le\lceil4(N+1)^4 2^{N/4}\rceil,\qquad
+ S_{\rm gr}(N)\le\lceil4(N+1)^4 3^{N/6}\rceil.
+\tag{4}
+\]
+Here are short proofs of the counting inputs. In a forest, an isolated
+vertex is forced into every maximal independent set. Otherwise choose
+a leaf $v$ with neighbor $u$; partitioning maximal sets by which of
+$u,v$ they contain gives
+\[
+ \mis(G)=\mis(G-\{u,v\})+\mis(G-N[u])\le2\cdot2^{(N-2)/2}.
+\]
+For a general graph without isolates, choose a minimum-degree vertex
+$v$, of degree $\delta\ge1$. Every maximal independent set meets $N[v]$;
+conditioning on a chosen member and overcounting gives
+\[
+ \mis(G)\le\sum_{u\in N[v]}\mis(G-N[u])
+ \le(\delta+1)3^{(N-\delta-1)/3}\le3^{N/3}.
+\]
+The last inequality is $k\le3^{k/3}$ for integers $k\ge2$, proved from
+$k=2,3,4$ and the step $k+3\le3k$. These arguments are inductions on $N$.
+
+The maximal members of any set family form an antichain. Counting
+permutations whose initial segment is a member of an antichain gives
+$\sum_{S\text{ maximal}}\binom N{|S|}^{-1}\le1$. Thus, writing
+$B_N=\binom N{\lfloor N/2\rfloor}$,
+\[
+ S_{\rm fam}(N)\le\lceil4(N+1)^4\sqrt{B_N}\rceil,
+\tag{5}
+\]
+and the same bound holds for complexes.
+
+\smallskip\noindent\textit{Graph lower bounds.}
+For $q\ge2$ and $t\ge1$, let $G_{q,t}$ have a root with three neighbors
+$w_1,w_2,w_3$. Attach $t$ disjoint $q$-cliques to each $w_i$, joining
+$w_i$ to exactly $q-1$ vertices of every attached clique. Then
+\[
+ |V(G_{q,t})|=3qt+4,\quad \alpha=3t+3,\qquad
+ I(G_{q,t};x)=\big((1+qx)^t+x(1+x)^t\big)^3+x(1+qx)^{3t}.
+\]
+For $q=2$ this is Galvin's known tree $T_{3,t}$~\cite{G}.
+Its top three coefficients, in descending order, are $1,A,B$, where
+\[
+ A=3(q^t+t),\qquad
+ B=q^{3t}+3\left(tq^{t-1}+\binom t2\right)+3(q^t+t)^2.
+\]
+After $m$ isolates, the last log-concavity difference is
+\[
+ A^2-B+Am+\frac{m(m+1)}2.
+\tag{6}
+\]
+For fixed $q$, $B-A^2\sim q^{3t}$ and $A=o(q^{3t/2})$.
+The exact positive root of (6) consequently gives the terminal threshold
+$\tau(G_{q,t})\sim\sqrt2\,q^{3t/2}$. Since $\sigma\ge\tau$, the
+choices $q=2,3$ match (4) in exponential rate.
+To cover every $N$, choose $t=\lfloor(N-4)/(3q)\rfloor$.
+
+An explicit finite lower bound is also available: for $q\ge2,t\ge8$,
+$A\le4q^t$ and $B-A^2\ge15q^{3t}/16$. At
+$m=\lfloor q^{3t/2}\rfloor$, we have
+$Am\le q^{3t}/4$ and $m(m+1)/2\le9q^{3t}/16$.
+Hence
+\[
+ S_{\rm for}(N)>2^{N/4-5/2}\ (N\ge52),\qquad
+ S_{\rm gr}(N)>3^{N/6-13/6}\ (N\ge76).
+\tag{7}
+\]
+
+\smallskip\noindent\textit{Complex lower bounds.}
+For $N\ge4$, put $r=\lfloor N/2\rfloor$, $d=r+2$, and fix a $d$-set
+$A\subseteq[N]$. The simplicial complex
+\[
+ \mathcal K_N=\{S\subseteq[N]:|S|\le r\}\ \cup\ 2^A
+\]
+has polynomial
+\[
+ P_{\mathcal K_N}(x)=\sum_{j=0}^{r}\binom Njx^j+dx^{d-1}+x^d.
+\]
+Its top coefficients are $1,d,B_N$. By (6), its terminal threshold is
+$\sim\sqrt{2B_N}=2^{N/2+o(N)}$, because $d=O(N)$ and
+$2^N/(N+1)\le B_N\le2^N$. This proves both remaining lower bounds.
+For a finite version, $N\ge16$ implies $B_N\ge4d^2$:
+$2^N\ge4(N+1)(N+2)^2$ follows by induction from $N=16$.
+At $m=\lfloor\sqrt{B_N}/2\rfloor$, the positive terms in (6) sum to
+at most $B_N/2$, while $B_N-d^2\ge3B_N/4$. Thus
+\[
+ S_{\rm cx}(N)>\tfrac12\sqrt{B_N}
+ \ge\frac{2^{N/2}}{2\sqrt{N+1}}\qquad(N\ge16).
+\]
+\end{proof}
+
+\paragraph{Sharpness in the maximal-member parameter.}
+For the same graphs, put $x=q^t$. If the root is selected, there are
+$x^3$ maximal independent sets. If it is not selected, at least one
+$w_i$ must be selected. In each branch, selecting $w_i$ gives one maximal
+configuration; omitting it gives $x-1$, since at least one selected clique
+vertex must dominate $w_i$. Thus
+\[
+ \mis(G_{q,t})=x^3+\{x^3-(x-1)^3\}
+             =x^3+3x^2-3x+1\sim q^{3t}.
+\]
+Therefore $\sigma(I(G_{q,t};x))\ge(\sqrt2+o(1))\sqrt{\mis(G_{q,t})}$.
+No bound $N^C M^{1/2-\varepsilon}$, with fixed $C$ and
+$\varepsilon>0$, can hold for all trees. The polynomial factor $4(N+1)^4$
+in our upper bound is not claimed optimal.
+
+\section{Verification and limits of the claim}
+The accompanying exact-arithmetic verifier passed 191,941 checks, including
+all 138 families containing the empty set on one, two, or three elements.
+It checks the pairwise identity,
+its prescribed interior range, the baseline curvature, the endpoint
+constants, finite set-family counting bounds, and concrete global
+thresholds. These are checks supporting the written universal proof;
+they are not a proof-assistant certificate. In particular, a finite
+experiment is not used to infer either asymptotic theorem.
+
+The result does not prove that the global and terminal thresholds agree
+for each graph. It proves that their \emph{worst-case exponential rates}
+agree in the graph classes above. It does not resolve the number of
+log-concavity failures of an unmodified forest. The present argument and
+its audit were developed with ChatGPT and have not undergone independent
+mathematical review.
+
+\begin{thebibliography}{9}
+\bibitem{H92} D. Handelman, \emph{Spectral radii of primitive integral
+companion matrices and log concave polynomials}, Contemporary Mathematics
+135 (1992), 231--237.
+\bibitem{H11} D. Handelman, \emph{Log concavity of $(1+x)^m(1+x^k)$},
+arXiv:1102.2961, version 2 (2018).
+\url{https://arxiv.org/abs/1102.2961}.
+\bibitem{G} D. Galvin, \emph{Trees with non log-concave independent set
+sequences}, arXiv:2502.10654 (2025).
+\url{https://arxiv.org/abs/2502.10654}.
+\bibitem{PP} C. Palmer and B. Patk\'os, \emph{On the number of maximal
+independent sets: From Moon--Moser to Hujter--Tuza}, Journal of Graph
+Theory 102 (2023), 440--445; arXiv:2205.04082.
+\url{https://arxiv.org/abs/2205.04082}.
+\end{thebibliography}
+\end{document}

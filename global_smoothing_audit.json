@@ -1,0 +1,109 @@
+{
+  "status": "PASS_EXACT_ARITHMETIC_AUDIT",
+  "formal_proof_assistant_certificate": false,
+  "proof_of_universal_theorem": "global_smoothing.pdf / global_smoothing.tex",
+  "checks": {
+    "symbolic_pairwise_identity": 1,
+    "interior_pairwise_sign": 13425,
+    "baseline_curvature": 9360,
+    "endpoint_constants": 1920,
+    "family_counts": 922,
+    "full_family_smoothing": 157437,
+    "endpoint_relative_error": 4488,
+    "endpoint_log_concavity": 4356,
+    "graph_enumeration": 8,
+    "global_threshold_examples": 21,
+    "complex_lower_bound": 3
+  },
+  "total_checks": 191941,
+  "exhaustive_set_families": 138,
+  "graph_examples": [
+    {
+      "q": 2,
+      "t": 4,
+      "vertices": 28,
+      "terminal": 25,
+      "global": 25
+    },
+    {
+      "q": 2,
+      "t": 5,
+      "vertices": 34,
+      "terminal": 138,
+      "global": 138
+    },
+    {
+      "q": 2,
+      "t": 6,
+      "vertices": 40,
+      "terminal": 505,
+      "global": 505
+    },
+    {
+      "q": 2,
+      "t": 7,
+      "vertices": 46,
+      "terminal": 1630,
+      "global": 1630
+    },
+    {
+      "q": 2,
+      "t": 8,
+      "vertices": 52,
+      "terminal": 4983,
+      "global": 4983
+    },
+    {
+      "q": 3,
+      "t": 3,
+      "vertices": 31,
+      "terminal": 102,
+      "global": 102
+    },
+    {
+      "q": 3,
+      "t": 4,
+      "vertices": 40,
+      "terminal": 766,
+      "global": 766
+    }
+  ],
+  "complex_examples": [
+    {
+      "N": 8,
+      "central_binomial": 70,
+      "global_threshold": 4
+    },
+    {
+      "N": 10,
+      "central_binomial": 252,
+      "global_threshold": 14
+    },
+    {
+      "N": 12,
+      "central_binomial": 924,
+      "global_threshold": 34
+    },
+    {
+      "N": 14,
+      "central_binomial": 3432,
+      "global_threshold": 73
+    },
+    {
+      "N": 16,
+      "central_binomial": 12870,
+      "global_threshold": 150
+    },
+    {
+      "N": 18,
+      "central_binomial": 48620,
+      "global_threshold": 301
+    },
+    {
+      "N": 20,
+      "central_binomial": 184756,
+      "global_threshold": 596
+    }
+  ],
+  "verifier_sha256": "c35c80d7b534b2a7c85c23b8353c8e589fad11f4bcfd8a5e040884b0cae69d04"
+}
