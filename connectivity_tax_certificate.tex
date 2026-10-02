@@ -1,0 +1,351 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Ical}{\mathcal I}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+
+\title{A Connectivity Tax Beyond the Scalar Entropy Barrier\\
+\large An exact lower certificate for the forest mode constant at $\lambda=1$}
+\author{}
+\date{2 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $\mu(T)$ be the mean size of a uniformly random independent set of a finite tree $T$, and let $\alpha(T)$ be its independence number.  Write
+\[
+ a_*(1)=\inf_T \frac{\mu(T)}{\alpha(T)},
+\]
+where the infimum is over finite nonempty trees.  Starting from the entropy--partition decomposition, we prove the strictly stronger universal bound
+\[
+\boxed{
+ a_*(1)\ge
+ \frac{\log(34/5)}{6\log 2}
+ +\frac{\log(1458/1445)}{48\log 2}
+ =0.461191649955056508\ldots>0.461 .
+}
+\]
+The improvement comes from a connectivity tax that is absent from the scalar degree relaxation.  Near scalar equality, almost all excess $A$--degree must be carried by vertices with $d=4$.  If the induced $B$--forest is dense, its edge term already pays a positive cost; if it is sparse, linearly many $d=4$ vertices are isolated in the $B$--forest and can be paired through shared $A$--neighbours.  Under the comparison hard-core measure each such pair is occupied with probability exactly $1/289$, forcing a linear overlap entropy contribution.  The only scalar comparisons needed by the proof are reducible to exact integer arithmetic and are checked by the accompanying script \texttt{verify\_connectivity\_tax\_0461.py}.
+\end{abstract}
+
+\section{Statement}
+
+For a finite graph $G$, let
+\[
+ Z_G=|\Ical(G)|,
+ \qquad
+ \mu(G)=\frac1{Z_G}\sum_{I\in\Ical(G)}|I|,
+ \qquad
+ \alpha(G)=\max_{I\in\Ical(G)}|I|.
+\]
+Set
+\[
+ c:=\frac{\log(34/5)}{6\log2},
+ \qquad
+ \gamma:=\frac12-c
+ =\frac{\log(20/17)}{6\log2},
+\]
+and define the new separation constant
+\[
+ \rho:=\frac{\log(1458/1445)}{12\log2}
+ =0.00107676891157466036\ldots .
+\]
+
+\begin{theorem}[Connectivity-tax certificate]\label{thm:main}
+Every finite nonempty tree $T$ satisfies
+\[
+ \frac{\mu(T)}{\alpha(T)}
+ \ge c+\frac{\rho}{4}.
+\]
+Consequently
+\[
+ \boxed{
+ a_*(1)\ge c+\frac{\rho}{4}
+ =0.461191649955056508\ldots>0.461 .
+ }
+\]
+\end{theorem}
+
+The proof is completely uniform in the order and maximum degree of the tree.
+
+\section{Entropy--partition decomposition}
+
+Fix a maximum independent set $A$ of $T$ and write
+\[
+ \alpha=|A|,
+ \qquad B=V(T)\setminus A,
+ \qquad K=T[B],
+ \qquad e=|E(K)|.
+\]
+For $v\in B$ put
+\[
+ d_v=|N(v)\cap A|.
+\]
+Since $A$ is maximum, it is maximal, hence $d_v\ge1$ for every $v\in B$.
+Because $T$ is a tree,
+\begin{equation}\label{eq:edgeidentity}
+ \sum_{v\in B}(d_v-1)=\alpha-1-e.
+\end{equation}
+
+For $d\ge1$ define
+\[
+ \ell_d:=\left[\log\frac{5/4}{1+2^{-d}}\right]_+,
+ \qquad
+ \Delta_d:=\gamma(d-1)-\frac{\ell_d}{2\log2}.
+\]
+We shall use the following sharpened form of the scalar estimate.
+
+\begin{lemma}[Scalar separation away from $d=4$]\label{lem:scalar}
+One has $\Delta_1=\Delta_4=0$, and for every integer $d\ge2$, $d\ne4$,
+\[
+ \Delta_d\ge \rho(d-1).
+\]
+\end{lemma}
+
+\begin{proof}
+We have
+\[
+ \ell_3=\log(10/9),
+ \qquad
+ \ell_4=\log(20/17),
+\]
+so $\Delta_4=0$ and
+\[
+ \frac{\Delta_3}{2}
+ =\gamma-\frac{\ell_3}{4\log2}
+ =\frac{\log(1458/1445)}{12\log2}=\rho.
+\]
+For $d\ge2$, $d\ne4$, the desired inequality is equivalent to
+\begin{equation}\label{eq:scalar_equiv}
+ 2\ell_d\le(d-1)\ell_3.
+\end{equation}
+For $d=2$ this is immediate and for $d=3$ it is equality.  For $d=5$ it follows from
+\[
+ \left(\frac{40}{33}\right)^2
+ <\left(\frac{10}{9}\right)^4,
+\]
+and for every $d\ge6$ from
+\[
+ 2\ell_d<2\log(5/4)
+ <5\log(10/9)
+ \le(d-1)\ell_3.
+\]
+The two strict rational comparisons are checked after clearing denominators by the accompanying integer audit.
+\end{proof}
+
+We next record exactly the part of the entropy argument that will be used.  Let $J=I\cap B$ for a uniformly random independent set $I$ of $T$.  Put
+\[
+ w_v=2^{-d_v},
+ \qquad
+ Z_K(w)=\sum_{J\in\Ical(K)}\prod_{v\in J}w_v.
+\]
+Let $Q$ be the hard-core measure on $K$ with activities $(w_v)_{v\in B}$.
+For $J\in\Ical(K)$ define
+\[
+ O(J):=\sum_{v\in J}d_v-|N_A(J)|.
+\]
+Then
+\begin{equation}\label{eq:overlap}
+ O(J)=\sum_{a\in A}\bigl(k_a(J)-1\bigr)_+,
+ \qquad
+ k_a(J)=|J\cap N(a)|.
+\end{equation}
+Counting first over $J$ gives the exact identity
+\begin{equation}\label{eq:RA}
+ Z_T
+ =2^\alpha Z_K(w)\,\E_Q 2^{O(J)},
+ \qquad
+ R_A:=\log\E_Q2^{O(J)}\ge(\log2)\E_Q O(J).
+\end{equation}
+The last inequality is Jensen.
+
+For completeness, the entropy identity with the comparison measure of activity $1/4$ is
+\[
+ 2\log2\,\mu(T)
+ =\log Z_T-\log Z_K(1/4)+\KL(P\|Q_{1/4}),
+\]
+where $P$ is the law of $J$ and $Q_{1/4}(J)=4^{-|J|}/Z_K(1/4)$.
+Changing the coordinates of $Z_K$ one at a time yields
+\[
+ \log Z_K(w)-\log Z_K(1/4)
+ \ge-\sum_{v\in B}\ell_{d_v}.
+\]
+Indeed, with all other activities fixed the partition function is $U+xV$ with $0<V\le U$, so lowering a coordinate from $1/4$ to $x\le1/4$ costs at most
+$\log[(1+1/4)/(1+x)]$, while increasing a coordinate costs nothing.
+Combining these facts and discarding the nonnegative relative entropy gives
+\begin{equation}\label{eq:masterlower}
+ \mu(T)-c\alpha
+ \ge \gamma(1+e)+S+\frac{R_A}{2\log2},
+ \qquad
+ S:=\sum_{v\in B}\Delta_{d_v}.
+\end{equation}
+Here we used \eqref{eq:edgeidentity}.
+
+\section{The connectivity tax}
+
+Let
+\[
+ B_4=\{v\in B:d_v=4\}.
+\]
+By Lemma~\ref{lem:scalar} and \eqref{eq:edgeidentity},
+\begin{equation}\label{eq:n4}
+ 3|B_4|
+ \ge \alpha-1-e-\frac{S}{\rho}.
+\end{equation}
+Let $B_4^0\subseteq B_4$ be the vertices isolated in $K=T[B]$.
+At most $2e$ vertices of $K$ are incident with an edge, hence
+\begin{equation}\label{eq:n40}
+ |B_4^0|\ge|B_4|-2e.
+\end{equation}
+
+For every $a\in A$, let
+\[
+ q_a=|N(a)\cap B_4^0|.
+\]
+Pair arbitrarily $2\lfloor q_a/2\rfloor$ of these neighbours.  Let $M$ be the total number of pairs produced over all $a\in A$.  Since
+\[
+ \sum_{a\in A}q_a=4|B_4^0|,
+\]
+we have
+\begin{align}
+ M
+ &=\sum_{a\in A}\left\lfloor\frac{q_a}{2}\right\rfloor
+ \ge \frac{4|B_4^0|-\alpha}{2} \notag\\
+ &\ge
+ \frac{\alpha}{6}-\frac23-\frac{14}{3}e
+ -\frac{2}{3\rho}S.
+ \label{eq:Mlower}
+\end{align}
+Of course $M\ge0$ as well.
+
+\begin{lemma}[Overlap tax]\label{lem:overlaptax}
+With $M$ as above,
+\[
+ \frac{R_A}{2\log2}\ge\frac{M}{578}.
+\]
+\end{lemma}
+
+\begin{proof}
+Fix $a\in A$.  If $m_a(J)$ of the selected pairs at $a$ have both endpoints in $J$, then
+\[
+ m_a(J)\le \left\lfloor\frac{k_a(J)}2\right\rfloor
+ \le (k_a(J)-1)_+.
+\]
+Summing over $a$ and using \eqref{eq:overlap},
+\[
+ O(J)\ge\sum_{\text{selected pairs }\{u,v\}}
+ \mathbf 1_{\{u,v\subseteq J\}}.
+\]
+Every vertex in $B_4^0$ is an isolated vertex of $K$ with activity $2^{-4}=1/16$.
+Under $Q$ it is therefore occupied independently with probability $1/17$.
+Consequently every selected pair is simultaneously occupied with probability exactly $1/289$, and linearity of expectation gives
+\[
+ \E_QO(J)\ge\frac{M}{289}.
+\]
+Now use \eqref{eq:RA}.
+\end{proof}
+
+\section{Cancellation and proof of the theorem}
+
+Set
+\[
+ \theta:=867\rho.
+\]
+The exact scalar comparisons in the accompanying audit imply
+\begin{equation}\label{eq:theta_gamma}
+ 0<\theta<1,
+ \qquad
+ \gamma>7\rho.
+\end{equation}
+Since $M\ge0$ and $M$ also satisfies \eqref{eq:Mlower}, for every $0\le\theta\le1$ we may write
+\[
+ M\ge \theta\left(
+ \frac{\alpha}{6}-\frac23-\frac{14}{3}e
+ -\frac{2}{3\rho}S
+ \right).
+\]
+Substituting Lemma~\ref{lem:overlaptax} into \eqref{eq:masterlower} and using this inequality yields
+\begin{align*}
+ \mu(T)-c\alpha
+ &\ge \gamma(1+e)+S
+ +\frac{\theta}{578}
+ \left(
+ \frac{\alpha}{6}-\frac23-\frac{14}{3}e
+ -\frac{2}{3\rho}S
+ \right)\\
+ &=\frac{\rho}{4}\alpha
+ +(\gamma-\rho)
+ +(\gamma-7\rho)e.
+\end{align*}
+The $S$--coefficient cancels exactly because
+\[
+ \frac{867\rho}{578}\frac{2}{3\rho}=1.
+\]
+By \eqref{eq:theta_gamma}, the two remaining correction terms are positive.  Hence
+\[
+ \mu(T)-c\alpha\ge\frac{\rho}{4}\alpha,
+\]
+which proves Theorem~\ref{thm:main}.
+
+\section{Exact scalar audit}
+
+No floating-point comparison is needed for the theorem.  The verifier
+\texttt{verify\_connectivity\_tax\_0461.py} checks the following after clearing denominators:
+\begin{enumerate}
+ \item the $d=5$ comparison
+ \[
+ (40/33)^2<(10/9)^4;
+ \]
+ \item the uniform $d\ge6$ comparison
+ \[
+ (5/4)^2<(10/9)^5;
+ \]
+ \item $\theta<1$, equivalently
+ \[
+ (1458/1445)^{289}<16;
+ \]
+ \item $\gamma>7\rho$, equivalently
+ \[
+ (20/17)^2>(1458/1445)^7;
+ \]
+ \item the advertised decimal threshold, equivalently
+ \[
+ \left(34^8\cdot1458\right)^{1000}
+ >2^{22128}\left(5^8\cdot1445\right)^{1000}.
+ \]
+\end{enumerate}
+The last comparison is exactly
+\[
+ c+\frac{\rho}{4}>\frac{461}{1000}.
+\]
+The verifier also checks the three rational coefficient identities responsible for the cancellation in the final display.
+
+\section{Current interval and relation to the Bellman attack}
+
+Combining Theorem~\ref{thm:main} with the supplied exact layered-tree witness with branching factors
+\[
+ (2,1,3,9,6,9,9,9,14,10)
+\]
+gives the present certified interval
+\[
+ \boxed{
+ 0.461191649955056508\ldots
+ \le a_*(1)
+ <0.473301418185171818.
+ }
+\]
+The upper endpoint is a genuine integer-tree witness.  It should not be confused with the separate fractional Bellman obstruction: the latter concerns a weighted relaxation and is neither a tree witness nor an upper bound on $a_*(1)$.
+
+The significance of the present argument for the Bellman programme is structural.  The old scalar entropy bound becomes sharp only at degree $d=4$.  The proof above shows that a connected tree cannot realize that scalar equality for free: either the induced $B$--forest pays through $e$, or isolated $d=4$ vertices create overlap entropy through shared $A$--neighbours.  Thus the first nonzero ``connectivity correction'' can already be extracted without solving the full Bellman dual.
+
+\end{document}
