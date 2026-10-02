@@ -1,0 +1,443 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.55cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Ical}{\mathcal I}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\TC}{\mathrm{TC}}
+
+\title{The Second Connectivity Tax\\
+\large Collision entropy, Bethe total correlation, and a universal $0.462$ lower bound}
+\author{}
+\date{2 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a finite nonempty tree $T$, let $\mu(T)$ be the mean size of a uniformly random independent set and let $\alpha(T)$ be its independence number.  Write
+\[
+ a_*(1)=\inf_T \frac{\mu(T)}{\alpha(T)}.
+\]
+Starting from the exact entropy--partition decomposition, we add a second connectivity tax.  The first tax is the collision term already visible under the comparison hard-core measure.  The second is the total correlation of the conditional factor model on the isolated $B$-vertices.  Because this conditional factor graph is a forest, its entropy is exactly Bethe and the total correlation decomposes as a sum of factor multi-informations.  A local discharging argument then shows that the only potentially dangerous scalar degrees are $3$ and $4$, and that the critical clean factor is the pair $(4,4)$.  The remaining contamination is absorbed by the $B$-core edge budget.  We obtain the exact universal bound
+\[
+ \boxed{a_*(1)\ge \frac{231}{500}=0.462.}
+\]
+All nontrivial scalar inequalities in the proof reduce to rational interval arithmetic for logarithms and are checked by the accompanying standard-library verifier
+\texttt{verify\_second\_connectivity\_0462.py}; no floating-point operation is used in the certificate.
+\end{abstract}
+
+\section{Statement}
+
+For a finite graph $G$, put
+\[
+ Z_G=|\Ical(G)|,
+ \qquad
+ \mu(G)=\frac1{Z_G}\sum_{I\in\Ical(G)}|I|,
+ \qquad
+ \alpha(G)=\max_{I\in\Ical(G)}|I|.
+\]
+Let
+\[
+ c:=\frac{\log(34/5)}{6\log2},
+ \qquad
+ \gamma:=\frac12-c,
+ \qquad
+ r_0:=\frac{231}{500}.
+\]
+Thus
+\[
+ \gamma-(r_0-c)=\frac12-r_0=\frac{19}{500}.
+\]
+
+\begin{theorem}[Second connectivity tax]\label{thm:main}
+Every finite nonempty tree $T$ satisfies
+\[
+ \mu(T)\ge \frac{231}{500}\,\alpha(T).
+\]
+Consequently
+\[
+ \boxed{a_*(1)\ge0.462.}
+\]
+\end{theorem}
+
+The proof is uniform in the order and maximum degree of $T$.
+
+\section{The adjusted entropy decomposition}
+
+Fix a maximum independent set $A$ of $T$ and write
+\[
+ \alpha=|A|,
+ \qquad B=V(T)\setminus A,
+ \qquad K=T[B],
+ \qquad e=|E(K)|.
+\]
+For $v\in B$ put
+\[
+ d_v=|N(v)\cap A|\ge1.
+\]
+Since $T$ is a tree,
+\begin{equation}\label{eq:edgeid}
+ \sum_{v\in B}(d_v-1)=\alpha-1-e.
+\end{equation}
+
+For $d\ge1$ define
+\[
+ \ell_d:=\left[\log\frac{5/4}{1+2^{-d}}\right]_+,
+ \qquad
+ \Delta_d:=\gamma(d-1)-\frac{\ell_d}{2\log2}.
+\]
+The entropy--partition decomposition gives
+\begin{equation}\label{eq:oldmaster}
+ \mu(T)-c\alpha
+ \ge
+ \gamma(1+e)+\sum_{v\in B}\Delta_{d_v}
+ +\frac{R_A}{2\log2}
+ +\frac{D_{\mathrm{KL}}(P\|Q_{1/4})}{2\log2},
+\end{equation}
+where $P$ is the law of $J=I\cap B$ under the uniform independent-set measure, $Q_{1/4}$ is the hard-core measure of activity $1/4$ on $K$, and
+\[
+ R_A=\log\E_Q 2^{O(J)},
+ \qquad
+ O(J)=\sum_{a\in A}(|J\cap N(a)|-1)_+.
+\]
+We shall not use the additional nonnegative coordinate-comparison remainder.
+
+Subtract $(r_0-c)\alpha$ and use \eqref{eq:edgeid}.  Define the adjusted scalar charge
+\begin{equation}\label{eq:sdef}
+ s_d
+ :=\Delta_d-(r_0-c)(d-1)
+ =\frac{19}{500}(d-1)-\frac{\ell_d}{2\log2}.
+\end{equation}
+Then
+\begin{equation}\label{eq:master}
+ \mu(T)-r_0\alpha
+ \ge
+ \frac{19}{500}(1+e)
+ +\sum_{v\in B}s_{d_v}
+ +\frac{R_A}{2\log2}
+ +\frac{D_{\mathrm{KL}}(P\|Q_{1/4})}{2\log2}.
+\end{equation}
+
+Write
+\[
+ D_d:=(-s_d)_+,
+ \qquad
+ t_d:=\frac{(s_d)_+}{d}.
+\]
+Thus
+\begin{equation}\label{eq:splitcharge}
+ s_d=d\,t_d-D_d.
+\end{equation}
+
+\begin{lemma}[Only degrees $3$ and $4$ are dangerous]\label{lem:scalar}
+One has
+\[
+ D_d=0\qquad(d\ne3,4),
+\]
+and
+\[
+ 0<D_3<D_4.
+\]
+Moreover, for every $d\ge6$,
+\[
+ t_d\ge D_4.
+\]
+\end{lemma}
+
+\begin{proof}
+This is a one-dimensional calculation from \eqref{eq:sdef}.  The finite cases reduce to rational logarithmic inequalities.  For the tail, use
+$\ell_d<\log(5/4)$ and the linear growth of $(19/500)(d-1)$.  The exact interval audit verifies all cases through $d=80$ and the endpoint of the monotone tail.
+\end{proof}
+
+Numerically, only for orientation,
+\begin{equation}\label{eq:D4num}
+ D_4=0.00323262681851147\ldots .
+\end{equation}
+No numerical value is used in the proof.
+
+\section{The collision term on isolated $B$-vertices}
+
+Let
+\[
+ R:=\{v\in B:\deg_K(v)>0\},
+ \qquad
+ C:=B\setminus R.
+\]
+Every vertex of $C$ is isolated in $K$.  Under the comparison measure $Q$ with activities
+$w_v=2^{-d_v}$, the indicators of vertices in $C$ are therefore mutually independent and
+\[
+ \Pr_Q(v\in J)=p_{d_v}:=\frac1{2^{d_v}+1}.
+\]
+
+For $a\in A$, let
+\[
+ X_a=|J\cap N(a)\cap C|.
+\]
+Since
+\[
+ O(J)\ge\sum_{a\in A}(X_a-1)_+,
+\]
+and the functions $2^{(X_a-1)_+}$ are increasing functions of independent Bernoulli variables on $C$, Harris' inequality gives
+\begin{equation}\label{eq:collision-factor}
+ \frac{R_A}{2\log2}
+ \ge\sum_{a\in A}\mathcal R_a,
+\end{equation}
+where, if the $C$-neighbour degrees at $a$ are $d_1,\ldots,d_q$,
+\begin{equation}\label{eq:Rlocal}
+ \mathcal R(d_1,\ldots,d_q)
+ :=\frac1{2\log2}
+ \log\frac{\prod_{i=1}^q(1+p_{d_i})+\prod_{i=1}^q(1-p_{d_i})}{2}.
+\end{equation}
+Indeed,
+\[
+ \E 2^{(X-1)_+}
+ =\frac12\left(\prod_i(1+p_i)+\prod_i(1-p_i)\right).
+\]
+
+For the critical pair $d_1=d_2=4$, set
+\begin{equation}\label{eq:kappa}
+ \kappa:=\mathcal R(4,4)
+ =\frac{\log(290/289)}{2\log2}.
+\end{equation}
+
+\section{Conditional Bethe total correlation}
+
+Condition on the configuration on $R$.  Under $Q_{1/4}$, the variables in $C$ remain independent Bernoulli$(1/5)$ variables and are independent of $R$.
+Under $P$, the conditional law on $C$ factorizes on the bipartite forest with variable nodes $C$ and factor nodes $A$.  At a factor $a$, if some conditioned neighbour in $R$ is occupied the factor is constant; otherwise the active factor is
+\[
+ \psi_a(x_{N_C(a)})=
+ \begin{cases}
+ 2,&x_v=0\text{ for every }v\in N_C(a),\\
+ 1,&\text{otherwise.}
+ \end{cases}
+\]
+The factor graph is a forest because it is a subgraph of $T$.
+
+For any probability distribution factorizing on a factor forest, the Bethe entropy identity is exact.  Hence, conditionally on $R$,
+\begin{equation}\label{eq:bethe}
+ \TC(P_{C\mid R})
+ =\sum_{a\ \mathrm{active}}
+ \left(\sum_{v\in N_C(a)}H(S_v)-H(S_{N_C(a)})\right).
+\end{equation}
+Since the reference measure on $C$ is a product,
+\begin{equation}\label{eq:KLTC}
+ D_{\mathrm{KL}}(P\|Q_{1/4})
+ \ge \E_R\TC(P_{C\mid R}).
+\end{equation}
+
+We only need a quantitative bound for an active factor with exactly two dangerous neighbours.
+After all other factors are absorbed into cavity messages, its two-variable law has unnormalised weights
+\[
+ (2,a,b,ab),
+ \qquad
+ \frac18\le a,b\le1,
+\]
+because a dangerous vertex has degree $3$ or $4$, and every other incident active factor changes its cavity odds by a factor between $1/2$ and $1$.
+
+\begin{lemma}[Critical pair mutual information]\label{lem:iota}
+For the law with weights $(2,a,b,ab)$ on $\{0,1\}^2$ and $1/8\le a,b\le1$, the mutual information is minimized at $a=b=1/8$.  Therefore
+\begin{align}
+ \frac{I(X;Y)}{2\log2}
+ &\ge \iota,\label{eq:iota-bound}\\
+ \iota
+ &:={1\over2\log2}\,{1\over145}
+ \left[
+ 128\log{290\over289}
+ +16\log{145\over153}
+ +\log{145\over81}
+ \right].\label{eq:iota}
+\end{align}
+Numerically $\iota=0.000821638641763987\ldots$.
+\end{lemma}
+
+\begin{proof}
+The joint probabilities at $a=b=1/8$ are
+\[
+ \frac1{145}(128,8,8,1),
+\]
+with marginals $(136,9)/145$, which gives \eqref{eq:iota}.
+It remains to locate the minimum.  If $I(a,b)$ denotes the mutual information, direct differentiation gives
+\[
+ \frac{\partial I}{\partial a}
+ =-\frac{N(a,b)}{(ab+a+b+2)^2},
+\]
+up to a further positive factor, where
+\[
+ N(a,b)
+ =(b+1)(b+2)\log\frac{b+1}{b+2}
+ +b\log\frac{a+1}{a+2}
+ +2(b+1)\log2.
+\]
+For fixed $b$, $N(a,b)$ is increasing in $a$, so it is enough to take $a=1$.  Put $F(b)=N(1,b)$.  Then
+\[
+ F'(b)
+ =1+\log\!\left[
+ {8\over3}\left({b+1\over b+2}\right)^{2b+3}
+ \right].
+\]
+The bracket is increasing on $[1/8,1]$ and at $b=1$ equals $256/729<e^{-1}$; hence $F'(b)<0$.  Thus $F(b)\le F(1/8)<0$, the last strict endpoint comparison being one of the exact logarithmic checks in the audit.  Therefore $\partial I/\partial a\ge0$.  By symmetry the same holds for $b$, and the minimum is attained at $(1/8,1/8)$.
+\end{proof}
+
+For later use define
+\begin{equation}\label{eq:zeta}
+ \zeta:=2D_4-\kappa-\frac\iota2.
+\end{equation}
+The audit proves $\zeta>0$; numerically
+\[
+ \zeta=0.00356273055901312\ldots .
+\]
+
+\section{Local discharging}
+
+A factor is called \emph{clean} if it has no neighbour in $R$, and \emph{contaminated} otherwise.
+The positive scalar charge of a vertex $v\in C$ is distributed equally over its $d_v$ incident $A$-factors, contributing $t_{d_v}$ to each incidence.  By \eqref{eq:splitcharge}, the only unpaid vertex charges are the deficits $D_3,D_4$.
+
+Root every connected component of the clean factor forest at a $C$-vertex.  At a clean factor, one incident $C$-vertex is the parent and all remaining incident $C$-vertices are children.
+
+\begin{lemma}[Clean-factor inequality]\label{lem:clean}
+For every clean factor $a$,
+\begin{equation}\label{eq:cleanlocal}
+ \mathcal R_a+\mathcal I_a
+ +\sum_{v\in N_C(a)}t_{d_v}
+ \ge
+ \sum_{v\in \mathrm{children}(a)}D_{d_v},
+\end{equation}
+where $\mathcal I_a$ is the factor multi-information from \eqref{eq:bethe}.  It is enough to use $\mathcal I_a=0$ except when $a$ has exactly two neighbours and both have degree $3$ or $4$, in which case $\mathcal I_a/(2\log2)\ge\iota$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:scalar}, a neighbour of degree at least $6$ already contributes $t_d\ge D_4$ and can be stripped off together with at most one dangerous child.  After this reduction, only degrees $1,\ldots,5$ remain.  For arity at least $7$, the marginal increase of the collision term from an additional dangerous neighbour already exceeds $D_4$, so the residual problem reduces to arities at most $6$.
+The remaining finite family is checked exactly by rational logarithmic intervals.  The unique critical configuration is the pair $(4,4)$, where
+\[
+ \kappa+\iota-D_4>0.
+\]
+The exact audit gives a strict margin exceeding $8.07\times10^{-5}$.
+\end{proof}
+
+Thus every clean component pays all dangerous deficits except possibly that of its root, which is at most $D_4$.
+
+Now consider a contaminated factor.  Let $k_R\ge1$ be its number of neighbours in $R$.  Its $C$-neighbours lie in distinct clean components whenever those components are attached through this factor, because the original graph is a tree.
+
+\begin{lemma}[Contaminated-factor inequality]\label{lem:contam}
+After paying the distributed positive credits $t_d$ and the collision contribution $\mathcal R_a$, the total unpaid dangerous-root deficit attached through a contaminated factor is at most
+\[
+ \zeta\,k_R.
+\]
+If $k_R=1$ and the unique critical $C$-configuration is the pair $(4,4)$, one additionally uses half of the pair mutual-information bound $\iota$.
+\end{lemma}
+
+\begin{proof}
+If $k_R=1$, the unique $R$-neighbour is unoccupied with probability at least $1/2$: deleting an occupied vertex injects independent sets containing it into independent sets avoiding it.  Hence in the critical $(4,4)$ case the factor is active with probability at least $1/2$, giving the additional contribution $\iota/2$.
+The worst residual is then exactly
+\[
+ 2D_4-\kappa-\frac\iota2=\zeta.
+\]
+All other residual configurations are strictly smaller.  For $k_R\ge2$ the right side only increases, and no total-correlation contribution is needed.  As in Lemma~\ref{lem:clean}, degrees at least $6$ and arities at least $7$ reduce monotonically to a finite audit over degrees $1,\ldots,5$ and arities at most $6$.
+\end{proof}
+
+\section{The $R$-core budget}
+
+Let $k_v=\deg_K(v)$ for $v\in R$.  Then $k_v\ge1$ and
+\[
+ \sum_{v\in R}k_v=2e.
+\]
+Every contaminated factor is incident with at least one $R$-vertex.  Summing Lemma~\ref{lem:contam} therefore leaves total unpaid clean-component root deficit at most
+\begin{equation}\label{eq:residualR}
+ \zeta\sum_{v\in R}d_v.
+\end{equation}
+
+The $R$-vertices themselves have not spent their scalar charge.  The edge term in \eqref{eq:master} distributes as
+\[
+ {19\over500}e
+ =\sum_{v\in R}{19\over1000}k_v.
+\]
+The following one-variable inequality closes the argument.
+
+\begin{lemma}[$R$-core domination]\label{lem:Rcore}
+For every integer $d\ge1$ and every integer $k\ge1$,
+\begin{equation}\label{eq:Rcore}
+ s_d+{19\over1000}k\ge \zeta d.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The left side is increasing in $k$, so it suffices to take $k=1$.  The exact audit checks $1\le d\le80$.  For the tail, $s_d/d\to19/500$ while $\zeta<19/500$, and the endpoint estimate is already strict.  The smallest finite margin occurs at $d=4$ and is positive.
+\end{proof}
+
+Summing \eqref{eq:Rcore} over $R$ gives
+\begin{equation}\label{eq:Rsum}
+ \sum_{v\in R}s_{d_v}+{19\over500}e
+ \ge
+ \zeta\sum_{v\in R}d_v,
+\end{equation}
+which pays \eqref{eq:residualR} in full.
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Apply \eqref{eq:master}.  On $C$, decompose every scalar charge as $d_vt_{d_v}-D_{d_v}$ and distribute the positive credits over the incident $A$-factors.
+
+For each clean component, Lemma~\ref{lem:clean} pays every dangerous deficit except possibly one root deficit.  If $R=\varnothing$, the whole tree has only one such component, and the unused constant term $19/500$ is much larger than $D_4$, so the root is paid.
+
+If $R\ne\varnothing$, every clean component is attached to the rest of the tree through at least one contaminated factor.  Root the quotient forest toward the $R$-core.  Lemma~\ref{lem:contam} pays all child-component root deficits up to the residual \eqref{eq:residualR}.  Lemma~\ref{lem:Rcore}, summed as in \eqref{eq:Rsum}, pays that residual and simultaneously pays all scalar charges on $R$.
+
+All terms retained from \eqref{eq:master} have now been exhausted without a negative remainder.  Therefore
+\[
+ \mu(T)-{231\over500}\alpha(T)\ge0,
+\]
+which proves the theorem.
+\qed
+
+\section{Exact audit and scope}
+
+The script \texttt{verify\_second\_connectivity\_0462.py} uses only
+\texttt{fractions.Fraction}.  Logarithms are enclosed by the exact atanh series
+\[
+ \log x
+ =2\sum_{j=0}^{N-1}\frac{y^{2j+1}}{2j+1}+R_N,
+ \qquad
+ y=\frac{x-1}{x+1},
+\]
+with the rational remainder bound
+\[
+ |R_N|
+ \le
+ \frac{2|y|^{2N+1}}{(2N+1)(1-y^2)}.
+\]
+It verifies:
+\begin{itemize}
+ \item degrees $3$ and $4$ are the only negative adjusted scalar charges;
+ \item $t_d\ge D_4$ for every $d\ge6$;
+ \item the complete reduced clean-factor table;
+ \item the complete reduced contaminated-factor table;
+ \item the exact critical identity defining $\zeta$;
+ \item the $R$-core domination inequality and its tail.
+\end{itemize}
+The executed audit terminates with \texttt{PASS}.  It is a finite exact certificate for the scalar reductions used above; it is not a proof-assistant formalization.
+
+\begin{remark}[Numerical location of the next barrier]
+The critical clean pair $(4,4)$ has local budget
+\[
+ \kappa+\iota=0.00331334239889181\ldots,
+\]
+whereas at $r_0=0.462$ its required deficit is
+\[
+ D_4=0.00323262681851147\ldots .
+\]
+Thus this second-tax mechanism still has positive local room.  If all other stability losses could be eliminated, the clean $(4,4)$ pair alone would permit the formal value
+\[
+ c+\frac{\kappa+\iota}{3}
+ =0.46202690519346\ldots .
+\]
+We do not claim this latter number as a universal bound here.
+\end{remark}
+
+\end{document}
