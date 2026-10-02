@@ -1,0 +1,647 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2.7cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{problem}[theorem]{Problem}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\I}{\mathcal I}
+\newcommand{\T}{\mathcal T}
+\newcommand{\Sset}{\mathscr S}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\dd}{\mathrm d}
+
+\title{Finite--Zero Temperature Bellman Duality\\
+for Extremal Independent Sets on Trees}
+\author{Research note}
+\date{2 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a finite tree $T$ and hard-core activity $\lambda>0$, let
+\[
+  \mu_\lambda(T)=\frac{\lambda Z_T'(\lambda)}{Z_T(\lambda)},
+  \qquad
+  a_*(\lambda)=\inf_T \frac{\mu_\lambda(T)}{\alpha(T)}.
+\]
+We give an exact local representation of both the finite-temperature observable
+$\mu_\lambda$ and the zero-temperature observable $\alpha$ on the same rooted tree.
+Each vertex carries a three-component state $(x,z,g)$ satisfying a closed recursion,
+and
+\[
+  \mu_\lambda(T)=\sum_{v\in T} z_v,
+  \qquad
+  \alpha(T)=\sum_{v\in T} g_v,
+  \qquad g_v\in\{0,1\}.
+\]
+This yields an exact Bellman dual characterization of $a_*(\lambda)$: it is the largest
+$r$ for which there exists a nonpositive potential on the reachable state space whose
+one-step Bellman slack is nonnegative for every rooted-tree composition.  The duality
+is exact in both directions and immediately supplies a rigidity principle: near-extremal
+trees must concentrate on the contact set of any sharp dual potential.
+
+At $\lambda=1$ the child multiset enters the parent state only through three aggregate
+statistics, making the problem suitable for a rigorous interval-certified Bellman search.
+The concrete target is a certificate at $r=0.4733$.  Combined with the existing explicit
+upper witness $a_*(1)<0.47330186$, such a certificate would confine the constant to an
+interval of width $1.86\times10^{-6}$.
+\end{abstract}
+
+\section{The extremal constant}
+
+For a finite nonempty tree $T$, write
+\[
+  Z_T(\lambda)=\sum_{I\in\I(T)}\lambda^{|I|},
+  \qquad
+  \mu_\lambda(T)=\lambda\frac{Z_T'(\lambda)}{Z_T(\lambda)},
+\]
+and let $\alpha(T)$ be the independence number.  Define
+\begin{equation}
+  a_*(\lambda)
+  :=\inf_{T\text{ finite nonempty tree}}
+  \frac{\mu_\lambda(T)}{\alpha(T)}.
+  \label{eq:astar}
+\end{equation}
+The purpose of this note is to replace the optimization over all finite trees by an exact
+local dynamic program admitting a dual certificate.
+
+\section{A common local state for two temperatures}
+
+Root a finite tree $T$.  For a vertex $v$, let $T_v$ denote the rooted descendant subtree,
+and let $C(v)$ be the children of $v$.
+
+For the hard-core model, write $Z_{0,v}$ and $Z_{1,v}$ for the partition functions of
+$T_v$ with $v$ forced vacant and occupied, respectively, and define the cavity ratio
+\begin{equation}
+  x_v:=\frac{Z_{1,v}}{Z_{0,v}}.
+  \label{eq:xdef}
+\end{equation}
+Let $D:=\lambda\partial_\lambda$ and define the local response charge
+\begin{equation}
+  z_v:=D\log(1+x_v).
+  \label{eq:zdef}
+\end{equation}
+
+For the zero-temperature problem, let $\alpha_{0,v}$ be the largest independent-set size
+in $T_v$ subject to $v$ being excluded, and put
+\begin{equation}
+  g_v:=\alpha(T_v)-\alpha_{0,v}.
+  \label{eq:gdef}
+\end{equation}
+
+\begin{theorem}[Exact finite/zero-temperature recursion]
+\label{thm:local-recursion}
+For every rooted finite tree and every $\lambda>0$,
+\begin{align}
+  x_v
+  &=\lambda\prod_{u\in C(v)}(1+x_u)^{-1},
+  \label{eq:xrec}\\
+  z_v
+  &=\frac{x_v}{1+x_v}
+    \left(1-\sum_{u\in C(v)}z_u\right),
+  \label{eq:zrec}\\
+  g_v
+  &=\1\!\left\{g_u=0\text{ for every }u\in C(v)\right\}.
+  \label{eq:grec}
+\end{align}
+In particular $g_v\in\{0,1\}$ for every vertex.
+\end{theorem}
+
+\begin{proof}
+The usual root decomposition gives
+\[
+  Z_{0,v}=\prod_{u\in C(v)}(Z_{0,u}+Z_{1,u}),
+  \qquad
+  Z_{1,v}=\lambda\prod_{u\in C(v)}Z_{0,u},
+\]
+which proves \eqref{eq:xrec}.  Taking $D\log$ gives
+\[
+  D\log x_v
+  =1-\sum_{u\in C(v)}D\log(1+x_u)
+  =1-\sum_{u\in C(v)}z_u.
+\]
+Since
+\[
+  D\log(1+x_v)=\frac{x_v}{1+x_v}D\log x_v,
+\]
+we obtain \eqref{eq:zrec}.
+
+For the independence number,
+\[
+  \alpha_{0,v}=\sum_{u\in C(v)}\alpha(T_u),
+\]
+whereas forcing $v$ into the independent set gives
+\[
+  \alpha_{1,v}=1+\sum_{u\in C(v)}\alpha_{0,u}.
+\]
+Hence
+\[
+  \alpha_{1,v}-\alpha_{0,v}
+  =1-\sum_{u\in C(v)}g_u.
+\]
+By induction from a leaf, each $g_u$ is $0$ or $1$, and therefore
+\[
+  g_v
+  =\max\left\{0,1-\sum_{u\in C(v)}g_u\right\}
+  =\1\!\left\{\sum_{u\in C(v)}g_u=0\right\}.
+\]
+\end{proof}
+
+The remarkable point is that the two global observables themselves telescope.
+
+\begin{theorem}[Exact local-charge decomposition]
+\label{thm:charges}
+For every rooted finite tree $T$,
+\begin{equation}
+  \boxed{
+  \mu_\lambda(T)=\sum_{v\in T}z_v,
+  \qquad
+  \alpha(T)=\sum_{v\in T}g_v.}
+  \label{eq:charges}
+\end{equation}
+Moreover
+\[
+  A_g:=\{v:g_v=1\}
+\]
+is a maximum independent set of $T$.
+\end{theorem}
+
+\begin{proof}
+Since
+\[
+  Z_{T_v}
+  =Z_{0,v}(1+x_v)
+  =\left(\prod_{u\in C(v)}Z_{T_u}\right)(1+x_v),
+\]
+we have
+\[
+  \mu_\lambda(T_v)
+  =\sum_{u\in C(v)}\mu_\lambda(T_u)+z_v.
+\]
+Induction proves the first identity in \eqref{eq:charges}.
+
+Likewise, by definition of $g_v$,
+\[
+  \alpha(T_v)=\alpha_{0,v}+g_v
+  =\sum_{u\in C(v)}\alpha(T_u)+g_v,
+\]
+which proves the second identity.  If $g_v=1$, then every child has $g_u=0$ by
+\eqref{eq:grec}, so $A_g$ is independent.  Its cardinality is $\sum_v g_v=\alpha(T)$,
+hence it is maximum.
+\end{proof}
+
+\begin{remark}
+The set $A_g$ is a canonical maximum independent set attached to the chosen rooting.
+Thus the finite-temperature hard-core field and a zero-temperature maximum independent set
+are encoded on exactly the same recursion tree.
+\end{remark}
+
+\section{Exact Bellman duality}
+
+Let $\Sset_\lambda$ be the set of all states
+\[
+  s(T)=(x(T),z(T),g(T))
+\]
+that occur at the root of a finite rooted tree at activity $\lambda$.  If
+$s_1,\dots,s_d\in\Sset_\lambda$ are child states, write
+\[
+  F_\lambda(s_1,\dots,s_d)=s
+\]
+for the parent state determined by \eqref{eq:xrec}--\eqref{eq:grec}.  The case $d=0$
+is the leaf state
+\begin{equation}
+  s_\bullet
+  =\left(\lambda,\frac{\lambda}{1+\lambda},1\right).
+  \label{eq:leaf}
+\end{equation}
+
+For $r\in\mathbb R$, define the local cost
+\begin{equation}
+  c_r(x,z,g):=z-rg.
+  \label{eq:local-cost}
+\end{equation}
+
+\begin{definition}[Bellman certificate]
+A function $\Phi:\Sset_\lambda\to\mathbb R$ is an $r$-certificate if
+\begin{equation}
+  \Phi(s)\le0
+  \qquad(s\in\Sset_\lambda)
+  \label{eq:nonpositive}
+\end{equation}
+and for every finite child list and its parent state
+$s=F_\lambda(s_1,\dots,s_d)$,
+\begin{equation}
+  c_r(s)+\Phi(s)-\sum_{i=1}^d\Phi(s_i)\ge0.
+  \label{eq:bellman-ineq}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Bellman lower-bound theorem]
+\label{thm:bellman-lb}
+If an $r$-certificate exists, then
+\[
+  a_*(\lambda)\ge r.
+\]
+More precisely, every finite tree satisfies
+\[
+  \mu_\lambda(T)-r\alpha(T)\ge-\Phi(s(T))\ge0.
+\]
+\end{theorem}
+
+\begin{proof}
+Apply \eqref{eq:bellman-ineq} at every vertex.  Every nonroot potential appears once
+with a plus sign at that vertex and once with a minus sign as a child of its parent.
+Therefore
+\[
+  \sum_{v\in T}\left(z_v-rg_v\right)+\Phi(s(T))\ge0.
+\]
+Theorem~\ref{thm:charges} turns the sum into
+$\mu_\lambda(T)-r\alpha(T)$.  Finally use $\Phi\le0$.
+\end{proof}
+
+The converse is equally important: this is not merely a sufficient device.
+
+\begin{theorem}[Exact Bellman duality]
+\label{thm:bellman-duality}
+For every $\lambda>0$,
+\begin{equation}
+  \boxed{
+  a_*(\lambda)
+  =\max\Bigl\{r\in\mathbb R:
+  \text{an $r$-certificate on $\Sset_\lambda$ exists}\Bigr\}.}
+  \label{eq:dual-characterization}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Theorem~\ref{thm:bellman-lb} proves that the right-hand side is at most $a_*(\lambda)$.
+
+Conversely fix $r\le a_*(\lambda)$.  For a reachable state $s$, define
+\begin{equation}
+  V_r(s)
+  :=\inf\left\{
+      \mu_\lambda(T)-r\alpha(T):
+      T\text{ finite rooted tree with }s(T)=s
+    \right\}.
+  \label{eq:value}
+\end{equation}
+Every term inside the infimum is nonnegative, so $V_r(s)\ge0$, and the set over which
+we take the infimum is nonempty by reachability.  Put
+\[
+  \Phi_r(s):=-V_r(s)\le0.
+\]
+
+Take any transition $s=F_\lambda(s_1,\dots,s_d)$.  For $\varepsilon>0$, choose rooted
+trees $T_i$ with state $s_i$ and
+\[
+  \mu_\lambda(T_i)-r\alpha(T_i)
+  \le V_r(s_i)+\varepsilon/d
+\]
+(with the obvious interpretation when $d=0$).  Attach their roots to a new parent.
+By Theorem~\ref{thm:charges}, the resulting tree has state $s$ and deficit
+\[
+  c_r(s)+\sum_{i=1}^d
+  \bigl(\mu_\lambda(T_i)-r\alpha(T_i)\bigr).
+\]
+Hence
+\[
+  V_r(s)
+  \le c_r(s)+\sum_{i=1}^d V_r(s_i)+\varepsilon.
+\]
+Letting $\varepsilon\downarrow0$ and substituting $\Phi_r=-V_r$ gives
+\eqref{eq:bellman-ineq}.  Thus an $r$-certificate exists for every $r\le a_*(\lambda)$,
+including $r=a_*(\lambda)$ itself.
+\end{proof}
+
+\begin{remark}[Why this is useful]
+The proof of Theorem~\ref{thm:bellman-duality} constructs an abstract optimal potential,
+but not an explicit one.  The research problem is therefore sharply separated into two parts:
+\begin{enumerate}[label=(\roman*)]
+  \item the extremal constant is exactly a Bellman dual optimum;
+  \item proving a numerical lower bound reduces to exhibiting one explicit potential.
+\end{enumerate}
+There is no loss from the dual formulation.
+\end{remark}
+
+\section{Slack identity and rigidity}
+
+Given an $r$-certificate $\Phi$, define the one-step slack
+\begin{equation}
+  \Delta_\Phi(s;s_1,\dots,s_d)
+  :=c_r(s)+\Phi(s)-\sum_{i=1}^d\Phi(s_i)\ge0.
+  \label{eq:slack}
+\end{equation}
+
+\begin{proposition}[Exact slack decomposition]
+\label{prop:slack}
+Every rooted finite tree satisfies
+\begin{equation}
+  \mu_\lambda(T)-r\alpha(T)
+  =\sum_{v\in T}\Delta_\Phi(v)-\Phi(s(T)),
+  \label{eq:slack-decomp}
+\end{equation}
+where $\Delta_\Phi(v)$ denotes the slack of the transition at $v$.
+Both terms on the right are nonnegative.
+\end{proposition}
+
+\begin{proof}
+This is the same telescoping computation as in
+Theorem~\ref{thm:bellman-lb}, now retaining the exact slack at each vertex.
+\end{proof}
+
+\begin{corollary}[Contact-set rigidity]
+\label{cor:rigidity}
+Assume $r=a_*(\lambda)$ and let $T_n$ be a sequence with
+\[
+  \frac{\mu_\lambda(T_n)}{\alpha(T_n)}\longrightarrow r,
+  \qquad
+  \alpha(T_n)\longrightarrow\infty.
+\]
+If an optimal certificate $\Phi$ additionally satisfies
+\[
+  -\Phi(s(T_n))=o(\alpha(T_n)),
+\]
+then
+\[
+  \sum_{v\in T_n}\Delta_\Phi(v)=o(\alpha(T_n)).
+\]
+Consequently, any family of local transitions on which
+$\Delta_\Phi\ge\eta>0$ can occur only $o(\alpha(T_n))$ times.
+\end{corollary}
+
+This turns an explicit sharp dual potential into an extremal classification theorem: asymptotically
+optimal trees must live on the contact set $\Delta_\Phi=0$.
+
+\section{Specialization to $\lambda=1$}
+
+At unit activity the leaf state is
+\begin{equation}
+  s_\bullet=(1,1/2,1),
+\end{equation}
+and the transition becomes
+\begin{align}
+  x&=\prod_{i=1}^d(1+x_i)^{-1},
+  \label{eq:unit-x}\\
+  z&=\frac{x}{1+x}\left(1-\sum_{i=1}^d z_i\right),
+  \label{eq:unit-z}\\
+  g&=\1\!\left\{\sum_{i=1}^d g_i=0\right\}.
+  \label{eq:unit-g}
+\end{align}
+
+There is an important compression.  Put
+\begin{equation}
+  L:=\sum_i\log(1+x_i),
+  \qquad
+  Z:=\sum_i z_i,
+  \qquad
+  K:=\sum_i g_i.
+  \label{eq:aggregates}
+\end{equation}
+Then
+\begin{equation}
+  \boxed{
+  x=e^{-L},
+  \qquad
+  z=\frac{x}{1+x}(1-Z),
+  \qquad
+  g=\1\{K=0\}.}
+  \label{eq:aggregate-transition}
+\end{equation}
+Thus an unbounded child multiset influences the parent state only through two real additive
+statistics and the zero/nonzero status of one integer statistic.
+
+\subsection{A coercive potential ansatz}
+
+A useful explicit family is
+\begin{equation}
+  \Phi(x,z,g)
+  =-A\log(1+x)-Bg-H_g(x,z),
+  \qquad A,B\ge0,\quad H_g\ge0.
+  \label{eq:ansatz}
+\end{equation}
+It is automatically nonpositive.  If $K=\sum_i g_i$, then the local slack at $\lambda=1$
+is exactly
+\begin{align}
+  \Delta_\Phi
+  ={}&z-rg
+  -A\log\bigl(x(1+x)\bigr)
+  +B(K-g)
+  \nonumber\\
+  &\quad
+  -H_g(x,z)+\sum_i H_{g_i}(x_i,z_i).
+  \label{eq:ansatz-slack}
+\end{align}
+The first line is explicit and contains two useful coercive terms:
+$B K$ penalizes many zero-temperature active children, while the logarithmic term records the
+entire multiplicative hard-core recursion exactly.  The remaining task is to construct two
+nonnegative correction functions $H_0,H_1$.
+
+Equation \eqref{eq:ansatz-slack} is the proposed route to a machine-checkable proof: approximate
+$H_0,H_1$ by piecewise-rational or piecewise-polynomial functions, prove the Bellman inequality
+by interval arithmetic on boxes, and handle the unbounded child count through the additive
+statistics in \eqref{eq:aggregates} rather than by an arity cutoff.
+
+\section{The primal laboratory: layered trees}
+
+The known strong upper witnesses are recursively symmetric, so it is useful to record the
+one-dimensional primal dynamics.  Start from
+\[
+  x_0=1,
+  \quad z_0=\frac12,
+  \quad g_0=1,
+  \quad M_0=\frac12,
+  \quad A_0=1,
+  \quad n_0=1.
+\]
+If level $j+1$ consists of a new root attached to $b_{j+1}\ge1$ identical copies of the
+previous rooted tree, then
+\begin{align}
+  x_{j+1}&=(1+x_j)^{-b_{j+1}},
+  \label{eq:layer-x}\\
+  z_{j+1}&=\frac{x_{j+1}}{1+x_{j+1}}
+              \left(1-b_{j+1}z_j\right),
+  \label{eq:layer-z}\\
+  g_{j+1}&=1-g_j,
+  \label{eq:layer-g}\\
+  M_{j+1}&=b_{j+1}M_j+z_{j+1},
+  \label{eq:layer-mu}\\
+  A_{j+1}&=b_{j+1}A_j+g_{j+1},
+  \label{eq:layer-alpha}\\
+  n_{j+1}&=1+b_{j+1}n_j.
+  \label{eq:layer-n}
+\end{align}
+Here $M_j=\mu(T_j)$ and $A_j=\alpha(T_j)$ exactly.
+
+An existing exact witness uses the bottom-up branching sequence
+\begin{equation}
+  (2,1,3,9,6,9,8,5)
+  \label{eq:known-sequence}
+\end{equation}
+and gives
+\begin{equation}
+  a_*(1)<0.47330186.
+  \label{eq:known-upper}
+\end{equation}
+The layered dynamics should be viewed as a primal search engine; the Bellman potential is its
+matching dual certificate.
+
+\section{Compatibility with the dilute golden-ratio regime}
+
+For a star with $d$ leaves, all leaves have
+\[
+  x=\lambda,
+  \qquad
+  z=q:=\frac{\lambda}{1+\lambda},
+  \qquad
+  g=1.
+\]
+The center therefore has
+\[
+  x_c=\frac{\lambda}{(1+\lambda)^d},
+  \qquad
+  z_c=\frac{x_c}{1+x_c}(1-dq),
+  \qquad
+  g_c=0,
+\]
+and hence
+\begin{equation}
+  \frac{\mu_\lambda(K_{1,d})}{\alpha(K_{1,d})}
+  =q+\frac{z_c}{d}.
+  \label{eq:star-exact}
+\end{equation}
+Taking $d\sim s/\lambda$ gives
+\[
+  \frac{\mu_\lambda}{\alpha}
+  =q-\left(1-\frac1s\right)e^{-s}\lambda^2+o(\lambda^2).
+\]
+The maximizing $s>1$ satisfies
+\[
+  s^2-s-1=0,
+\]
+so $s=\varphi=(1+\sqrt5)/2$ and the coefficient is
+$e^{-\varphi}/\varphi^2$.  Thus the golden-ratio asymptotic appears directly as a stationary
+point of the same local dynamics used in the Bellman formulation.
+
+\section{Relation to the entropy decomposition at $\lambda=1$}
+
+The canonical set $A_g=\{v:g_v=1\}$ from Theorem~\ref{thm:charges} is a maximum independent
+set, so the entropy--partition decomposition can be applied with this specific $A_g$.
+The existing scalar argument yields
+\begin{equation}
+  c
+  =\frac{\log(34/5)}{6\log2}
+  =0.4609224577271628\ldots
+  \le a_*(1).
+  \label{eq:entropy-lb}
+\end{equation}
+Its exact nonnegative decomposition separates four sources of slack: a degree term, an overlap
+term, a coordinate-comparison term, and a Kullback--Leibler term.  The scalar degree inequality
+is tight only at degree four, but that does not force the other slacks to vanish.
+
+The Bellman state $(x,z,g)$ retains information discarded by the scalar degree relaxation.
+Accordingly, the entropy lower bound should be regarded as a coarse feasible dual point, while
+Theorem~\ref{thm:bellman-duality} identifies the exact dual optimum.
+
+\section{The concrete $\lambda=1$ target}
+
+The present rigorous interval is
+\begin{equation}
+  0.4609224577271628\ldots
+  \le a_*(1)
+  <0.47330186.
+  \label{eq:current-interval}
+\end{equation}
+The proposed first target is the rational value
+\begin{equation}
+  r_0:=\frac{4733}{10000}=0.4733.
+  \label{eq:r0}
+\end{equation}
+
+\begin{problem}[Finite certificate target]
+Construct explicit nonnegative functions $H_0,H_1$ and constants $A,B\ge0$ such that the
+potential \eqref{eq:ansatz} satisfies
+\begin{equation}
+  \Delta_\Phi\ge0
+  \label{eq:target-ineq}
+\end{equation}
+for every reachable unit-activity transition, with $r=r_0$.
+\end{problem}
+
+By Theorem~\ref{thm:bellman-lb}, such a certificate would imply
+\begin{equation}
+  \boxed{
+  0.4733\le a_*(1)<0.47330186,}
+  \label{eq:bomb-interval}
+\end{equation}
+an interval of width $1.86\times10^{-6}$.
+
+This is a qualitatively different task from another global entropy estimate.  It is a local
+verification problem on the exact finite/zero-temperature state recursion.
+
+\section{A certification architecture}
+
+A rigorous computer-assisted proof can be organized as follows.
+
+\begin{enumerate}[label=\textbf{C\arabic*.},leftmargin=2.2em]
+\item \textbf{Reachable-state enclosure.}
+Generate certified outer boxes for the two reachable sectors $g=0$ and $g=1$ under
+\eqref{eq:unit-x}--\eqref{eq:unit-g}.  The enclosure is recursive and uses directed rational
+or interval arithmetic only.
+
+\item \textbf{Potential representation.}
+Represent $H_0,H_1$ by a piecewise-rational, piecewise-affine, or Bernstein-polynomial
+function with rational coefficients and explicit interval remainder bounds.
+
+\item \textbf{Aggregate child reduction.}
+Use \eqref{eq:aggregates} to eliminate the raw child count from the parent equations.  The
+remaining optimization of $\sum_i H_{g_i}(x_i,z_i)$ is an additive moment problem under
+fixed $(L,Z,K)$.
+
+\item \textbf{Tail coercivity.}
+Choose the explicit $A$ and $B$ terms in \eqref{eq:ansatz} so that configurations with large
+$L$ or large $K$ have a strictly positive analytic margin.  Only a compact residual region is
+then passed to interval subdivision.
+
+\item \textbf{Exact checker.}
+The final verifier receives only rational box endpoints and rational potential coefficients.
+Every transcendental quantity is enclosed by monotone rational bounds; the checker verifies
+\eqref{eq:target-ineq} box by box and prints the minimum certified slack.
+\end{enumerate}
+
+The desired end product is therefore not a stochastic search result but a short deterministic
+certificate whose mathematical statement is precisely Theorem~\ref{thm:bellman-lb}.
+
+\section{What is proved here and what remains}
+
+The following statements are proved in this note without computational assumptions:
+\begin{enumerate}[label=(\roman*)]
+  \item the common state recursion \eqref{eq:xrec}--\eqref{eq:grec};
+  \item the exact charge identities \eqref{eq:charges};
+  \item the canonical maximum independent set $A_g$;
+  \item the Bellman lower-bound theorem;
+  \item the converse and exact dual characterization \eqref{eq:dual-characterization};
+  \item the exact slack/rigidity identity \eqref{eq:slack-decomp};
+  \item the aggregate compression \eqref{eq:aggregate-transition} at $\lambda=1$.
+\end{enumerate}
+
+The only missing step toward the interval \eqref{eq:bomb-interval} is an explicit verified
+potential satisfying \eqref{eq:target-ineq} at $r=0.4733$.  That is now a sharply formulated
+finite-temperature/zero-temperature dual-certificate problem rather than an unconstrained
+search over trees.
+
+\end{document}
