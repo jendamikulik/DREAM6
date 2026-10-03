@@ -1,0 +1,622 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\causal}{\mathrm{causal}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\eps}{\varepsilon}
+\title{The sharp square-root bill of an exact causal source}
+\author{}
+\date{3 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let \(P\) and \(Q\) be finite nondegenerate laws with the same Shannon entropy \(h\) and surprisal standard deviations \(\sigma_P\neq\sigma_Q\).
+An exact horizon-\(n\) causal source is a finite seed which, under every deterministic nonanticipative policy, emits the product law of the requested actions.
+Its minimal seed entropy admits the second-order expansion
+\[
+  C_n^{\causal}(P,Q)
+  =
+  nh+\sqrt{\frac{2}{\pi}}\,|\sigma_P-\sigma_Q|\,\sqrt{n}+o(\sqrt{n}).
+\]
+The lower bound is not the two-transcript profile bound.
+It comes from evaluating the seed atomwise against a grid of threshold policies simultaneously: the seed mass is at most every transcript probability at once, so the seed surprisal dominates the maximum of the centered policy martingales.
+Those martingales converge to two-speed Brownian motions, and the lower envelope of their time-\(1\) laws has mean exactly \(\sqrt{2/\pi}\,|\sigma_P-\sigma_Q|\).
+The matching upper bound is a one-way quantile recycling of two independent streams, lifted to a history-indexed source by reading the second stream backwards.
+The recycled fiber length tracks the running maximum of the surprisal-difference walk, which has the same leading constant.
+For the crash pair \(P=(1/2,1/4,1/4)\) and \(H(Q)=3/2\) the coefficient is \(0.0347472540518177\ldots\).
+\end{abstract}
+
+\section{Model}
+
+Let \(P\) and \(Q\) be probability laws on finite alphabets, with every atom strictly positive, and write
+\[
+  h=H(P)=H(Q),\qquad
+  \sigma_P^2=\mathrm{Var}(-\log_2 P(X)),\qquad
+  \sigma_Q^2=\mathrm{Var}(-\log_2 Q(Y)).
+\]
+Both variances are finite.
+The argument is symmetric in \(P\) and \(Q\); from Section~\ref{sec:threshold} onward we set
+\[
+  a=\sigma_P\ge b=\sigma_Q
+\]
+and write \(\Delta=a-b\ge 0\).
+The centered one-letter surprisals are uniformly bounded: there is a finite \(L_\star\) such that
+\[
+  \bigl|-\log_2 P(x)-h\bigr|\le L_\star,\qquad
+  \bigl|-\log_2 Q(y)-h\bigr|\le L_\star
+\]
+for every positive atom.
+
+A deterministic nonanticipative policy \(\pi=(\pi_t)_{t=1}^n\) chooses an action
+\[
+  A_t=\pi_t(Y_1,\ldots,Y_{t-1})\in\{P,Q\}.
+\]
+An exact horizon-\(n\) history-indexed causal source is a finite random seed \(S\) together with deterministic output maps such that, for every such policy, the transcript \(Y^\pi\) has law
+\begin{equation}
+  \label{eq:exact}
+  R_\pi(y^n)=\prod_{t=1}^n P_{A_t}(y_t),
+\end{equation}
+where \(P_P=P\) and \(P_Q=Q\).
+Equivalently, \eqref{eq:exact} holds for every deterministic action word, and hence for every adaptive policy.
+The causal cost is the minimal seed entropy
+\[
+  C_n^{\causal}(P,Q)=\inf\bigl\{H(S):S\text{ is an exact horizon-\(n\) seed}\bigr\}.
+\]
+For a policy \(\pi\) and a transcript \(y^n\) write
+\[
+  I_\pi(y^n)=-\log_2 R_\pi(y^n),\qquad
+  M_{\pi,n}(y^n)=I_\pi(y^n)-nh.
+\]
+Thus \(M_{\pi,n}(Y^\pi)\) is a centered martingale in the filtration of \(Y^\pi\), with increments bounded by \(L_\star\).
+
+\section{The seed sees every policy at once}
+\label{sec:seed}
+
+The two-policy profile bound only recovers half the constant below.
+The sharp lower bound uses the stronger atomwise comparison.
+
+\begin{lemma}[Atomwise seed inequality]
+\label{lem:atom}
+Let \(S\) be an exact seed and let \(\Pi\) be any finite family of deterministic nonanticipative policies.
+For every atom \(s\) of mass \(\gamma_s>0\),
+\[
+  \gamma_s\le R_\pi\bigl(y^\pi(s)\bigr)
+  \qquad\text{for every }\pi\in\Pi,
+\]
+where \(y^\pi(s)\) is the transcript produced by \(\pi\) on the seed atom \(s\).
+Consequently
+\begin{equation}
+  \label{eq:seed-max}
+  H(S)\ge nh+\E\Bigl[\max_{\pi\in\Pi} M_{\pi,n}(Y^\pi)\Bigr],
+\end{equation}
+the expectation being under the seed law.
+In particular
+\[
+  C_n^{\causal}(P,Q)
+  \ge
+  nh+\sup_{\Pi}\E\Bigl[\max_{\pi\in\Pi} M_{\pi,n}\Bigr].
+\]
+\end{lemma}
+
+\begin{proof}
+The output maps are deterministic, so each policy transcript is a function of \(S\).
+Exactness says that the push-forward of the seed law under \(s\mapsto y^\pi(s)\) equals \(R_\pi\).
+Therefore, for each transcript \(y\),
+\[
+  \sum_{s:\,y^\pi(s)=y}\gamma_s=R_\pi(y).
+\]
+Every summand is nonnegative, so \(\gamma_s\le R_\pi(y^\pi(s))\).
+The same atom \(s\) satisfies the inequality for every \(\pi\in\Pi\) simultaneously, hence
+\[
+  -\log_2\gamma_s
+  \ge
+  \max_{\pi\in\Pi} I_\pi\bigl(y^\pi(s)\bigr)
+  =
+  nh+\max_{\pi\in\Pi} M_{\pi,n}\bigl(y^\pi(s)\bigr).
+\]
+Averaging over \(s\) gives \eqref{eq:seed-max}.
+\end{proof}
+
+The inequality is strictly stronger than a bound that uses only marginal transcript laws.
+The profile functional of the companion note,
+\[
+  \mathcal L(Z_{\pi_1},\ldots,Z_{\pi_m})
+  =\int_0^\infty \max_i\Prob(Z_{\pi_i}>t)\,dt,
+\]
+depends on the marginal tails alone.
+Lemma~\ref{lem:atom} charges the joint maximum realized by one seed.
+Azuma's inequality still shows that each \(M_{\pi,n}\) is \(O(\sqrt{n})\) in \(L^1\), uniformly in the policy, so the gain available here is a constant factor inside the square-root scale, not a change of exponent.
+
+For two policies the profile functional collapses to the familiar Wasserstein form, recorded only for comparison.
+
+\begin{proposition}[Two-policy floor]
+\label{prop:two}
+For the two constant policies,
+\[
+  C_n^{\causal}(P,Q)
+  \ge
+  nh+\tfrac12 W_1(S_{P,n},S_{Q,n}),
+\]
+where \(S_{P,n}\) and \(S_{Q,n}\) are the product surprisal sums.
+Hence
+\[
+  \liminf_{n\to\infty}
+  \frac{C_n^{\causal}(P,Q)-nh}{\sqrt{n}}
+  \ge
+  \frac{|\sigma_P-\sigma_Q|}{\sqrt{2\pi}}.
+\]
+\end{proposition}
+
+\begin{proof}
+Lemma~\ref{lem:atom} with the two constant policies yields
+\(H(S)\ge\E\max\{S_{P,n},S_{Q,n}\}\).
+For any coupling of two nonnegative random variables,
+\(\E\max(U,V)\ge\bigl(\E U+\E V+W_1(\mathcal L(U),\mathcal L(V))\bigr)/2\),
+and both transcript entropies equal \(nh\).
+Finite support gives \(W_1\) convergence of the normalized sums to the centered Gaussians of variances \(\sigma_P^2\) and \(\sigma_Q^2\).
+The monotone coupling of those Gaussians has cost \(|\sigma_P-\sigma_Q|\,\E|G|=\sqrt{2/\pi}\,|\sigma_P-\sigma_Q|\), and the factor \(1/2\) produces the stated liminf.
+\end{proof}
+
+The constant in Proposition~\ref{prop:two} is exactly half the constant in Theorem~\ref{thm:main}.
+The rest of the lower bound is the recovery of that factor two.
+
+\section{Threshold policies}
+\label{sec:threshold}
+
+Fix \(z\in\R\).
+The threshold policy \(\pi_{z,n}\) requests the high-variance action while the centered surprisal accumulated so far lies below the barrier, and the low-variance action afterwards:
+\[
+  A_t=
+  \begin{cases}
+    P & \text{if }M_{t-1}<z\sqrt{n},\\
+    Q & \text{if }M_{t-1}\ge z\sqrt{n}.
+  \end{cases}
+\]
+Write \(M^{(z)}_n\) for its terminal centered surprisal and \(X^{(z)}\) for the diffusion
+\begin{equation}
+  \label{eq:sde}
+  dX_t=\sigma_z(X_t)\,dB_t,
+  \qquad
+  X_0=0,
+  \qquad
+  \sigma_z(x)=
+  \begin{cases}
+    a & \text{if }x<z,\\
+    b & \text{if }x\ge z.
+  \end{cases}
+\end{equation}
+The diffusion coefficient is Borel, bounded, and uniformly elliptic.
+The martingale problem for \eqref{eq:sde} is well posed, and the time-\(1\) law is absolutely continuous
+\cite{Lejay2006,EtoreMartinez}.
+Call this time-\(1\) law \(F_z\).
+
+\begin{lemma}[Diffusion limit of one threshold]
+\label{lem:fclt}
+For each fixed \(z\),
+\[
+  \frac{M^{(z)}_n}{\sqrt{n}}\ \Rightarrow\ X^{(z)}_1.
+\]
+The convergence holds jointly for any finite set of thresholds.
+Moreover the family \(\{|M^{(z)}_n|/\sqrt{n}\}\) is uniformly integrable, uniformly in \(z\) and \(n\).
+\end{lemma}
+
+\begin{proof}
+The centered surprisal is a martingale with bounded increments.
+Conditional on the past, the next increment has mean zero and variance \(a^2\) or \(b^2\) according to the side of the barrier \(z\sqrt{n}\) on which the current position lies; the conditional variance equals the exact one-letter varentropy of the requested action.
+Standard functional convergence for triangular martingale arrays with bounded increments and state-dependent conditional variance applies: the normalized path converges weakly in Skorokhod space to the unique solution of the martingale problem \eqref{eq:sde}.
+See Ethier--Kurtz, Chapter~7, for the martingale-problem criterion, and Lejay for uniqueness at a single discontinuous interface.
+Joint convergence on a finite grid follows by applying the same criterion to the vector of policies driven by a common seed, or, for the marginal envelope argument below, is unnecessary: only marginal convergence is required.
+
+Uniform integrability is Azuma's inequality.
+The increments are bounded by \(L_\star\), so for every policy and every \(s>0\),
+\[
+  \Prob\bigl(|M_{\pi,n}|>s\bigr)
+  \le
+  2\exp\Bigl(-\frac{s^2}{2n L_\star^2}\Bigr).
+\]
+Hence \(\E[|M_{\pi,n}|/\sqrt{n}]^{1+\delta}\) is bounded for every \(\delta\in(0,1)\), uniformly in the policy.
+\end{proof}
+
+\section{The envelope}
+\label{sec:envelope}
+
+Let \(\Phi\) be the standard normal distribution function.
+Define
+\begin{equation}
+  \label{eq:Fstar}
+  F_*(x)=
+  \begin{cases}
+    \dfrac{2b}{a+b}\,\Phi(x/b) & \text{if }x\le 0,\\[1.2ex]
+    1-\dfrac{2a}{a+b}\bigl(1-\Phi(x/a)\bigr) & \text{if }x>0.
+  \end{cases}
+\end{equation}
+This is a distribution function.
+Its mean is the constant we need, and the computation is elementary once \eqref{eq:Fstar} is granted.
+
+\begin{lemma}[Mean of the envelope]
+\label{lem:mean}
+If \(R_*\) has law \(F_*\), then
+\[
+  \E[R_*]=\sqrt{\frac{2}{\pi}}\,(a-b).
+\]
+\end{lemma}
+
+\begin{proof}
+The Gaussian tail integrals
+\[
+  \int_0^\infty\bigl(1-\Phi(x/c)\bigr)\,dx=\frac{c}{\sqrt{2\pi}},
+  \qquad c>0,
+\]
+give
+\begin{align*}
+  \E[R_*]
+  &=
+  \int_0^\infty\bigl(1-F_*(x)\bigr)\,dx
+  -\int_{-\infty}^0 F_*(x)\,dx\\
+  &=
+  \frac{2a}{a+b}\cdot\frac{a}{\sqrt{2\pi}}
+  -\frac{2b}{a+b}\cdot\frac{b}{\sqrt{2\pi}}
+  =
+  \frac{2}{\sqrt{2\pi}}\,(a-b)
+  =
+  \sqrt{\frac{2}{\pi}}\,(a-b).
+\end{align*}
+The identity \(a^2-b^2=(a-b)(a+b)\) is the only cancellation.
+\end{proof}
+
+The distribution \(F_*\) is not the law of a single two-speed path.
+It is the lower envelope of the family \(\{F_z\}\), attained by placing the interface at the level being tested.
+
+\begin{lemma}[Interface formula]
+\label{lem:interface}
+For every \(x\in\R\),
+\[
+  F_*(x)=\Prob\bigl(X^{(x)}_1\le x\bigr)
+  =\inf_{z\in\R}\Prob\bigl(X^{(z)}_1\le x\bigr).
+\]
+In particular \(F_*(x)=\inf_z F_z(x)\).
+\end{lemma}
+
+\begin{proof}
+Write \(u(t,y)=\Prob(X_1\le x\mid X_t=y)\) for a controlled diffusion whose instantaneous volatility \(\sigma_t\) is progressively measurable and takes values in \(\{a,b\}\).
+Then \(u(1,y)=\mathbf 1_{y\le x}\), and on \([0,1)\) the function \(u\) satisfies the HJB equation
+\begin{equation}
+  \label{eq:hjb}
+  \partial_t u+\tfrac12\sup_{\sigma\in\{a,b\}}\sigma^2\,\partial_{yy}u=0
+\end{equation}
+in the viscosity sense, because the controller who wants to minimize \(\Prob(X_1\le x)\) chooses the volatility that the forward equation charges with a minus sign; equivalently, the probability of the bad half-line is the expectation of the indicator under the controlled law, and the generator contribution of a pure diffusion is \(\tfrac12\sigma^2\partial_{yy}\).
+The candidate feedback
+\[
+  \sigma^*(y)=a\cdot\mathbf 1_{y<x}+b\cdot\mathbf 1_{y\ge x}
+\]
+is exactly \(\pi_{x}\) in the diffusion limit.
+Its occupation formula is classical for oscillating Brownian motion after a translation that moves the interface to the origin
+\cite{KeilsonWellner,Lejay2006}.
+Translated back, the sub-probability density of \(X^{(x)}_1\) on \((-\infty,x]\) is the left-hand Gaussian density of variance \(b^2\), weighted by the transmission factor \(2b/(a+b)\) when the starting point lies on the low-volatility side of the interface, and the right-hand tail is the Gaussian density of variance \(a^2\), weighted by \(2a/(a+b)\).
+Those are the two lines of \eqref{eq:Fstar}, so the candidate achieves \(F_*\).
+
+To see that no other interface does better, observe that \(F_*\) is a viscosity solution of \eqref{eq:hjb} with the same terminal condition.
+On \(\{y<x\}\) the candidate value function is a mixture of Gaussians whose second derivative has the sign that selects \(\sigma=a\); on \(\{y>x\}\) it selects \(\sigma=b\).
+Uniqueness of bounded viscosity solutions of \eqref{eq:hjb} gives optimality of the threshold \(z=x\).
+Thus the pointwise infimum over deterministic thresholds, and even over all progressively measurable volatility choices, equals \(F_*(x)\).
+\end{proof}
+
+At the single point \(x=0\) the formula reduces to the transmission weight
+\[
+  \Prob\bigl(X^{(0)}_1\le 0\bigr)=\frac{b}{a+b},
+\]
+which is the standard left-mass of oscillating Brownian motion started on the interface.
+For \(x\neq 0\) the starting point is not on the interface, and the tail scale is the volatility of the side that contains the origin: scale \(b\) for \(x<0\), scale \(a\) for \(x>0\).
+
+\begin{lemma}[Envelope lower bound]
+\label{lem:envelope-exp}
+Let \(\Pi_n\) be a finite \(n^{-1/4}\)-grid of thresholds in \([-\log n,\log n]\).
+Then
+\[
+  \liminf_{n\to\infty}
+  \E\Bigl[\max_{\pi\in\Pi_n}\frac{M_{\pi,n}}{\sqrt{n}}\Bigr]
+  \ge
+  \sqrt{\frac{2}{\pi}}\,(a-b).
+\]
+\end{lemma}
+
+\begin{proof}
+Write \(M_n=\max_{\pi\in\Pi_n} M_{\pi,n}/\sqrt{n}\).
+For every \(x\),
+\[
+  \Prob(M_n\le x)
+  \le
+  \min_{\pi\in\Pi_n}\Prob(M_{\pi,n}/\sqrt{n}\le x).
+\]
+Pass to the limit along the grid.
+Lemma~\ref{lem:fclt} gives marginal convergence at every fixed threshold.
+The map \(z\mapsto F_z(x)\) is continuous in \(z\) at continuity points of \(F_z\), because the diffusion coefficient depends continuously on the interface in the bounded-Lipschitz metric on time-\(1\) laws: moving the interface by \(\eta\) changes the volatility on an interval of length \(\eta\), and the resulting total-variation distance is \(O(\eta^{1/2})\) by the Burkholder--Davis--Gundy inequality.
+A grid of spacing \(n^{-1/4}\) is therefore dense enough that
+\[
+  \limsup_{n\to\infty}\Prob(M_n\le x)
+  \le
+  \inf_z F_z(x)=F_*(x)
+\]
+at every continuity point of \(F_*\).
+Layer-cake representation and Fatou's lemma on the positive part give
+\[
+  \liminf_{n\to\infty}\E[(M_n)_+]
+  \ge
+  \int_0^\infty\bigl(1-F_*(t)\bigr)\,dt.
+\]
+For the negative part the inequality runs the other way and produces a matching limsup,
+\[
+  \limsup_{n\to\infty}\E[(M_n)_-]
+  \le
+  \int_{-\infty}^0 F_*(t)\,dt,
+\]
+after truncating at \(\log n\) and using the Azuma tail to show that the truncation costs \(o(1)\).
+Thresholds outside \([-\log n,\log n]\) do not contribute to the envelope at the \(\sqrt{n}\) scale: a barrier beyond \(\log n\) standard deviations is not hit with probability \(1-o(n^{-K})\) for every \(K\), again by Azuma, so the grid restriction is free.
+Combining the two sides and applying Lemma~\ref{lem:mean} yields the claim.
+Uniform integrability of the maximum over the grid follows from the same Azuma tail and a union bound: the grid has cardinality \(O(n^{1/4}\log n)\), which does not damage the Gaussian tail.
+\end{proof}
+
+\section{Matching upper bound}
+\label{sec:upper}
+
+The construction has two layers.
+First produce a one-way joint of two length-\(n\) strings whose conditional entropy meets the constant.
+Then lift that joint to an exact history-indexed seed by reading the second string backwards.
+
+\subsection{One-way recycling}
+
+Let \(L=\lfloor(\log n)^2\rfloor\) and \(m=\lfloor n/L\rfloor\), and write \(n=mL+r\) with \(0\le r<L\).
+The remainder \(r\) contributes \(O(L)=o(\sqrt{n})\) bits and is ignored after the first sentence of the entropy budget.
+
+Draw \(W^n\sim Q^n\).
+Generate \(X^n\) from \(W^n\) and an auxiliary uniform seed by blocks, causally.
+On block \(j=1,\ldots,m\), having seen \(W\) on that block, split the current seed fiber in the proportions of \(P^{\otimes L}\) and retain the atom consistent with a \(P\)-block that is quantile-coupled to the observed \(Q\)-block.
+Concretely, let \(U_0\sim\mathrm{Unif}[0,1]\) be independent of \(W^n\), and maintain the dyadic fiber \((\lambda_j^-,\lambda_j^+)\) containing \(U_0\).
+The \(Q\)-block \(W^{(j)}\) has surprisal \(B_j=-\log_2 Q^{\otimes L}(W^{(j)})\).
+The comonotone (quantile) preimage of this block under the product law \(P^{\otimes L}\) is an interval of \(P^{\otimes L}\)-mass
+\[
+  \alpha_j=\Theta\bigl(2^{-(B_j-A_j)}\bigr),
+\]
+where \(A_j\) is the \(P\)-surprisal of the selected atom; the implicit factor is the usual arithmetic-coding redundancy, at most \(2\) per block after the Kraft tightening of \(O(1)\) bits per block recorded below.
+Intersecting the current fiber with that preimage multiplies its length by at most \(\alpha_j\).
+The resulting string \(X^n\) is exactly \(P^n\)-distributed, because each block is drawn from the \(P^{\otimes L}\) splitting of a uniform fiber, and \(X_t\) is a function of \(U_0\) and \(W_1,\ldots,W_t\) only.
+
+\begin{lemma}[Fiber length tracks the running maximum]
+\label{lem:fiber}
+Let \(A_j,B_j\) be the block surprisals under the comonotone coupling, and set
+\[
+  Z_j=(A_j-Lh)-(B_j-Lh),\qquad
+  S_k=\sum_{j=1}^k Z_j,\qquad
+  S_k^+=\max_{0\le i\le k} S_i
+\]
+with \(S_0=0\).
+The terminal fiber length \(\lambda\) satisfies
+\begin{equation}
+  \label{eq:fiber}
+  -\log_2\lambda
+  \le
+  Lh\cdot 0+S_m^++G_m
+  =
+  S_m^++G_m,
+\end{equation}
+where the overhead \(G_m\) obeys \(G_m\le C\log m\) almost surely for a constant \(C\) depending only on the alphabets.
+Consequently
+\[
+  H(X^n\mid W^n)
+  \le
+  \E[S_m^+]+O(\log n).
+\]
+\end{lemma}
+
+\begin{proof}
+The construction never needs more uniform bits than the heaviest fiber restriction encountered along the path.
+A negative increment \(Z_j<0\) shortens the \(P\)-preimage relative to the \(Q\)-surprisal already paid by \(W\), and the unused portion of the fiber can be returned to the pool: the nesting is a restriction followed by a release, not a permanent multiplication by every \(\alpha_j\).
+The outstanding restriction at step \(k\) is therefore bounded by the largest partial sum of the increments \(Z_j\), up to the integer-bit loss of an arithmetic coder.
+Each block contributes at most \(O(1)\) bits of coder redundancy (a fixed Kraft gap coming from the finite alphabet), and the record times of \(S_k\) contribute an additional \(O(\log m)\) bits to address the active interval endpoints.
+This is the inequality \eqref{eq:fiber}.
+The conditional entropy is at most the expected codelength of a prefix-free encoding of the fiber, which is \(-\E\log_2\lambda+O(1)\).
+\end{proof}
+
+The overhead \(O(\log n)\) is \(o(\sqrt{n})\).
+The walk itself produces the constant.
+
+\begin{lemma}[Walk maximum]
+\label{lem:walk}
+Under the comonotone coupling of the two block-surprisal laws,
+\[
+  \E[Z_1]=0,
+  \qquad
+  \frac{\E[Z_1^2]}{L}\to(a-b)^2,
+\]
+and
+\[
+  \frac{\E[S_m^+]}{\sqrt{n}}
+  \to
+  \sqrt{\frac{2}{\pi}}\,(a-b).
+\]
+\end{lemma}
+
+\begin{proof}
+Each block is an i.i.d.\ copy, so \((Z_j)_{j\le m}\) is an i.i.d.\ centered triangular array.
+Finite alphabets give a fourth-moment bound \(\E Z_1^4=O(L^2)\).
+The normalized block sums obey a CLT, and the comonotone coupling is the \(W_2\)-optimal coupling of the two block laws.
+Therefore
+\[
+  \frac{Z_1}{\sqrt{L}}
+  \Rightarrow
+  (a-b)G,
+  \qquad G\sim N(0,1),
+\]
+which is the variance claim; the fourth-moment bound upgrades convergence of second moments.
+Donsker's theorem lifts the array to a Brownian path on \([0,1]\) after diffusive scaling by \(\sqrt{mL}=\sqrt{n-r}\).
+The running-maximum functional is continuous in the Skorokhod topology on the set of paths whose maximum is not attained at a flat stretch, a set of full Wiener measure.
+Hence \(S_m^+/\sqrt{n}\) converges in law to \((a-b)\max_{t\le 1} B_t\).
+Uniform integrability follows from Doob's inequality and the fourth-moment bound.
+The reflected Brownian maximum has expectation
+\[
+  \E\Bigl[\max_{t\le 1} B_t\Bigr]=\sqrt{\frac{2}{\pi}},
+\]
+by the reflection identity \(\Prob(\max_{t\le 1} B_t\ge u)=2\Prob(B_1\ge u)\) for \(u\ge 0\).
+Multiplying by \(a-b\) gives the limit.
+\end{proof}
+
+\subsection{Anti-diagonal lift}
+
+It remains to turn the one-way joint into an exact causal seed without increasing the entropy by more than \(o(\sqrt{n})\).
+
+\begin{lemma}[Anti-diagonal lift]
+\label{lem:lift}
+Suppose \(X^n\sim P^n\), \(W^n\sim Q^n\), and
+\begin{equation}
+  \label{eq:oneway}
+  \mathcal L(X_{1:k}\mid W_{1:n})
+  =
+  \mathcal L(X_{1:k}\mid W_{1:k})
+  \qquad\text{for every }k\le n.
+\end{equation}
+Read \(W\) backwards: on the \(r\)-th request for \(P\), emit \(X_r\); on the \(s\)-th request for \(Q\), emit \(W_{n-s+1}\).
+Every action word, and every adaptive policy, then exposes independent symbols with the requested product law.
+The pair \((X^n,W^n)\) is an exact horizon-\(n\) seed, and
+\[
+  C_n^{\causal}(P,Q)
+  \le
+  H(X^n,W^n)
+  =
+  nh+H(X^n\mid W^n).
+\]
+\end{lemma}
+
+\begin{proof}
+An action word with \(r\) letters \(P\) and \(s\) letters \(Q\), \(r+s=n\), exposes \(X_1,\ldots,X_r\) and \(W_n,W_{n-1},\ldots,W_{n-s+1}\).
+The reversed block is exactly \(W_{r+1},\ldots,W_n\), hence disjoint from \(\{1,\ldots,r\}\).
+Condition \eqref{eq:oneway} says that \(X_{1:r}\) is a function of the seed fiber and \(W_{1:r}\) only, so it is independent of \(W_{r+1:n}\).
+The marginals are the requested products by construction.
+An adaptive policy reveals only a prefix of some action word at each time, and the same index disjointness applies pathwise: after \(r\) requests for \(P\) and \(s\) requests for \(Q\), the reversed reads still lie strictly above index \(r\).
+Thus every policy transcript has law \(R_\pi\).
+\end{proof}
+
+No padding is required, and a padding segment would be illegal for the entropy budget: an unused middle copy of \(W\) adds a second \(nh\) and destroys the first-order term.
+The reversed block of a mixed word already occupies the complementary index set \(\{r+1,\ldots,n\}\), so the same string serves both directions.
+In the recycling construction \(X_t\) is a function of the fiber of \(U_0\) and of \(W_{1:t}\), which is \eqref{eq:oneway}.
+The seed stores \(W^n\) and a prefix-free encoding of the occupied fiber.
+Lemma~\ref{lem:fiber} bounds that fiber, and therefore
+\[
+  C_n^{\causal}(P,Q)
+  \le
+  nh+\E[S_m^+]+O(\log n).
+\]
+
+\begin{lemma}[Upper bound]
+\label{lem:upper}
+\[
+  \limsup_{n\to\infty}
+  \frac{C_n^{\causal}(P,Q)-nh}{\sqrt{n}}
+  \le
+  \sqrt{\frac{2}{\pi}}\,|\sigma_P-\sigma_Q|.
+\]
+\end{lemma}
+
+\begin{proof}
+Combine the implementation just given with Lemmas~\ref{lem:fiber} and~\ref{lem:walk}.
+The block length \(L=(\log n)^2\) tends to infinity, so the CLT variance identification applies, and \(L=o(n^{1/2})\) keeps the edge block inside the \(o(\sqrt{n})\) remainder.
+\end{proof}
+
+\section{The theorem}
+
+\begin{theorem}
+\label{thm:main}
+Let \(P,Q\) be finite strictly positive laws with \(H(P)=H(Q)=h\) and surprisal standard deviations \(\sigma_P,\sigma_Q\).
+Then
+\begin{equation}
+  \label{eq:main}
+  C_n^{\causal}(P,Q)
+  =
+  nh+\sqrt{\frac{2}{\pi}}\,|\sigma_P-\sigma_Q|\,\sqrt{n}+o(\sqrt{n}).
+\end{equation}
+If \(\sigma_P=\sigma_Q\), the second term vanishes and the construction of Section~\ref{sec:upper} gives \(C_n^{\causal}=nh+O(\log n)\).
+\end{theorem}
+
+\begin{proof}
+The case \(\Delta=0\) is the upper bound with a degenerate walk, whose maximum is \(O(\log n)\) by the fourth-moment bound, together with the trivial \(C_n^{\causal}\ge nh\).
+For \(\Delta>0\), Lemma~\ref{lem:atom} and Lemma~\ref{lem:envelope-exp} give the liminf, and Lemma~\ref{lem:upper} gives the limsup.
+\end{proof}
+
+The profile floor of Proposition~\ref{prop:two} is the same statement with \(\sqrt{2/\pi}\) replaced by \(1/\sqrt{2\pi}\).
+The factor two is the difference between a terminal Gaussian comparison and a running maximum: \(\E[(B_1)_+]=\sqrt{1/(2\pi)}\) and \(\E[\max_{t\le 1} B_t]=\sqrt{2/\pi}\).
+
+\section{Crash pair}
+
+Take \(P=(1/2,1/4,1/4)\) and \(Q=(q,q,1-2q)\), with \(q\in(1/3,1/2)\) the unique solution of \(H(Q)=3/2\).
+Then
+\begin{align*}
+  q&=0.4100324281819856\ldots,\\
+  h&=3/2,\\
+  \sigma_P^2&=1/4,\\
+  \sigma_Q^2&=0.2083473102390734\ldots,\\
+  \sigma_P&=1/2,\\
+  \sigma_Q&=0.4564507752639635\ldots.
+\end{align*}
+Theorem~\ref{thm:main} specializes to
+\begin{equation}
+  \label{eq:crash}
+  C_n^{\causal}(P,Q)
+  =
+  \tfrac32 n
+  +0.0347472540518177\ldots\,\sqrt{n}
+  +o(\sqrt{n}),
+\end{equation}
+since
+\[
+  \sqrt{\frac{2}{\pi}}\,|\sigma_P-\sigma_Q|
+  =0.0347472540518177\ldots.
+\]
+The two-policy floor is half of this, \(0.0173736270259089\ldots\).
+The independent antidiagonal block construction remains a valid, coarser upper bound of order \(n^{2/3}\), with leading coefficient \(0.145119355153\ldots\); Theorem~\ref{thm:main} closes that gap.
+
+\section{What the argument uses, and what it does not}
+
+The atomwise comparison, Lemma~\ref{lem:atom}, is elementary and does not pass through the profile functional \(\mathcal L\).
+The square-root barrier for \(\mathcal L\) proved in the companion note is therefore not a barrier for \eqref{eq:seed-max}.
+That barrier says a universal \(n^{2/3}\) lower bound cannot be extracted from marginal transcript tails.
+It does not forbid a sharp constant on the \(\sqrt{n}\) scale, which is all that Theorem~\ref{thm:main} claims.
+
+The analytic inputs are standard and localized.
+Well-posedness of \eqref{eq:sde} is the martingale problem for a uniformly elliptic piecewise constant diffusion coefficient \cite{Lejay2006}.
+The passage from marginal convergence to the expectation of the maximum is the envelope inequality \(\Prob(\max_z R_z\le x)\le\inf_z\Prob(R_z\le x)\), which holds for every coupling, plus Azuma tails for uniform integrability.
+No identification of the joint law of \((X^{(z)})_z\) is required on the lower side.
+On the upper side the blocks are independent by construction, so there is no dependence-removal step: \(L=(\log n)^2\) is used only to reach the Gaussian variance \((a-b)^2 L\).
+Prefix-free exactization of \(U_0\) costs \(O(\log n)\) bits.
+The one-way condition \eqref{eq:oneway} is preserved because each output symbol is a function of the seed fiber and the past of \(W\) only, and the reversed \(Q\)-reads lie off that past.
+
+\begin{thebibliography}{9}
+\bibitem{EtoreMartinez}
+P.~\'Etor\'e and M.~Martinez,
+\emph{On the existence of a time-inhomogeneous skew Brownian motion and some related laws},
+Electron.\ J.\ Probab.\ \textbf{17} (2012), no.~19.
+\bibitem{KeilsonWellner}
+J.~Keilson and J.~A.~Wellner,
+\emph{Oscillating Brownian motion},
+J.\ Appl.\ Probab.\ \textbf{15} (1978), 300--310.
+\bibitem{Lejay2006}
+A.~Lejay,
+\emph{On the constructions of the skew Brownian motion},
+Probab.\ Surv.\ \textbf{3} (2006), 413--466.
+\end{thebibliography}
+
+\end{document}
