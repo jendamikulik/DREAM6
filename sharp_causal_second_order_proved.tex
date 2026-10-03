@@ -1,0 +1,553 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[margin=25mm]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\causal}{\mathrm{causal}}
+\newcommand{\R}{\mathbb R}
+\title{The sharp square-root bill of an exact causal source\\[4pt]
+\large A proof by global realization and discrete Bellman barriers}
+\author{}
+\date{3 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Let $P,Q$ be finite probability laws of equal entropy $h$, with
+surprisal standard deviations $a\ge b\ge0$. We prove
+\[
+C_n^{\causal}(P,Q)=nh+\sqrt{2/\pi}\,(a-b)\sqrt n+o(\sqrt n)
+\]
+for the full history-indexed exact causal model, including $b=0$.
+The proof has two independent parts. A finite greedy response-tree
+decomposition realizes the Bellman information envelope within
+$\log_2 e$ bits at every horizon. An explicit two-Gaussian profile
+approximates the centered Bellman recursion; Taylor's theorem and
+sup-norm nonexpansiveness give a finite-horizon comparison with explicit
+constants. Gaussian tail bounds then give convergence of the means.
+No simultaneous coupling of policy diffusion limits, stochastic
+differential equation convergence, or unproved recycling lemma is used.
+For equal positive varentropies, a separate application of a published
+nonuniform martingale Berry--Esseen bound yields an $O(\log(n+1))$ excess.
+\end{abstract}
+
+\section{The statement and the exact causal model}
+Zero-probability symbols are removed. Entropies and surprisals are in
+bits. Let
+\[
+H(P)=H(Q)=h,\qquad
+a^2=\operatorname{Var}_P(-\log_2P(X)),\quad
+b^2=\operatorname{Var}_Q(-\log_2Q(Y)),\quad a\ge b.
+\]
+A seed $S$ is sampled once, independently of external policy randomness.
+At round $t$, its output is a deterministic function of $S$, the complete
+past action-output history, and the currently requested action. Under
+every adaptive policy, its conditional output law must be the requested
+$P$ or $Q$. Let $C_n^{\causal}$ be the infimum entropy of finite seeds
+with this property. Seeds may depend on $n$. Responses at distinct
+histories are not required to be identical.
+
+\begin{theorem}\label{thm:main}
+For any such pair of finite laws,
+\begin{equation}\label{eq:main}
+\boxed{C_n^{\causal}(P,Q)
+=nh+\sqrt{\frac2\pi}\,(a-b)\sqrt n+o(\sqrt n).}
+\end{equation}
+If $a=b=0$, then $C_n^{\causal}=nh$ exactly. If $a=b>0$, then also
+\begin{equation}\label{eq:equalvar}
+0\le C_n^{\causal}-nh=O(\log(n+1)).
+\end{equation}
+\end{theorem}
+
+Write $\nu_P,\nu_Q$ for the laws of the centered one-letter surprisals
+$D_A=-\log_2P_A(Y)-h$, so $\E D_A=0$. Define
+\begin{equation}\label{eq:T}
+(Tf)(x)=\min_{A\in\{P,Q\}}\E f(x-D_A),\qquad
+G_0(x)=\mathbf1_{\{x\ge0\}},\qquad G_n=T^nG_0.
+\end{equation}
+Every $G_n$ is a finite-support CDF; let $Z_n\sim G_n$ and $e_n=\E Z_n$.
+For a deterministic policy $\pi$, let $M_{\pi,n}$ be its transcript
+surprisal minus $nh$. Backward induction gives the exact identity
+\begin{equation}\label{eq:policy}
+G_n(x)=\min_\pi\Prob(M_{\pi,n}\le x).
+\end{equation}
+Indeed, after choosing the first action and observing its output, each
+continuation policy can be selected separately for the remaining
+threshold. This is precisely \eqref{eq:T}. Allowing policy randomization
+does not reduce the minimum: conditioning on its randomness expresses
+its success probability as a mixture of deterministic-policy values.
+
+The two ingredients of the proof are
+\begin{equation}\label{eq:twoingredients}
+0\le C_n^{\causal}-nh-e_n\le\log_2e,
+\qquad
+\frac{e_n}{\sqrt n}\longrightarrow\sqrt{2/\pi}\,(a-b).
+\end{equation}
+Both will be proved below.
+
+\section{Global realization with a constant entropy gap}
+We prove a finite-tree statement, also valid for history-dependent
+kernels and any finite number of actions. A history is $v$, and its
+child after action $A$ and output $y$ is $vAy$. Set
+\[
+p(\varnothing)=1,\qquad p(vAy)=p(v)K_v(y\mid A).
+\]
+These cylinder weights satisfy
+$\sum_y p(vAy)=p(v)$ for each action separately. For a policy $\pi$,
+let $\mathcal L_\pi$ denote its terminal histories. Their weights sum
+to one and form its transcript law. Define $I_\pi=-\log_2p(T_\pi)$ and
+\[
+F_*(t)=\min_\pi\Prob(I_\pi\le t),\qquad Z\sim F_*,\quad L=\E Z.
+\]
+
+\begin{lemma}[Finite global realization]\label{lem:realization}
+There is a finite exact causal seed $S_G$, supported on at most the
+number of terminal histories in the full tree, such that
+\begin{equation}\label{eq:gap}
+L\le C\le H(S_G)\le L+\log_2e.
+\end{equation}
+\end{lemma}
+\begin{proof}
+A residual flow $r$ is nonnegative and satisfies
+$\sum_y r(vAy)=r(v)$ for every action. A deterministic response
+strategy $d$ chooses an output at each history-action pair. Its
+compatibility indicator $\chi_d(v)$ equals one when all its outputs
+on the path to $v$ agree with $v$. It is a flow of root mass one.
+
+For any residual flow compute from the leaves upward
+\[
+B_r(v)=r(v)\quad(v\text{ terminal}),\qquad
+B_r(v)=\min_A\max_y B_r(vAy)\quad(v\text{ nonterminal}).
+\]
+There are two elementary consequences.
+First, the largest extractable strategy weight is $B_r(\varnothing)$:
+for each possible action the strategy selects a child of maximal
+bottleneck, and this is done recursively. Nonnegativity on terminal
+histories implies nonnegativity at all histories by flow conservation.
+Second, a policy choosing a minimizing action at every history has
+\[
+r(v)\le B_r(\varnothing)\qquad(v\in\mathcal L_{\pi_r}).
+\]
+Indeed, along every output of that policy, bottleneck values never
+increase. This policy also proves that no larger strategy weight is
+possible. If the root mass is positive, every action has a positive
+child, and induction gives a positive root bottleneck.
+
+Starting from $r=p$, repeatedly extract a maximizing strategy of weight
+$w=B_r(\varnothing)$ and replace $r$ by $r-w\chi_d$. At least one
+positive terminal residual becomes zero at each extraction; otherwise
+the same strategy would permit a larger weight. Residuals never
+increase, so the algorithm terminates after finitely many steps. Its
+weights $w_j$ are nonincreasing, sum to one, and satisfy
+\begin{equation}\label{eq:decomp}
+p(v)=\sum_jw_j\chi_{d_j}(v).
+\end{equation}
+Choosing strategy $d_j$ with probability $w_j$ gives all the prescribed
+history weights simultaneously. Ratios of child to parent weights
+give the correct conditional laws at every positive-probability history.
+Thus this is one exact causal seed for all policies.
+
+Fix $0<\delta\le1$ and stop just after all weights larger than $\delta$
+have been extracted. The remaining root mass is
+$r(\varnothing)=\sum_{j:w_j\le\delta}w_j$. Its bottleneck is at most
+$\delta$. The minimizing policy above therefore gives
+\begin{align}
+\sum_{j:w_j\le\delta}w_j
+&\le\max_\pi\sum_{v\in\mathcal L_\pi}\min\{p(v),\delta\}\notag\\
+&=\max_\pi\E\min\{1,\delta2^{I_\pi}\}
+\le\E\min\{1,\delta2^Z\}.\label{eq:softtail}
+\end{align}
+The last inequality uses stochastic dominance: $F_*\le F_{I_\pi}$.
+The zero residual case satisfies the same inequality trivially.
+For $J=-\log_2w_{S_G}$, substitute $\delta=2^{-t}$ to obtain
+\[
+\Prob(J\ge t)\le\E\min\{1,2^{Z-t}\}
+=\Prob(Z+E\ge t),
+\]
+where $E$ is independent exponential of rate $\ln2$. Integrating these
+nonnegative-variable tails yields $H(S_G)\le L+1/\ln2$.
+
+For the converse, under any deterministic policy each seed atom is
+contained in its transcript atom. Its surprisal therefore dominates
+the transcript surprisal under the induced coupling. Hence
+$F_S\le F_{I_\pi}$ for all $\pi$, and thus $F_S\le F_*$. Integration
+gives $H(S)\ge L$. This proves \eqref{eq:gap}.
+\end{proof}
+
+In the equal-entropy memoryless model, $F_*(t)=G_n(t-nh)$ by
+\eqref{eq:policy}. Lemma~\ref{lem:realization} proves the first
+inequality in \eqref{eq:twoingredients}. In particular, realizability
+introduces no error proportional to the number of rounds or blocks.
+
+\section{An explicit finite-horizon Bellman comparison}
+Assume for now $a\ge b>0$. Let $\Phi$ be the standard normal CDF and set
+\begin{equation}\label{eq:F}
+F(x)=\begin{cases}
+\displaystyle\frac{2b}{a+b}\Phi(x/b),&x\le0,\\[5pt]
+\displaystyle1-\frac{2a}{a+b}\bigl(1-\Phi(x/a)\bigr),&x>0.
+\end{cases}
+\end{equation}
+This is a CDF. Define
+\[
+K=\frac{\sqrt{2/\pi}}{a+b},\quad
+m_3=\max_A\E|D_A|^3,\quad
+\mathcal C=K\left(\frac{m_3}{3b^2}+a\right),\quad
+u_t(x)=F(x/\sqrt t)\quad(t>0).
+\]
+
+\begin{lemma}[Explicit comparison]\label{lem:comparison}
+For every $\tau\ge1$, $R\ge0$, and integer $n\ge0$, put
+\[
+\eta=\max\{F(-R/\sqrt\tau),\,1-F(R/\sqrt\tau)\}.
+\]
+Then, for every $x\in\R$,
+\begin{equation}\label{eq:barrier}
+\boxed{\begin{aligned}
+F\!\left(\frac{x-R}{\sqrt{n+\tau}}\right)
+-\eta-\frac{3\mathcal C}{\sqrt\tau}
+&\le G_n(x),\\
+G_n(x)&\le
+F\!\left(\frac{x+R}{\sqrt{n+\tau}}\right)
++\eta+\frac{3\mathcal C}{\sqrt\tau}.
+\end{aligned}}
+\end{equation}
+\end{lemma}
+\begin{proof}
+For $x$ of either sign let $c=b$ on the negative half-line and $c=a$
+on the positive half-line. Direct differentiation gives
+\[
+F'(x)=Ke^{-x^2/(2c^2)},\qquad
+F''(x)=-\frac{Kx}{c^2}e^{-x^2/(2c^2)}.
+\]
+The first two derivatives extend continuously across zero; in particular
+$F''(0)=0$. The one-sided third derivatives satisfy
+\[
+|F'''(x)|=\frac K{c^2}
+\left|\frac{x^2}{c^2}-1\right|e^{-x^2/(2c^2)}
+\le\frac{2K}{b^2}.
+\]
+Consequently $F''$ is globally Lipschitz with that constant. Taylor's
+theorem therefore applies even when an increment crosses the interface.
+
+The function $u_t$ satisfies the following identity everywhere,
+including $x=0$:
+\begin{equation}\label{eq:pde}
+\partial_tu_t(x)
+=\frac12\min\{a^2\partial_{xx}u_t(x),b^2\partial_{xx}u_t(x)\}.
+\end{equation}
+On $x<0$ the second derivative is positive and the minimum selects
+$b^2$; on $x>0$ it is negative and selects $a^2$. On each side both
+expressions equal $-x\partial_xu_t(x)/(2t)$.
+
+Because $\E D_A=0$, the spatial Taylor remainder gives
+\[
+\left|Tu_t-u_t-\partial_tu_t\right|
+\le\frac{Km_3}{3b^2}\,t^{-3/2}
+\qquad\text{uniformly in }x.
+\]
+For clarity, the minimum of the two quadratic Taylor terms is exactly
+\eqref{eq:pde}; taking a minimum cannot increase the maximal absolute
+remainder. Also, with $z=x/\sqrt t$,
+\[
+\partial_{tt}u_t(x)
+=\frac K{4t^2}(3z-z^3/c^2)e^{-z^2/(2c^2)},
+\qquad \|\partial_{tt}u_t\|_\infty\le\frac{2Ka}{t^2}.
+\]
+The last bound follows from
+$\sup_{s\ge0}se^{-s^2/2}\le1$ and
+$\sup_{s\ge0}s^3e^{-s^2/2}\le2$.
+The time Taylor remainder is thus at most $Ka t^{-2}$. For $t\ge1$,
+\begin{equation}\label{eq:local}
+\|Tu_t-u_{t+1}\|_\infty\le\mathcal C t^{-3/2}.
+\end{equation}
+
+The operator $T$ is monotone, commutes with spatial translations and
+addition of constants, and is nonexpansive in the sup norm. Telescoping
+\eqref{eq:local} therefore gives
+\begin{equation}\label{eq:telescoping}
+\|T^nu_\tau-u_{n+\tau}\|_\infty
+\le\mathcal C\sum_{j=0}^{n-1}(\tau+j)^{-3/2}
+\le\frac{3\mathcal C}{\sqrt\tau}.
+\end{equation}
+Finally, the definition of $\eta$ implies the pointwise initial bounds
+\[
+u_\tau(x-R)-\eta\le\mathbf1_{\{x\ge0\}}
+\le u_\tau(x+R)+\eta.
+\]
+Apply $T^n$, use its three invariances, and then
+\eqref{eq:telescoping}. This proves \eqref{eq:barrier}.
+\end{proof}
+
+\begin{corollary}[CDF limit when $b>0$]\label{cor:cdf}
+For each $x\in\R$, $G_n(x\sqrt n)\to F(x)$.
+\end{corollary}
+\begin{proof}
+Fix $\tau,R$ and substitute $x\sqrt n$ in \eqref{eq:barrier}. Both
+shifted arguments tend to $x$, so the limsup and liminf differ from
+$F(x)$ by at most $\eta+3\mathcal C/\sqrt\tau$.
+First choose $\tau$ large and then $R$ large. The error tends to zero.
+For explicit choices at tolerance $0<\epsilon<1$, take
+\[
+\tau\ge\max\{1,(6\mathcal C/\epsilon)^2\},\qquad
+R=a\sqrt{2\tau\ln(4/\epsilon)}.
+\]
+The Gaussian Chernoff bound gives $\eta\le\epsilon/2$, and the other
+term is at most $\epsilon/2$. These parameters are fixed before sending
+$n$ to infinity, so no uniform convergence over a moving policy grid
+is being assumed.
+\end{proof}
+
+\section{Zero variance and convergence of the means}
+\begin{lemma}[The degenerate endpoint]\label{lem:zero}
+If $a>0$ and $b=0$, then
+\[
+G_n(x\sqrt n)\longrightarrow F_{a,0}(x)
+=\begin{cases}0,&x\le0,\\2\Phi(x/a)-1,&x>0.\end{cases}
+\]
+\end{lemma}
+\begin{proof}
+This step concerns the centered increment control problem only.
+For $\varepsilon>0$ add an independent Rademacher increment
+$\varepsilon\xi_t$ at each time and for either action. Retain both the
+original output and $\xi_t$ as observed labels. The new centered
+increments have variances $a^2+\varepsilon^2$ and $\varepsilon^2$;
+write $G_n^\varepsilon$ for their Bellman CDF.
+Extra labels do not change the Bellman recursion: conditional on the
+history the next increment law depends only on the action, and the
+remaining terminal threshold depends only on the current sum.
+
+The perturbed and unperturbed sums under the same action choices differ
+by $\varepsilon\sum_{t=1}^n\xi_t$. For every $d>0$, Chebyshev gives
+\[
+\Prob\left(\left|\varepsilon\sum_{t=1}^n\xi_t\right|>d\sqrt n\right)
+\le\varepsilon^2/d^2,
+\]
+uniformly over policies. Every original policy is a perturbed policy
+that ignores the extra coins. Conversely, an original controller can
+emulate a perturbed policy by drawing those coins as private randomness.
+The optimal original value is no larger than that randomized policy's
+value. These two observations give
+\begin{equation}\label{eq:noise}
+G_n^\varepsilon((x-d)\sqrt n)-\varepsilon^2/d^2
+\le G_n(x\sqrt n)
+\le G_n^\varepsilon((x+d)\sqrt n)+\varepsilon^2/d^2.
+\end{equation}
+Apply Corollary~\ref{cor:cdf} with
+$a_\varepsilon=\sqrt{a^2+\varepsilon^2}$ and $b_\varepsilon=\varepsilon$.
+Then let $\varepsilon\downarrow0$ with $d=\sqrt\varepsilon$.
+The explicit CDFs \eqref{eq:F} converge to the continuous CDF $F_{a,0}$,
+also at the moving arguments $x\pm\sqrt\varepsilon$. At $x=0$, both
+limits are zero directly from the two formulas. Equation~\eqref{eq:noise}
+proves the claim.
+\end{proof}
+
+\begin{lemma}[Mean limit]\label{lem:mean}
+For $a\ge b\ge0$,
+\begin{equation}\label{eq:mean}
+\lim_{n\to\infty}\frac{e_n}{\sqrt n}
+=\sqrt{\frac2\pi}\,(a-b).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Let $B=\max_{A,y}|-\log_2P_A(y)-h|$. If $B=0$ the claim is immediate;
+assume $B>0$. For any policy the centered
+increments have conditional mean zero and absolute value at most $B$.
+Convexity bounds their conditional exponential moment by
+$\cosh(\lambda B)\le e^{\lambda^2B^2/2}$. Iteration and exponential
+Markov therefore give, uniformly over all policies,
+\[
+\Prob(M_{\pi,n}>t\sqrt n),\quad
+\Prob(M_{\pi,n}\le-t\sqrt n)
+\le e^{-t^2/(2B^2)}\qquad(t>0).
+\]
+By \eqref{eq:policy}, both tails of $Z_n/\sqrt n$ have these same
+bounds. Hence the signed tail formula
+\[
+\frac{e_n}{\sqrt n}
+=\int_0^\infty[1-G_n(t\sqrt n)]\,dt
+-\int_0^\infty G_n(-t\sqrt n)\,dt
+\]
+admits dominated convergence, using Corollary~\ref{cor:cdf} or
+Lemma~\ref{lem:zero}. When $b>0$, its limit is
+\begin{align*}
+\int_0^\infty[1-F(t)]\,dt-\int_0^\infty F(-t)\,dt
+&=\frac{2a^2}{(a+b)\sqrt{2\pi}}
+-\frac{2b^2}{(a+b)\sqrt{2\pi}}\\
+&=\sqrt{2/\pi}\,(a-b).
+\end{align*}
+Here $\int_0^\infty[1-\Phi(t/c)]\,dt=c/\sqrt{2\pi}$.
+For $b=0<a$ the negative integral vanishes and the positive one is
+$a\sqrt{2/\pi}$. If $a=b=0$, both increment laws are point masses
+at zero and $G_n=G_0$, so the assertion is immediate.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Lemma~\ref{lem:realization} and Lemma~\ref{lem:mean} give
+\[
+\frac{C_n^{\causal}-nh}{\sqrt n}
+=\frac{e_n}{\sqrt n}+O(n^{-1/2})
+\longrightarrow\sqrt{2/\pi}\,(a-b).
+\]
+If both varentropies vanish, both laws are uniform. Equal entropy means
+their supports have the same size $k$. A single uniform seed on
+$\{1,\ldots,k\}^n$, with the appropriate output relabeling for each
+requested action, has entropy $n\log_2k=nh$. The all-$P$ transcript
+gives the reverse inequality.
+The stronger bound \eqref{eq:equalvar} is proved in the following section.
+\end{proof}
+
+\section{Equal positive varentropies: the logarithmic upper bound}
+The main second-order argument above is self-contained. For the sharper
+remainder when $a=b=\sigma>0$, we use the following specialization of
+Fan--Grama--Liu, Theorem 2.1 \cite{FGL}.
+
+\paragraph{External input (with its exact hypotheses).}
+Let $(\xi_i,\mathcal F_i)$ be martingale differences such that, almost
+surely,
+\[
+\sum_{i=1}^n\E(\xi_i^2\mid\mathcal F_{i-1})=1,\qquad
+\left|\E(\xi_i^k\mid\mathcal F_{i-1})\right|
+\le\tfrac12 k!\epsilon^{k-2}\E(\xi_i^2\mid\mathcal F_{i-1})
+\quad(k\ge2),
+\]
+where $0<\epsilon\le1/2$. There is an absolute constant $C_{\rm FGL}$
+such that, for all real $x$,
+\begin{equation}\label{eq:fgl}
+\left|\Prob\left(\sum_i\xi_i\le x\right)-\Phi(x)\right|
+\le C_{\rm FGL}(1+x^2)\epsilon|\ln\epsilon|
+\exp\left(-\frac{\widehat x_\epsilon^2}{2}\right),\qquad
+\widehat x_\epsilon=\frac{2|x|}{1+\sqrt{1+2\epsilon|x|}}.
+\end{equation}
+This is that theorem with its quadratic-variation error parameter
+$\delta=0$.
+
+\begin{proof}[Proof of \eqref{eq:equalvar}]
+Put $B=\max_{A,y}|-\log_2P_A(y)-h|$. For every deterministic policy use
+\[
+\xi_i=\frac{D_{A_i}(Y_i)}{\sigma\sqrt n},\qquad
+\epsilon_n=\frac{B}{\sigma\sqrt n}.
+\]
+The conditional variance of every $\xi_i$ is exactly $1/n$, regardless
+of which action the policy chooses. Also $|\xi_i|\le\epsilon_n$, so
+\[
+\left|\E(\xi_i^k\mid\mathcal F_{i-1})\right|
+\le\epsilon_n^{k-2}\E(\xi_i^2\mid\mathcal F_{i-1})
+\le\tfrac12 k!\epsilon_n^{k-2}\E(\xi_i^2\mid\mathcal F_{i-1}).
+\]
+Thus all the hypotheses hold once $n\ge4B^2/\sigma^2$, with identical
+parameters for all policies. Taking the infimum of their CDFs preserves
+the same two-sided error about $\Phi$. Consequently
+\begin{equation}\label{eq:envfgl}
+|G_n(\sigma\sqrt n\,x)-\Phi(x)|
+\le C_{\rm FGL}(1+x^2)\epsilon_n|\ln\epsilon_n|
+e^{-\widehat x_{\epsilon_n}^2/2}.
+\end{equation}
+This is a pointwise uniform bound, not merely a separate Wasserstein
+estimate for each policy.
+
+The right side has an integrable envelope independent of
+$\epsilon_n\le1/2$. Indeed, for $|x|\ge1$,
+\[
+1+\sqrt{1+2\epsilon_n|x|}
+\le1+\sqrt{1+|x|}\le3\sqrt{|x|},\qquad
+\widehat x_{\epsilon_n}^2/2\ge2|x|/9.
+\]
+It follows that
+\[
+\int_{\R}(1+x^2)e^{-\widehat x_{\epsilon_n}^2/2}\,dx
+\le\frac83+2\int_0^\infty(1+x^2)e^{-2x/9}\,dx<400.
+\]
+Since the standard normal has mean zero, the CDF formula for the
+difference of means and \eqref{eq:envfgl} give
+\begin{align*}
+0\le e_n
+&\le\sigma\sqrt n\int_{\R}|G_n(\sigma\sqrt n\,x)-\Phi(x)|\,dx\\
+&\le400C_{\rm FGL}B\ln\left(\frac{\sigma\sqrt n}{B}\right).
+\end{align*}
+The nonnegativity follows also from stochastic dominance over any
+single centered policy sum. Lemma~\ref{lem:realization} now gives,
+for every integer $n\ge4B^2/\sigma^2$,
+\[
+0\le C_n^{\causal}-nh
+\le400C_{\rm FGL}B\ln\left(\frac{\sigma\sqrt n}{B}\right)+\log_2e.
+\]
+Absorbing the finitely many smaller horizons into the constant proves
+\eqref{eq:equalvar}.
+\end{proof}
+
+\section{The crash pair and the scope of the proof}
+For $P=(1/2,1/4,1/4)$ and $Q=(q,q,1-2q)$ with
+$q\in(1/3,1/2)$ defined by $H(Q)=3/2$, one obtains
+\begin{equation}\label{eq:crash}
+\boxed{C_n^{\causal}(P,Q)
+=\tfrac32n+0.034747254051818\ldots\sqrt n+o(\sqrt n).}
+\end{equation}
+The exact coefficient is
+$\sqrt{2/\pi}\bigl(1/2-\sqrt{V_Q}\bigr)$, where
+\[
+V_Q=2q(1-2q)\left(\log_2\frac q{1-2q}\right)^2.
+\]
+The accompanying rational audit proves $0.410<q<0.411$ and
+$V_Q<3699/16000<1/4$. It uses eight terms of the series for
+$\ln x=2\operatorname{atanh}((x-1)/(x+1))$ and an explicit geometric
+remainder after reducing arguments to $[1,2]$. Decimal digits in
+\eqref{eq:crash} are numerical evaluations, not the definition of the
+coefficient.
+
+\paragraph{What is repaired relative to the supplied draft.}
+The proof uses the envelope over all adaptive transcript laws itself.
+There is no need to identify a seed-dependent joint diffusion limit.
+The discrete identity \eqref{eq:pde} has a minimum, and its sign is
+verified on both half-lines. The finite-horizon inequality
+\eqref{eq:barrier} replaces the unquantified diffusion/grid passage.
+Finally, the single charge \eqref{eq:softtail} replaces the unproved
+fiber-recycling estimate: it never accumulates a coder loss per block.
+
+The draft's additional assertion $C_n^{\causal}=nh+O(\log n)$ when
+$a=b>0$ does not follow from a vanishing square-root coefficient or a
+fourth-moment bound. Section 5 proves it instead by an explicitly stated
+external theorem, with all its hypotheses checked uniformly in the
+policy. The full second-order formula \eqref{eq:main} and the stated
+logarithmic upper bound are therefore both established. This does not
+assert a sharp logarithmic coefficient or a logarithmic lower bound.
+
+\paragraph{Verification and computational scope.}
+The included exact verifier checks all residual flow identities,
+reconstructed decoder marginals, and soft-tail inequalities in eighteen
+finite instances, including history-dependent kernels and three
+actions. It also includes a depth-three decoder certificate.
+The separate Bellman-limit program provides floating-point
+illustrations for $(a,b)=(2,1)$ and $(1,0)$; these numerical runs are
+not used in the proof. The universal argument is the finite-tree proof
+and the explicit inequalities above (and the stated external theorem for
+the equal-variance refinement), not an extrapolation of tests.
+
+The source and decoder may be exponential in $n$. There is no claim of
+polynomial-time simulation, of one infinite-horizon seed, or of a
+proof-assistant certificate. Literature priority has not been established.
+Ordinary one-round coupling bounds and information-spectrum converses
+are prior work \cite{C22,CKQGK23,SY23}; the response-tree realization
+argument needed here is given in full in Lemma~\ref{lem:realization}.
+
+\begin{thebibliography}{9}
+\bibitem{C22} S. Compton.
+\emph{A Tighter Approximation Guarantee for Greedy Minimum Entropy
+Coupling}. 2022. \href{https://arxiv.org/abs/2203.05108}{arXiv:2203.05108}.
+\bibitem{CKQGK23} S. Compton, D. Katz, B. Qi, K. Greenewald, and M. Kocaoglu.
+\emph{Minimum-Entropy Coupling Approximation Guarantees Beyond the
+Majorization Barrier}. AISTATS, PMLR 206, 10445--10469, 2023.
+\href{https://proceedings.mlr.press/v206/compton23a.html}{Proceedings}.
+\bibitem{SY23} Y. Y. Shkel and A. K. Yadav.
+\emph{Information Spectrum Converse for Minimum Entropy Couplings and
+Functional Representations}. ISIT, 2023.
+\href{https://arxiv.org/abs/2305.05745}{arXiv:2305.05745}.
+\bibitem{FGL} X. Fan, I. Grama, and Q. Liu.
+\emph{Nonuniform Berry--Esseen bounds for martingales with applications
+to statistical estimation}. Theorem 2.1, conditions (A1)--(A2).
+\href{https://arxiv.org/abs/1608.05217}{arXiv:1608.05217}.
+\end{thebibliography}
+\end{document}
