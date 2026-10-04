@@ -1,0 +1,218 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,hyperref}
+\usepackage[margin=26mm]{geometry}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}[lemma]{Theorem}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\title{Proof Audit of Finite Global Realization}
+\author{}
+\date{4 October 2026}
+\begin{document}
+\maketitle
+\noindent\textbf{Scope and verdict.}
+This note audits Lemma 2 and its stochastic consequence in the supplied
+\texttt{causal\_spectrum\_complete(1).tex}. Within the stated finite,
+full-history-indexed causal model, the argument is valid. No missing
+asymptotic estimate or unproved realization assumption is needed for this
+lemma. We expand its minimax step, adaptive correctness, and the treatment
+of distributional atoms. This is an additional mathematical audit, not
+independent external peer review or a proof-assistant certificate. It does
+not audit all later asymptotic sections or establish priority.
+
+\section{Objects and exact hypotheses}
+Let a finite rooted tree have action/output children $vAy$. Each nonterminal
+node has a nonempty finite action set, and every action has a nonempty
+finite output set. Each node has a unique complete history. All paths end
+at terminal nodes. Allowing history-dependent action sets or unequal terminal
+depths only generalizes the manuscript's setting.
+A nonnegative flow $r$ satisfies
+\[
+\sum_y r(vAy)=r(v)\quad\text{for every nonterminal }v\text{ and action }A.
+\]
+A response strategy chooses one output for each history/action pair. Its
+compatible histories have indicator $\chi_d$, itself a flow of root mass
+one. A deterministic policy chooses one action at each history; its
+terminal set is $\mathcal L_\pi$. A strategy and policy have exactly one
+common terminal history. Unreachable choices may always be completed
+arbitrarily, so strategies are genuine total decoders.
+
+\section{The minimax step}
+For any nonnegative flow set
+\[
+b_r(v)=r(v)\quad(v\text{ terminal}),\qquad
+b_r(v)=\min_A\max_y b_r(vAy)\quad(v\text{ nonterminal}).
+\]
+\begin{lemma}[Explicit tree minimax]
+\[
+\max_d\min_{\substack{v\text{ terminal}\\\chi_d(v)=1}}r(v)
+=b_r(\varnothing)
+=\min_\pi\max_{v\in\mathcal L_\pi}r(v).
+\tag{1}
+\]
+This is also the largest $w$ for which $r-w\chi_d\ge0$ at every node for
+some strategy $d$.
+\end{lemma}
+\begin{proof}
+For the left side, a strategy specifies an independent output choice and
+subtree strategy for every available action. Its worst compatible terminal
+weight is the minimum over actions of the selected subtree minima.
+Backward induction therefore gives $\min_A\max_y b_r(vAy)$.
+For the right side, a policy chooses one action and specifies a continuation
+policy separately after each possible output. Its largest terminal weight
+is the maximum of those subtree maxima. Minimizing the independent
+continuations gives the same recursion.
+
+A signed flow is nonnegative at every node if it is nonnegative at every
+terminal node: induction follows from any action's conservation equation.
+Since $r-w\chi_d$ is a signed flow, the terminal conditions are sufficient
+as well as necessary. Finally, if $r(v)>0$, each action has a positive
+child; induction gives $b_r(v)>0$. Zero root flow forces all nodes to have
+zero weight.
+\end{proof}
+In particular, choosing a minimizing action at each node gives a policy
+whose every terminal residual is at most $b_r(\varnothing)$. This statement
+concerns the residual leaf weights, not their normalization as a new
+probability model. No normalization is needed.
+
+\section{Extraction and simultaneous correctness}
+Start at a flow $p$ of root mass one. At each nonzero residual extract a
+strategy of weight $w=b_r(\varnothing)>0$ as in (1). The residual remains
+a nonnegative flow. A compatible terminal node attains the minimum $w$,
+so at least one previously positive terminal weight becomes zero. Zero
+weights can never increase. Consequently at most $L_+$ extractions occur,
+where $L_+$ is the number of initially positive terminal histories.
+The procedure ends with zero residual at every node and gives
+\[
+p(v)=\sum_jw_j\chi_{d_j}(v),\qquad \sum_jw_j=1.
+\tag{2}
+\]
+The bottleneck is coordinatewise nondecreasing in residual weights, so the
+extracted weights are nonincreasing. Real-valued or irrational kernels
+cause no difficulty: finiteness follows from killed leaves, not a rational
+lattice or a numerical tolerance.
+
+Choose one $d_j$ with probability $w_j$. Equation (2) realizes every history
+cylinder simultaneously. For a deterministic external policy, on its
+reachable histories the probability of history $v$ is $p(v)$, and the
+probability of its child $vAy$ is $p(vAy)$. Their ratio is the specified
+kernel whenever $p(v)>0$. A randomized policy independent of the seed can
+be conditioned on its private randomness; each conditioned policy has the
+same correctness property. This proves adaptive correctness. At zero-mass
+histories conditional laws impose no positive-probability constraint.
+
+This step uses distinct coordinates for distinct complete histories. It
+does not prove a corresponding result when decoders at different histories
+are required to share the same time/action response coordinate.
+
+\section{The decisive soft-tail inequality}
+For each policy let $I_\pi$ be the surprisal of its random terminal history.
+Zero-probability leaves are omitted when taking logarithms. Since there
+are finitely many policies,
+\[
+F_*(t)=\min_\pi\Prob(I_\pi\le t)
+\]
+is a finite-support CDF of a nonnegative random variable $Z$. Thus every
+$I_\pi$ is stochastically dominated by $Z$.
+
+Fix $0<\delta\le1$. Stop extraction immediately before the first weight
+at most $\delta$, or at termination if no such weight exists. Nonincreasing
+weights show that the remaining root mass is
+\[
+r(\varnothing)=\sum_{j:w_j\le\delta}w_j.
+\]
+If it is nonzero, (1) supplies a policy with $r(v)\le\delta$ at every
+terminal history. Moreover $r(v)\le p(v)$. Policy conservation and stochastic
+dominance now give
+\begin{align*}
+\sum_{j:w_j\le\delta}w_j
+&=\sum_{v\in\mathcal L_{\pi_r}}r(v)\\
+&\le\sum_{v\in\mathcal L_{\pi_r}}\min\{p(v),\delta\}\\
+&\le\max_\pi\E\min\{1,\delta2^{I_\pi}\}\\
+&\le\E\min\{1,\delta2^Z\}.
+\end{align*}
+The zero-residual case is immediate. The function of information in the
+last line is bounded and increasing, precisely the direction needed for
+the stochastic comparison. Zero leaf weights contribute zero to the
+clipped sum and require no convention involving $0\cdot\infty$.
+
+\section{Stochastic sandwich and entropy}
+Write $J_G=-\log_2 w_{S_G}$, and take an auxiliary
+$E\sim\mathrm{Exp}(\ln2)$ independent of $Z$. For $t\ge0$,
+\[
+\Prob(J_G\ge t)
+\le\E\min\{1,2^{Z-t}\}
+=\Prob(Z+E\ge t).
+\tag{3}
+\]
+The equality holds also when $t$ equals an atom of $Z$: conditional on
+$Z\ge t$, the exponential tail is one. For $t<0$, all variables are
+nonnegative. To pass from the inclusive tail inequality to CDFs, take
+thresholds $t+1/k$ and let $k\to\infty$. This gives
+$\Prob(J_G>t)\le\Prob(Z+E>t)$, and hence
+$J_G\preceq_{\rm st}Z+E$ without dropping or adding any atom.
+
+For any exact finite seed $S$ and deterministic policy $\pi$, a seed atom
+lies inside the resulting transcript atom. Consequently, on their induced
+joint space, $J_S\ge I_\pi$. Therefore
+\[
+F_{J_S}\le F_{I_\pi}\quad\text{for all }\pi,
+\qquad F_{J_S}\le F_*,
+\]
+which is $Z\preceq_{\rm st}J_S$. We have proved
+\begin{theorem}
+For every such finite controlled tree there exists an exact seed with at
+most $L_+$ atoms satisfying
+\[
+\boxed{Z\preceq_{\rm st}J_G\preceq_{\rm st}Z+E.}
+\]
+Every exact seed satisfies the first inequality. In particular,
+\[
+\boxed{\E Z\le C\le H(S_G)\le\E Z+\log_2e.}
+\]
+\end{theorem}
+\begin{proof}
+Only the expectation statement remains. Integrating nonnegative-variable
+tails in the stochastic sandwich gives it, since $\E E=1/\ln2$.
+\end{proof}
+Independence of $E$ and $Z$ is an auxiliary comparison construction, not
+an assertion that the greedy information equals $Z$ plus independent
+operational noise. Equal action entropies, a CLT, FGL, and a growing horizon
+are not used anywhere in this argument. For a depth-zero tree the unique
+seed has weight one, $Z=J_G=0$, and the statements hold directly.
+
+\section{Independent finite checks}
+\texttt{audit\_incidence.py} enumerates strategy and policy sets as subsets
+of terminal histories. It does not call or reproduce the manuscript's
+bottom-up bottleneck routine. At each extraction it compares directly
+\[
+\max_d\min_{v\in d}r(v)
+\quad\text{and}\quad
+\min_\pi\max_{v\in\pi}r(v).
+\]
+It also checks unique strategy/policy intersection, all residual policy
+masses, exact reconstruction, monotone extraction weights, seed support,
+the spectrum converse, and both soft-tail inequalities using fractions.
+Deterministic transitions and zero-weight branches are retained.
+
+The run covers 165 cases, 769 residual minimax checks, and 2757 probability
+threshold checks, with no floating-point arithmetic. The cases include
+horizon zero, fair and nonuniform laws, and reproducibly generated
+history-dependent laws. All passed. These are finite diagnostic checks;
+the universal proof is the argument above. Run
+\begin{verbatim}
+python -S audit_incidence.py
+\end{verbatim}
+The JSON report explicitly records that no proof-assistant certificate is
+provided. No larger-horizon testing is needed to justify the general proof.
+
+\section{Editorial disposition}
+No corrective mathematical change to Lemma 2 is required by this audit.
+For readability, the original manuscript could display (1) explicitly,
+state that unreachable decoder choices are completed arbitrarily, and
+include the one-sided-limit sentence following (3). These make existing
+steps explicit; they do not supply missing hypotheses or repair a failed
+inequality. Questions of priority, sharpness of the additive constant,
+and the equal-varentropy logarithmic lower bound remain separate.
+\end{document}
